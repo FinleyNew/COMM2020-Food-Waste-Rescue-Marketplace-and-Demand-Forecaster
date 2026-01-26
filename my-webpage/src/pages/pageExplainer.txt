@@ -1,0 +1,14 @@
+Customer Pages
+Discover
+Streaks
+Codes
+
+Seller Pages
+Current Bundles Page
+Analytics Page
+Add Bundles Page
+
+Admin Pages
+View Reports Page
+Deployment History Page
+Testing Page

@@ -1,0 +1,45 @@
+import { useState } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+
+// Pages (ensure the file names match exactly)
+import Discover from "./pages/Discover";
+import Streaks from "./pages/Streaks";
+import Codes from "./pages/Codes";
+import LoginPage from "./pages/loginPage";
+import AddBundles from "./pages/AddBundles";
+import Analytics from "./pages/Analytics";
+import CurrentBundles from "./pages/CurrentBundles";
+import DeploymentHistory from "./pages/DeploymentHistory";
+import Testing from "./pages/testing";
+import ViewReports from "./pages/ViewReports";
+import HomePage from "./pages/HomePage";
+//|{" "}
+
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <>
+      {/* <nav>
+        <Link to="/login">LoginPage</Link>
+        
+      </nav>*/}
+
+      <Routes>
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/streaks" element={<Streaks />} />
+        <Route path="/codes" element={<Codes />} />
+        <Route path="/add-bundles" element={<AddBundles />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/current-bundles" element={<CurrentBundles />} />
+        <Route path="/deployment-history" element={<DeploymentHistory />} />
+        <Route path="/testing" element={<Testing />} />
+        <Route path="/view-reports" element={<ViewReports />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
