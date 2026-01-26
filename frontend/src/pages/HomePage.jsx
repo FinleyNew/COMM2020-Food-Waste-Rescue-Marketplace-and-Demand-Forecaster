@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
+import "../HomePage.css"
 function Home() {
   return (
     <div>
@@ -8,6 +9,7 @@ function Home() {
         
       </nav>
       <h1>Home Page</h1>
+      <h2>Fridge Raiders! ©</h2>
     </div>
   );
 }
