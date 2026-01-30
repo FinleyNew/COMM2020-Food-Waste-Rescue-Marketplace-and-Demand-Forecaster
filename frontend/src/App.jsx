@@ -3,16 +3,16 @@ import { Routes, Route, Link } from "react-router-dom";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
 // Pages (ensure the file names match exactly)
-import Discover from "./pages/Discover";
-import Streaks from "./pages/Streaks";
-import Codes from "./pages/Codes";
+import Discover from "./customerPages/Discover";
+import Streaks from "./customerPages/Streaks";
+import Codes from "./customerPages/Codes";
 import LoginPage from "./pages/loginPage";
-import AddBundles from "./pages/AddBundles";
-import Analytics from "./pages/Analytics";
-import CurrentBundles from "./pages/CurrentBundles";
-import DeploymentHistory from "./pages/DeploymentHistory";
-import Testing from "./pages/testing";
-import ViewReports from "./pages/ViewReports";
+import AddBundles from "./sellerPages/AddBundles";
+import Analytics from "./sellerPages/Analytics";
+import CurrentBundles from "./sellerPages/CurrentBundles";
+import DeploymentHistory from "./adminPages/DeploymentHistory";
+import Testing from "./adminPages/testing";
+import ViewReports from "./adminPages/ViewReports";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
 //|{" "}
