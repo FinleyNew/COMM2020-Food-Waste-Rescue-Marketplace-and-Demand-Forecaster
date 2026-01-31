@@ -4,6 +4,7 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 
 // Pages (ensure the file names match exactly)
 import Discover from "./pages/Discover";
+import BundleSelect from "./pages/bundle-select";
 import Streaks from "./pages/Streaks";
 import Codes from "./pages/Codes";
 import LoginPage from "./pages/loginPage";
@@ -36,6 +37,7 @@ function App() {
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
         <Route path="/discover" element={<ProtectedRoute user={user} requireRole="customer"><Discover /></ProtectedRoute>} />
+        <Route path="/bundle-select" element={<ProtectedRoute user={user} requireRole="customer"><BundleSelect /></ProtectedRoute>} />
         <Route path="/streaks" element={<ProtectedRoute user={user} requireRole="customer"><Streaks /></ProtectedRoute>} />
         <Route path="/codes" element={<ProtectedRoute user={user} requireRole="customer"><Codes /></ProtectedRoute>} />
 

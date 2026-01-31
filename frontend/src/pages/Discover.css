@@ -1,22 +1,24 @@
-body{
-    background-image: url("https://img.freepik.com/premium-vector/vector-gray-food-background1_733406-3095.jpg");
-    color: white;
-}
 section{
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     background-color: rgb(81, 155, 81);
 }
+.sectionPage{
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
 .row{
     display: flex;
     text-align:  center;
     gap: 10px; 
 }
-.text-block {
+.textBlock {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin: 10px;
 }
 
 .button {
@@ -48,7 +50,7 @@ section{
 .desc{
     font-family: Arial;
     font-size: 20px;
-    margin-top: 20px;
+    margin-top: 10px;
     flex: 1;
 }
 
@@ -58,4 +60,9 @@ section{
   padding: 10px;
   width: 300px; 
   margin-bottom: 10px;
+}
+
+.leftImg{
+    margin-top: 20px;
+    height: 150px;
 }
