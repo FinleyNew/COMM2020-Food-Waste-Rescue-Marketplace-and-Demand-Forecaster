@@ -71,3 +71,22 @@ section{
     margin-bottom: 50px;
     margin-top: 45px;
 }
+
+.textCentre{
+    text-align: center;
+    font-size: 25px;
+}
+
+.icon{
+    width: 70px;
+    height: 70px;
+}
+
+.rowIcons{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 10px;
+  gap: 40px;
+}
