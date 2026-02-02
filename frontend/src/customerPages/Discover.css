@@ -90,3 +90,8 @@ section{
   margin: 10px;
   gap: 40px;
 }
+
+.setting{
+    width: 30px;
+    height: 30px;
+}

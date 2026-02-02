@@ -8,6 +8,7 @@ function Home() {
         <Link to="/login">LoginPage</Link>
         
       </nav>
+      
       <h1>Home Page</h1>
       <h2>Fridge Raiders! ©</h2>
     </div>

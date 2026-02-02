@@ -31,7 +31,6 @@ function App() {
         <Link to="/login">LoginPage</Link>
         
       </nav>*/}
-
       <Routes>
         
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
@@ -55,12 +54,12 @@ function App() {
         <Route path="/unauthorised" element={<Unauthorised />} />
       </Routes>
       <details>
-        <summary>Settings</summary>
-        <label>
-          <input type="checkbox" name="darkmode"/>
-            Enable Dark Mode DOESNT WORK YET
-        </label>
-      </details>
+          <summary>Settings</summary>
+          <label>
+            <input type="checkbox" name="darkmode"/>
+              Enable Dark Mode DOESNT WORK YET
+          </label>
+        </details>
     </>
   );
 }
