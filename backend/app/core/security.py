@@ -1,0 +1,3 @@
+
+
+ALGORITM = "HS256"
