@@ -3,6 +3,7 @@ from sqlmodel import Field, SQLModel, Relationship
 
 if TYPE_CHECKING:
     from .user import User
+    from .reservation import Reservation
 
 class Consumer(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id")
