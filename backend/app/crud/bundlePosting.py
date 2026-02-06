@@ -26,4 +26,13 @@ def get_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]
 def is_available(posting_id: int, db: Session) -> bool:
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     bundle_posting = db.exec(statement).one()
+
     return (bundle_posting.available != 0)
+
+def delete_posting(posting_id: int, db: Session):
+    statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
+    bundle_posting = db.exec(statement).first()
+
+    if bundle_posting:
+        db.delete(bundle_posting)
+        db.commit()
