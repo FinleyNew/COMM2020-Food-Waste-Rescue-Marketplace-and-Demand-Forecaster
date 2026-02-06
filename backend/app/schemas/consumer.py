@@ -4,7 +4,8 @@ class ConsumerBase(SQLModel):
     display_name: str
 
 class ConsumerCreate(ConsumerBase):
-    password: str
+    #password: str
+    pass
 
 class ConsumerPublic(ConsumerBase):
     id: int

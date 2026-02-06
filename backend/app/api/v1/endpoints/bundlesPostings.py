@@ -9,7 +9,7 @@ router = APIRouter()
 def create_posting(bundle_in: BundlePostingCreate, current_seller: SellerDep, db: SessionDep):
     #Call bundle_service
 
-@router.get("/", response_model = BundlePostingPublic)
+@router.get("/", response_model = list[BundlePostingPublic])
 def get_active_bundles(db: SessionDep):
     #Call bundle_service
 
