@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from .user import User
     from.bundlePosting import BundlePosting
     from .record import Record
-    from .forecastOutput import ForecastOutput
+    from .forecast import ForecastOutput
 
 class Seller(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id")

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .seller import Seller
     from .reservation import Reservation
     from .record import Record
-    from .forecastOutput import ForecastOutput
+    from .forecast import ForecastOutput
 
 
 class BundlePosting(SQLModel, table=True):
