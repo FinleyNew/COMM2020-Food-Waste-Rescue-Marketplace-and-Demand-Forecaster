@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
 from app.api.deps import ConsumerDep, SessionDep
 from app.schemas.consumer import ConsumerPublic
 from app.services import user as user_service
