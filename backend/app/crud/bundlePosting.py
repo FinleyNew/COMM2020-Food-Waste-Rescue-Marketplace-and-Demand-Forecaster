@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 from typing import Sequence
 from app.models.bundlePosting import BundlePosting
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
+from app.schemas.bundlePosting import BundlePostingCreate
 
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
     #Convert the Schema into a Model
@@ -15,19 +15,30 @@ def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
 
-def get_posting(posting_id: int, db: Session) -> BundlePosting:
+def get_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
+    if lock:
+        statement = statement.with_for_update()
     return db.exec(statement).one()
 
 def get_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(BundlePosting.user_id == owner_id)
     return db.exec(statement).all()
 
-def is_available(posting_id: int, db: Session) -> bool:
+# def is_available(posting_id: int, db: Session) -> bool:
+#     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
+#     bundle_posting = db.exec(statement).one()
+
+#     return (bundle_posting.available != 0)
+
+def reserve_bundle(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     bundle_posting = db.exec(statement).one()
 
-    return (bundle_posting.available != 0)
+    bundle_posting.available -= 1
+    bundle_posting.reserved += 1
+
+    db.add(bundle_posting)
 
 def delete_posting(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
