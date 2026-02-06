@@ -1,0 +1,28 @@
+from typing import Optional, List, TYPE_CHECKING
+from decimal import Decimal
+from sqlmodel import Field, SQLModel, Relationship
+from sqlalchemy import Column
+from sqlalchemy.dialects import postgresql
+
+if TYPE_CHECKING:
+    from .seller import Seller
+    from .reservation import Reservation
+    from .record import Record
+    from .forecastOutput import ForecastOutput
+
+
+class BundlePosting(SQLModel, table=True):
+    posting_id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
+    category: str
+    allergens: str | None
+    available: int
+    reserved: int
+    price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
+    pickup_window: str
+    status: str
+
+    seller: "Seller" = Relationship(back_populates="posting")
+    reservation: List["Reservation"] = Relationship(back_populates="posting")
+    record: "Record" = Relationship(back_populates="posting")
+    forecast: ForecastOutput = Relationship(back_populates="posting")
