@@ -21,7 +21,7 @@ def test_bundle_creation(mock_db, sample_seller, sample_bundle):
     assert created_bundle.price == sample_bundle["price"]
 
 
-    #Teests that a bundle with negative price cannot be made
+    #Tests that a bundle with negative price cannot be made
     with pytest.raises(ValueError):
         bundles.create_bundle(
             seller_id=sample_seller["id"],
