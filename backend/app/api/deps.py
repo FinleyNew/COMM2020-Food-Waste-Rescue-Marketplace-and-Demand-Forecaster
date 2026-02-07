@@ -51,7 +51,7 @@ def get_current_seller(db: SessionDep, current_user: CurrentUser) -> Seller:
     if current_user.role != "seller":
         raise HTTPException(status_code=400, detail="This user is not a seller")
     #Find the corresponding seller in the database
-    seller = db.get(Seller, current_user.id)
+    seller = db.get(Seller, current_user.user_id)
     if not seller:
         raise HTTPException(status_code = 404, detail = "Seller not found")
     
@@ -61,7 +61,7 @@ def get_current_consumer(db: SessionDep, current_user: CurrentUser) -> Consumer:
     if current_user.role != "consumer":
         raise HTTPException(status_code=400, detail="This user is not a consumer")
     #Find the corresponding consumer in the database
-    consumer = db.get(Consumer, current_user.id)
+    consumer = db.get(Consumer, current_user.user_id)
     if not consumer:
         raise HTTPException(status_code = 404, detail = "Seller not found")
     

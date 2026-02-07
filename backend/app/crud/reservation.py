@@ -21,14 +21,9 @@ def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Rese
     statement = select(Reservation).where(Reservation.user_id == consumer_id)
     return db.exec(statement).all()
 
-def get_reservation_by_code(claim_code: str, seller_id, db: Session) -> Reservation:
+def get_reservation_by_claim_code(claim_code: str, seller_id, db: Session) -> Reservation:
     statement = select(Reservation).where(Reservation.claim_code == claim_code).where(Reservation.user_id == seller_id)
     return db.exec(statement).one()
-
-def reservation_collected(reservation: Reservation, db: Session):
-    reservation.status = #Collected?
-    db.add(reservation)
-    db.commit()
 
 def delete_reservation(reservation_id: int, db: Session):
     statement = select(Reservation).where(Reservation.reservation_id == reservation_id)

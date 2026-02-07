@@ -21,8 +21,13 @@ def create_reservation_service(reservation_in: ReservationCreate, consumer_id: i
     db.refresh(new_reservation)
     return new_reservation
     
+def collect_by_code_service(claim_code: str, seller_id: int, db: Session) -> Reservation:
+    reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, seller_id=seller_id, db=db)
+    reservation.status = ?
+    db.commit()
+    db.refresh(reservation)
+    return reservation
 
-def get_reservation_by_claim_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
-    return reservation_crud.get_reservation_by_code(claim_code=claim_code, seller_id=seller_id, db=db)
-    
-def collect_by_code(claim_code: str):
+def delete_reservation_service(reservation_id: int, db: Session):
+    #Needs to generate a record here
+    reservation_crud.delete_reservation(reservation_id=reservation_id, db=db)

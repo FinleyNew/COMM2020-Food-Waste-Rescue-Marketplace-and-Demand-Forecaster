@@ -11,4 +11,4 @@ class Consumer(SQLModel, table=True):
     streak: int
 
     user: "User" = Relationship(back_populates="consumer")
-    reservation: List["Reservation"] = Relationship(back_populates="consumer")
+    reservations: List["Reservation"] = Relationship(back_populates="consumer")
