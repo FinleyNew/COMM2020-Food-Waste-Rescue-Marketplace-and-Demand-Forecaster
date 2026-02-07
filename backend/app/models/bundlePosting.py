@@ -3,6 +3,7 @@ from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column
 from sqlalchemy.dialects import postgresql
+from .enums import BundleStatus, Category
 
 if TYPE_CHECKING:
     from .seller import Seller
@@ -14,13 +15,13 @@ if TYPE_CHECKING:
 class BundlePosting(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
-    category: str
+    category: Category
     allergens: str | None
     available: int
     reserved: int
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     pickup_window: str
-    status: str
+    status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
 
     seller: "Seller" = Relationship(back_populates="posting")
     reservation: List["Reservation"] = Relationship(back_populates="posting")

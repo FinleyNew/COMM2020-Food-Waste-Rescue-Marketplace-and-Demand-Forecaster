@@ -1,6 +1,7 @@
 from typing import Optional, TYPE_CHECKING
 import secrets
 from sqlmodel import Field, SQLModel, Relationship
+from .enums import ReservationStatus
 
 if TYPE_CHECKING:
     from .consumer import Consumer
@@ -16,7 +17,7 @@ class Reservation(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id")
     user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
     timestamp: str
-    status: str = ?
+    status: ReservationStatus = Field(default=ReservationStatus.RESERVED)
     claim_code: str = Field(
         default_factory=generate_claim_code,
         unique=True,

@@ -3,6 +3,7 @@ from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column, Index
 from sqlalchemy.dialects import postgresql
+from .enums import Category
 
 if TYPE_CHECKING:
     from .seller import Seller
@@ -16,7 +17,7 @@ class Record(SQLModel, table=True):
     # day_of_week: int
     # time_window: str
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
-    category: str
+    category: Category
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     raining: bool
     observed_reservations: int
