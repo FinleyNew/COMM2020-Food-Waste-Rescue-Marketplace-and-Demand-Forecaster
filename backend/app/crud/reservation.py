@@ -17,6 +17,10 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: 
             db_reservation.claim_code = generate_claim_code()
     raise Exception("could not generate unique claim code")
 
+def get_reservations_by_posting(posting_id: int, db: Session) -> Sequence[Reservation]:
+    statement = select(Reservation).where(Reservation.posting_id == posting_id)
+    return db.exec(statement).all()
+
 def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Reservation]:
     statement = select(Reservation).where(Reservation.user_id == consumer_id)
     return db.exec(statement).all()

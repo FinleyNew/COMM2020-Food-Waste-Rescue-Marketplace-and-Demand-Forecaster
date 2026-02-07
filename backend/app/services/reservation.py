@@ -28,3 +28,11 @@ def collect_by_code(claim_code: str, seller_id: int, db: Session) -> Reservation
 
 def delete_reservation(reservation_id: int, db: Session):
     reservation_crud.delete_reservation(reservation_id=reservation_id, db=db)
+
+def get_no_show(posting_id: int, db: Session) -> int:
+    no_show_count = 0
+    reservations: Sequence[Reservation] = reservation_crud.get_reservations_by_posting(posting_id=posting_id, db=db)
+    for reservation in reservations:
+        if reservation.status == "":
+            no_show_count += 1
+    return no_show_count
