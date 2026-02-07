@@ -20,6 +20,9 @@ def create_record(bundle_posting: BundlePosting, db: Session) -> Record:
             "observed_no_show": get_no_show(posting_id=posting_id, db=db)
         }
     )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
     return record
 
 def is_raining():
