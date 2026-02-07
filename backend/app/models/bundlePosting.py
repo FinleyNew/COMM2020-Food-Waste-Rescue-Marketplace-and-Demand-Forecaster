@@ -1,4 +1,4 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Any, Optional, List, TYPE_CHECKING
 from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column
@@ -20,7 +20,7 @@ class BundlePosting(SQLModel, table=True):
     available: int
     reserved: int
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
-    pickup_window: str
+    pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
     status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
 
     seller: "Seller" = Relationship(back_populates="posting")

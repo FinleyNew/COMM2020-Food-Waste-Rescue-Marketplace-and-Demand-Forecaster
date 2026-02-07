@@ -3,9 +3,12 @@ from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
 from app.crud import bundlePosting as bundlePosting_crud
+from psycopg.types.range import Range
 
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
-    return bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, db=db)
+    pickup_range = Range(bundle_in.start_time, bundle_in.end_time)
+
+    return bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, pickup_window=pickup_range, db=db)
 
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_active_bundle_postings(db=db)

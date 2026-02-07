@@ -2,8 +2,8 @@ from sqlmodel import SQLModel
 
 class SellerBase(SQLModel):
     name: str
-    location: ?
-    open_hours: ?
+    location: str
+    open_hours: str
 
 class SellerPublic(SellerBase):
-    id: int
+    user_id: int

@@ -9,7 +9,7 @@ class Forecast(SQLModel, table=True):
     forecast_id: Optional[int] = Field(default=None, primary_key=True)
     user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id")
-    predicted_reservations: float
+    predicted_reservations: int
     predicted_no_show: float
 
     seller: "Seller" = Relationship(back_populates="forecast")

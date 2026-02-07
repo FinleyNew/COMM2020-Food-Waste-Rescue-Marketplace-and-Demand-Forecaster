@@ -2,10 +2,11 @@ from sqlmodel import Session, select
 from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
+from psycopg.types.range import Range
 
-def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
+def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window: Range, db: Session) -> BundlePosting:
     #Convert the Schema into a Model
-    db_bundle_posting = BundlePosting.model_validate(bundle_in, update={"owner_id": owner_id})
+    db_bundle_posting = BundlePosting.model_validate(bundle_in, update={"owner_id": owner_id, "pickup_window": pickup_window})
     db.add(db_bundle_posting)
     db.commit()
     db.refresh(db_bundle_posting)

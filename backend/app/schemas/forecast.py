@@ -4,7 +4,7 @@ class ForcastBase(SQLModel):
     user_id: int
     posting_id: int
     predicted_reservations: int
-    predicted_no_show_prob: ?
+    predicted_no_show_prob: float
 
 class ForecastCreate(ForcastBase):
     pass
