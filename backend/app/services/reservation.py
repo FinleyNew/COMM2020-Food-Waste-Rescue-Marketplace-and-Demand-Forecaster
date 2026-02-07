@@ -1,5 +1,7 @@
 from sqlmodel import Session
 from typing import Sequence
+import secrets
+import string
 from app.models.reservation import Reservation
 from app.schemas.reservation import ReservationCreate
 from app.crud import reservation as reservation_crud
@@ -18,12 +20,9 @@ def create_reservation_service(reservation_in: ReservationCreate, consumer_id: i
     db.commit()
     db.refresh(new_reservation)
     return new_reservation
-
-
-
-def create_code():
+    
 
 def get_reservation_by_claim_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
     return reservation_crud.get_reservation_by_code(claim_code=claim_code, seller_id=seller_id, db=db)
     
-def collect_by_code():
+def collect_by_code(claim_code: str):

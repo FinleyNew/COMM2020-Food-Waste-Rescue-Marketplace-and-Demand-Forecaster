@@ -1,14 +1,21 @@
 from sqlmodel import Session, select
 from typing import Sequence
-from app.models.reservation import Reservation
+from sqlalchemy.exc import IntegrityError
+from app.models.reservation import Reservation, generate_claim_code
 from app.schemas.reservation import ReservationCreate
 
-def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session):
+def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session) -> Reservation:
     db_reservation = Reservation.model_validate(reservation_in, update={"consumer_id": consumer_id})
-    db.add(db_reservation)
-    db.commit()
-    db.refresh(db_reservation)
-    return db_reservation
+    #Try generating unique claim code
+    for i in range(5):
+        try:
+            with db.begin_nested():
+                db.add(db_reservation)
+                db.flush()
+            return db_reservation
+        except IntegrityError:
+            db_reservation.claim_code = generate_claim_code()
+    raise Exception("could not generate unique claim code")
 
 def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Reservation]:
     statement = select(Reservation).where(Reservation.user_id == consumer_id)

@@ -9,5 +9,6 @@ class ReservationCreate(ReservationBase):
     pass
 
 class ReservationPublic(ReservationBase):
+    reservation_id: int
     claim_code: str
     status: str
