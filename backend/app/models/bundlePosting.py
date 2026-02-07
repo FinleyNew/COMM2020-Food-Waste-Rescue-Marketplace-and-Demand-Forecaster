@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 
 
 class BundlePosting(SQLModel, table=True):
-    posting_id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
+    posting_id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
     category: Category
     allergens: str | None
     available: int

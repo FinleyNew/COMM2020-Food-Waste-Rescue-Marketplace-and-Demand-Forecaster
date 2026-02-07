@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from .reservation import Reservation
 
 class Consumer(SQLModel, table=True):
-    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id")
+    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id", index=True)
     display_name: str
     streak: int
 

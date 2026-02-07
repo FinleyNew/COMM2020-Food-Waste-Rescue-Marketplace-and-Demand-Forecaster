@@ -14,9 +14,9 @@ def generate_claim_code() -> str:
     return "".join(secrets.choice(alphabet) for _ in range(10))
 
 class Reservation(SQLModel, table=True):
-    reservation_id: Optional[int] = Field(default=None, primary_key=True)
-    posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id")
-    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
+    reservation_id: Optional[int] = Field(default=None, primary_key=True,index=True)
+    posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
     timestamp: datetime
     status: ReservationStatus = Field(default=ReservationStatus.RESERVED)
     claim_code: str = Field(

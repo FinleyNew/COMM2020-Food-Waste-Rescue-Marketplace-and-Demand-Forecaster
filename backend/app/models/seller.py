@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .forecast import Forecast
 
 class Seller(SQLModel, table=True):
-    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id")
+    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id", index=True)
     name: str
     location: str
     opening_hours: str

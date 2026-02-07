@@ -6,11 +6,11 @@ if TYPE_CHECKING:
     from .bundlePosting import BundlePosting
 
 class Forecast(SQLModel, table=True):
-    forecast_id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id")
-    posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id")
+    forecast_id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
+    posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)
     predicted_reservations: int
-    predicted_no_show: float
+    predicted_no_show_prob: float
 
     seller: "Seller" = Relationship(back_populates="forecast")
     posting: "BundlePosting" = Relationship(back_populates="forecast")
