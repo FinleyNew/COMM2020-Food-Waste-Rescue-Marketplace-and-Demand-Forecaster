@@ -9,7 +9,7 @@ router = APIRouter()
 def create_reservation(reservation_in: ReservationCreate, current_consumer: ConsumerDep, db: SessionDep):
     user_id = current_consumer.user_id
     if user_id:
-        return reservation_service.create_reservation_service(
+        return reservation_service.create_reservation(
             reservation_in=reservation_in,
             consumer_id=user_id,
             posting_id=reservation_in.posting_id,
@@ -20,7 +20,7 @@ def create_reservation(reservation_in: ReservationCreate, current_consumer: Cons
 def collect_by_code(claim_code: str, current_seller: SellerDep, db: SessionDep):
     user_id = current_seller.user_id
     if user_id:
-        return reservation_service.collect_by_code_service(
+        return reservation_service.collect_by_code(
             claim_code=claim_code,
             seller_id=user_id,
             db=db
@@ -32,4 +32,4 @@ def get_current_consumers_reservations(current_consumer: ConsumerDep, db: Sessio
     
 @router.delete("/{reservation_id}")
 def delete_reservation(reservation_id: int, db: SessionDep):
-    reservation_service.delete_reservation_service(reservation_id=reservation_id, db=db)
+    reservation_service.delete_reservation(reservation_id=reservation_id, db=db)
