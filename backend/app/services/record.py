@@ -10,7 +10,6 @@ def create_record(bundle_posting: BundlePosting, db: Session) -> Record:
     record = Record.model_validate(
         bundle_posting,
         update={
-            "pickup_window":
             "raining":,
             "observed_reservations": bundle_posting.reserved,
             "observed_no_show"
