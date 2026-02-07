@@ -3,8 +3,7 @@ from sqlmodel import SQLModel
 class RecordBase(SQLModel):
     user_id: int
     posting_id: int
-    day_of_week: #enum
-    time_window: ?
+    pickup_window: ?
     category: str
     price: ?
     raining: bool

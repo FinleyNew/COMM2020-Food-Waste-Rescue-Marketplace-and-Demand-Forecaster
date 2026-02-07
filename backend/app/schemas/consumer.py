@@ -8,5 +8,5 @@ class ConsumerCreate(ConsumerBase):
     pass
 
 class ConsumerPublic(ConsumerBase):
-    id: int
+    user_id: int
     streak: int

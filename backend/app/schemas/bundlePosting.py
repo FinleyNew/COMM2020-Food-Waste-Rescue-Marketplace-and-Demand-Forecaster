@@ -5,8 +5,8 @@ class BundlePostingBase(SQLModel):
     category: str
     allergens: str
     available: int
-    price: str
-    pickup_window: int
+    price: ?
+    pickup_window: ?
 
 class BundlePostingCreate(BundlePostingBase):
     pass
