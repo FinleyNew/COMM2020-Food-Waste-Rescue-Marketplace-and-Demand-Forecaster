@@ -5,7 +5,7 @@ if TYPE_CHECKING:
     from .user import User
     from.bundlePosting import BundlePosting
     from .record import Record
-    from .forecast import ForecastOutput
+    from .forecast import Forecast
 
 class Seller(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id")
@@ -14,6 +14,6 @@ class Seller(SQLModel, table=True):
     opening_hours: str
 
     user: "User" = Relationship(back_populates="seller")
-    posting: List["BundlePosting"] = Relationship(back_populates="seller")
-    record: List["Record"] = Relationship(back_populates="seller")
-    forecast: List["ForecastOutput"] = Relationship(back_populates="seller")
+    postings: List["BundlePosting"] = Relationship(back_populates="seller")
+    records: List["Record"] = Relationship(back_populates="seller")
+    forecasts: List["Forecast"] = Relationship(back_populates="seller")

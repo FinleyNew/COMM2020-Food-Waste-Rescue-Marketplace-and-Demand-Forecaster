@@ -11,17 +11,17 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Ses
     db.refresh(db_bundle_posting)
     return db_bundle_posting
 
-def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
+def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
 
-def get_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:
+def get_bundle_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     if lock:
         statement = statement.with_for_update()
     return db.exec(statement).one()
 
-def get_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]:
+def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(BundlePosting.user_id == owner_id)
     return db.exec(statement).all()
 
@@ -31,7 +31,7 @@ def get_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]
 
 #     return (bundle_posting.available != 0)
 
-def reserve_bundle(posting_id: int, db: Session):
+def reserve_bundle_posting(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     bundle_posting = db.exec(statement).one()
 
@@ -40,7 +40,7 @@ def reserve_bundle(posting_id: int, db: Session):
 
     db.add(bundle_posting)
 
-def delete_posting(posting_id: int, db: Session):
+def delete_bundle_posting(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     bundle_posting = db.exec(statement).first()
 

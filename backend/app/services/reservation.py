@@ -1,13 +1,11 @@
 from sqlmodel import Session
 from typing import Sequence
-import secrets
-import string
 from app.models.reservation import Reservation
 from app.schemas.reservation import ReservationCreate
 from app.crud import reservation as reservation_crud
-from app.services.bundlePosting import get_bundle_posting, bundle_reserved
+from app.services.bundlePosting import get_bundle_posting, reserve_bundle_posting
 
-def create_reservation_service(reservation_in: ReservationCreate, consumer_id: int, posting_id: int, db: Session) -> Reservation:
+def create_reservation(reservation_in: ReservationCreate, consumer_id: int, posting_id: int, db: Session) -> Reservation:
     bundle = get_bundle_posting(posting_id=posting_id, db=db, lock=True)
 
     if bundle.available <= 0:
@@ -15,19 +13,18 @@ def create_reservation_service(reservation_in: ReservationCreate, consumer_id: i
     
     new_reservation = reservation_crud.create_reservation(reservation_in, consumer_id=consumer_id, db=db)
     
-    bundle_reserved(posting_id=posting_id, db=db)
+    reserve_bundle_posting(posting_id=posting_id, db=db)
 
     db.commit()
     db.refresh(new_reservation)
     return new_reservation
     
-def collect_by_code_service(claim_code: str, seller_id: int, db: Session) -> Reservation:
+def collect_by_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
     reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, seller_id=seller_id, db=db)
     reservation.status = ?
     db.commit()
     db.refresh(reservation)
     return reservation
 
-def delete_reservation_service(reservation_id: int, db: Session):
-    #Needs to generate a record here
+def delete_reservation(reservation_id: int, db: Session):
     reservation_crud.delete_reservation(reservation_id=reservation_id, db=db)

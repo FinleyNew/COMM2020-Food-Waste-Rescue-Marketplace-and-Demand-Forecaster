@@ -2,22 +2,27 @@ from sqlmodel import Session
 from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
-from app.crud.bundlePosting import create_bundle_posting, get_all_bundle_postings, get_posting, get_postings_by_owner, reserve_bundle, delete_posting
+from app.crud import bundlePosting as bundlePosting_crud
 
-def create_new_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
-    return create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, db=db)
+def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
+    return bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, db=db)
 
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
-    return get_all_bundle_postings(db=db)
+    return bundlePosting_crud.get_active_bundle_postings(db=db)
 
 def get_bundle_posting(posting_id: int, db: Session, lock: bool = False) -> BundlePosting:
-    return get_posting(posting_id=posting_id, db=db, lock=lock)
+    return bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=lock)
 
 def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundlePosting]:
-    return get_postings_by_owner(owner_id = owner_id, db=db)
+    return bundlePosting_crud.get_bundle_postings_by_owner(owner_id = owner_id, db=db)
 
-def bundle_reserved(posting_id: int, db: Session):
-    return reserve_bundle(posting_id=posting_id, db=db)
+def reserve_bundle_posting(posting_id: int, db: Session):
+    bundlePosting_crud.reserve_bundle_posting(posting_id=posting_id, db=db)
 
 def delete_bundle_posting(posting_id: int, db: Session):
-    return delete_posting(posting_id=posting_id, db=db)
+    #Should generate a record here
+    #You want to fetch the corresponding posting
+    bundle_posting = get_bundle_posting(posting_id=posting_id, db=db)
+    #Call create record service (New Id and other aditional attributes)
+
+    bundlePosting_crud.delete_bundle_posting(posting_id=posting_id, db=db)
