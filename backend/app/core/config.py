@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 #from typing import Optional
 
 class Settings(BaseSettings):
@@ -8,9 +8,9 @@ class Settings(BaseSettings):
 
     #Database Settings
     #Taken from .env
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    POSTGRES_USER: str = ""
+    POSTGRES_PASSWORD: str = ""
+    POSTGRES_DB: str = ""
     POSTGRES_SERVER: str = "localhost"
 
     #Builds the full DB URL
@@ -20,10 +20,10 @@ class Settings(BaseSettings):
     
     #Secret key for JWT tokens
     #Taken from .env
-    SECRET_KEY: str
+    SECRET_KEY: str = ""
 
-    class Config:
-        #Tells pydantic to look for a .env file
-        env_file = ".env"
+    model_config = SettingsConfigDict(
+        env_file=".env"
+    )
 
 settings = Settings()
