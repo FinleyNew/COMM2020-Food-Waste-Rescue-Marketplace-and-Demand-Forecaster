@@ -3,9 +3,8 @@ FROM node:20-slim
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
-#COPY . .
-COPY frontend/ .
+COPY . .
 
-EXPOSE 5137
+EXPOSE 5173
 
-CMD [ "npm","start" ]
+CMD [ "npm","run", "dev", "--", "--host" ]
