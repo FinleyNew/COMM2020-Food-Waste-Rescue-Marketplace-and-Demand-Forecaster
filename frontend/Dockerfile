@@ -6,6 +6,6 @@ RUN npm install
 #COPY . .
 COPY frontend/ .
 
-EXPOSE 5137
+EXPOSE 5173
 
 CMD [ "npm","start" ]
