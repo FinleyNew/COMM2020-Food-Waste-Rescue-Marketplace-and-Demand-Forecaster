@@ -7,13 +7,13 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
   const navigate = useNavigate();
 
-  function myFunction() {
-    if (username=== "harryCustomer" && password === "lewis") {
+  function loginFunction() {
+    if (username=== "harryConsumer" && password === "lewis") {
       setUser({
         username:"harry",
-        role:"customer"
+        role:"consumer"
       })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "customer"}));
+      localStorage.setItem("user",JSON.stringify({username:"harry",role: "consumer"}));
       navigate("/discover");
     } 
     else if(username === "harrySeller" && password === "lewis"){
@@ -57,7 +57,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
 
       <br /><br />
 
-      <button onClick={myFunction}>Login</button>
+      <button onClick={loginFunction}>Login</button>
     </>
   );
 }

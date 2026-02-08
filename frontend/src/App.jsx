@@ -35,10 +35,10 @@ function App() {
         
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
-        <Route path="/discover" element={<ProtectedRoute user={user} requireRole="customer"><Discover /></ProtectedRoute>} />
-        <Route path="/bundle-select" element={<ProtectedRoute user={user} requireRole="customer"><BundleSelect /></ProtectedRoute>} />
-        <Route path="/streaks" element={<ProtectedRoute user={user} requireRole="customer"><Streaks /></ProtectedRoute>} />
-        <Route path="/codes" element={<ProtectedRoute user={user} requireRole="customer"><Codes /></ProtectedRoute>} />
+        <Route path="/discover" element={<ProtectedRoute user={user} requireRole="consumer"><Discover /></ProtectedRoute>} />
+        <Route path="/bundle-select" element={<ProtectedRoute user={user} requireRole="consumer"><BundleSelect /></ProtectedRoute>} />
+        <Route path="/streaks" element={<ProtectedRoute user={user} requireRole="consumer"><Streaks /></ProtectedRoute>} />
+        <Route path="/codes" element={<ProtectedRoute user={user} requireRole="consumer"><Codes /></ProtectedRoute>} />
 
         <Route path="/add-bundles" element={<ProtectedRoute user={user} requireRole="seller"><AddBundles /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute user={user} requireRole="seller"><Analytics /></ProtectedRoute>} />
