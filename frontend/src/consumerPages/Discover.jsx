@@ -1,6 +1,11 @@
 import { Routes, Route, Link } from "react-router-dom";
 import './Discover.css'
 function Discover() {
+  let companyName = "Amazon";
+  let category = "Fruit";
+  let bundleName = "idk";
+  let location = "EX1 2HR";
+  let collectionTime = "12:00";
   return (
     <>
       <nav class="row">
@@ -23,20 +28,20 @@ function Discover() {
           <div className="textBlock">
             <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
             <div className="desc">
-              <p className="desc">Company Name</p>
-              <p className="desc">Category</p>
+              <p className="desc">{companyName}</p>
+              <p className="desc">{category}</p>
             </div>
           </div>
           <div className="textBlock">
             <div className="desc">
-              <p className="desc">Bundle Name</p>
-              <p className="desc">Location</p>
-              <p className="desc">Collection Time</p>
+              <p className="desc">Bundle Name - {bundleName}</p>
+              <p className="desc">Location - {location}</p>
+              <p className="desc">Collection Time - {collectionTime}</p>
             </div>
           </div>
           <div className="formatter">
             <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="thumbnail"/>
-              <p className="desc">Company Name</p>
+              <p className="desc">{companyName}</p>
             </div>
           </section>
       </Link>
