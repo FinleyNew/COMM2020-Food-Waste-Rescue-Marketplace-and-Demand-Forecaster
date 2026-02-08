@@ -14,7 +14,7 @@ function AddBundles() {
       collectionTime: collectionTime
     };
 
-    fetch("http://localhost:5000/api/add-bundles", {
+    fetch("http://127.0.0.1:8000/api/v1/bundles/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
