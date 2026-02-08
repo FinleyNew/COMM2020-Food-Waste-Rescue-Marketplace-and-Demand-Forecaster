@@ -1,5 +1,5 @@
 
 
-def create_consumer():
+# def create_consumer():
 
-def check_streak():
+# def check_streak():

@@ -4,6 +4,7 @@ from app.models.reservation import Reservation
 from app.schemas.reservation import ReservationCreate
 from app.crud import reservation as reservation_crud
 from app.services.bundlePosting import get_bundle_posting, reserve_bundle_posting
+from app.models.enums import ReservationStatus
 
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, posting_id: int, db: Session) -> Reservation:
     bundle = get_bundle_posting(posting_id=posting_id, db=db, lock=True)
@@ -21,7 +22,7 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, post
     
 def collect_by_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
     reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, seller_id=seller_id, db=db)
-    reservation.status = ?
+    reservation.status = ReservationStatus.COLLECTED
     db.commit()
     db.refresh(reservation)
     return reservation

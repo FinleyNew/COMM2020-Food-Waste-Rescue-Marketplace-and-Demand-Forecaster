@@ -5,7 +5,7 @@ from sqlalchemy import Column
 from sqlmodel import Field, SQLModel
 from pydantic import computed_field
 
-from models.enums import Category, BundleStatus
+from app.models.enums import Category, BundleStatus
 
 class BundlePostingBase(SQLModel):
     user_id: int

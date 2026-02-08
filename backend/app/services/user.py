@@ -1,5 +1,5 @@
 
 
-def create_new_user():
+# def create_new_user():
 
-def authenticate_user():
+# def authenticate_user():

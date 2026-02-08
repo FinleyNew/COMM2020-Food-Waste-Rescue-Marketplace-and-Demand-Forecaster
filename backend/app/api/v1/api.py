@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.api.v1.endpoints import consumers, sellers, reservations, records, forecasts, login
-from backend.app.api.v1.endpoints import bundlesPostings
+from app.api.v1.endpoints import bundlesPostings
 
 api_router = APIRouter()
 

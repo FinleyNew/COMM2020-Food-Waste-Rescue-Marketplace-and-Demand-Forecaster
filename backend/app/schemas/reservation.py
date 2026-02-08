@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlmodel import SQLModel
-from models.enums import ReservationStatus
+from app.models.enums import ReservationStatus
 
 class ReservationBase(SQLModel):
     posting_id: int

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.deps import SellerDep, SessionDep
-from backend.app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
-from backend.app.services import bundlePosting as bundle_posting_service
+from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
+from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
 

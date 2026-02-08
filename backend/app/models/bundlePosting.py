@@ -26,4 +26,4 @@ class BundlePosting(SQLModel, table=True):
     seller: "Seller" = Relationship(back_populates="posting")
     reservation: List["Reservation"] = Relationship(back_populates="posting")
     record: "Record" = Relationship(back_populates="posting")
-    forecast: Forecast = Relationship(back_populates="posting")
+    forecast: "Forecast" = Relationship(back_populates="posting")
