@@ -40,16 +40,18 @@ function CurrentBundles() {
                 className="leftImg"
               />
               <div className="desc">
-                <p className="desc">Company - </p>
+                <p className="desc">Company - Amazon</p>
+                <p className="desc">Price - {bundle.price}</p>
                 <p className="desc">Category - {bundle.category}</p>
               </div>
             </div>
 
             <div className="textBlock">
               <div className="desc">
-                <p className="desc">Bundle Name - {bundle.allergens} </p>
+                <p className="desc">Allergens - {bundle.allergens} </p>
                 <p className="desc">Location - </p>
-                <p className="desc">Collection Time - </p>
+                <p className="desc">Collection Time -{bundle.start_time} </p>
+                <p className="desc">Collection Time2 -{bundle.end_time} </p>
               </div>
             </div>
 
