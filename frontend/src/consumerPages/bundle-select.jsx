@@ -11,8 +11,9 @@ function BundleSelect() {
       
        <nav class="row">
         <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
-        <Link to="/analytics" className="button"><b>Analytics</b></Link>
+        <Link to="/discover" className="button"><b>Discover</b></Link>
+        <Link to="/streaks" className="button"><b>Streaks</b></Link>
+        <Link to="/codes" className="button"><b>Codes</b></Link>
       </nav>
       <h1 className="headline">Bundles</h1>
       <section>
