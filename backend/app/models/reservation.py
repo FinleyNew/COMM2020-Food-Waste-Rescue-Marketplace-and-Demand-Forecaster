@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional, TYPE_CHECKING
 import secrets
-from sqlmodel import Column, Field, SQLModel, Relationship
+from sqlmodel import Column, Field, SQLModel, Relationship, DateTime
 from .enums import ReservationStatus
 
 if TYPE_CHECKING:
@@ -17,7 +17,9 @@ class Reservation(SQLModel, table=True):
     reservation_id: Optional[int] = Field(default=None, primary_key=True,index=True)
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
-    timestamp: datetime
+    timestamp: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False),
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
     status: ReservationStatus = Field(default=ReservationStatus.RESERVED)
     claim_code: str = Field(
         default_factory=generate_claim_code,
