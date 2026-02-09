@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.models.consumer import Consumer
+from app.models import Consumer
 
 
 def reset_consumers_streak(consumer_id: int, db: Session):

@@ -1,8 +1,8 @@
-"""initial setup
+"""fix_relationships
 
-Revision ID: 4250a46bca0e
+Revision ID: 2a9a299f269d
 Revises: 
-Create Date: 2026-02-08 11:13:49.836445
+Create Date: 2026-02-09 19:42:29.553861
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlmodel
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '4250a46bca0e'
+revision: str = '2a9a299f269d'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -28,22 +28,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('user_id')
     )
     op.create_index(op.f('ix_user_user_id'), 'user', ['user_id'], unique=False)
-    op.create_table('bundleposting',
-    sa.Column('posting_id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('category', sa.Enum('BAKED_GOODS', 'FRUIT', 'VEGETABLES', 'MEAT', 'SEAFOOD', 'SNACKS', 'DAIRY', 'DRINKS', name='category'), nullable=False),
-    sa.Column('allergens', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-    sa.Column('available', sa.Integer(), nullable=False),
-    sa.Column('reserved', sa.Integer(), nullable=False),
-    sa.Column('price', sa.NUMERIC(precision=10, scale=2), nullable=True),
-    sa.Column('pickup_window', postgresql.TSTZRANGE(), nullable=True),
-    sa.Column('status', sa.Enum('AVAILABLE', 'SOLD_OUT', 'EXPIRED', 'DELETED', name='bundlestatus'), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
-    sa.PrimaryKeyConstraint('posting_id')
-    )
-    op.create_index(op.f('ix_bundleposting_pickup_window'), 'bundleposting', ['pickup_window'], unique=False)
-    op.create_index(op.f('ix_bundleposting_posting_id'), 'bundleposting', ['posting_id'], unique=False)
-    op.create_index(op.f('ix_bundleposting_user_id'), 'bundleposting', ['user_id'], unique=False)
     op.create_table('consumer',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('display_name', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -61,6 +45,22 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('user_id')
     )
     op.create_index(op.f('ix_seller_user_id'), 'seller', ['user_id'], unique=False)
+    op.create_table('bundleposting',
+    sa.Column('posting_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('category', sa.Enum('BAKED_GOODS', 'FRUIT', 'VEGETABLES', 'MEAT', 'SEAFOOD', 'SNACKS', 'DAIRY', 'DRINKS', name='category'), nullable=False),
+    sa.Column('allergens', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('available', sa.Integer(), nullable=False),
+    sa.Column('reserved', sa.Integer(), nullable=False),
+    sa.Column('price', sa.NUMERIC(precision=10, scale=2), nullable=True),
+    sa.Column('pickup_window', postgresql.TSTZRANGE(), nullable=True),
+    sa.Column('status', sa.Enum('AVAILABLE', 'SOLD_OUT', 'EXPIRED', 'DELETED', name='bundlestatus'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['seller.user_id'], ),
+    sa.PrimaryKeyConstraint('posting_id')
+    )
+    op.create_index(op.f('ix_bundleposting_pickup_window'), 'bundleposting', ['pickup_window'], unique=False)
+    op.create_index(op.f('ix_bundleposting_posting_id'), 'bundleposting', ['posting_id'], unique=False)
+    op.create_index(op.f('ix_bundleposting_user_id'), 'bundleposting', ['user_id'], unique=False)
     op.create_table('forecast',
     sa.Column('forecast_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
@@ -68,7 +68,7 @@ def upgrade() -> None:
     sa.Column('predicted_reservations', sa.Integer(), nullable=False),
     sa.Column('predicted_no_show_prob', sa.Float(), nullable=False),
     sa.ForeignKeyConstraint(['posting_id'], ['bundleposting.posting_id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['seller.user_id'], ),
     sa.PrimaryKeyConstraint('forecast_id')
     )
     op.create_index(op.f('ix_forecast_forecast_id'), 'forecast', ['forecast_id'], unique=False)
@@ -85,7 +85,7 @@ def upgrade() -> None:
     sa.Column('observed_reservations', sa.Integer(), nullable=False),
     sa.Column('observed_no_show', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['posting_id'], ['bundleposting.posting_id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['seller.user_id'], ),
     sa.PrimaryKeyConstraint('record_id')
     )
     op.create_index(op.f('ix_record_pickup_window'), 'record', ['pickup_window'], unique=False)
@@ -96,11 +96,11 @@ def upgrade() -> None:
     sa.Column('reservation_id', sa.Integer(), nullable=False),
     sa.Column('posting_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.Column('timestamp', sa.DateTime(timezone=True), nullable=False),
     sa.Column('status', sa.Enum('RESERVED', 'COLLECTED', 'NO_SHOW', name='reservationstatus'), nullable=False),
     sa.Column('claim_code', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.ForeignKeyConstraint(['posting_id'], ['bundleposting.posting_id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['consumer.user_id'], ),
     sa.PrimaryKeyConstraint('reservation_id')
     )
     op.create_index(op.f('ix_reservation_claim_code'), 'reservation', ['claim_code'], unique=True)
@@ -127,14 +127,14 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_forecast_posting_id'), table_name='forecast')
     op.drop_index(op.f('ix_forecast_forecast_id'), table_name='forecast')
     op.drop_table('forecast')
-    op.drop_index(op.f('ix_seller_user_id'), table_name='seller')
-    op.drop_table('seller')
-    op.drop_index(op.f('ix_consumer_user_id'), table_name='consumer')
-    op.drop_table('consumer')
     op.drop_index(op.f('ix_bundleposting_user_id'), table_name='bundleposting')
     op.drop_index(op.f('ix_bundleposting_posting_id'), table_name='bundleposting')
     op.drop_index(op.f('ix_bundleposting_pickup_window'), table_name='bundleposting')
     op.drop_table('bundleposting')
+    op.drop_index(op.f('ix_seller_user_id'), table_name='seller')
+    op.drop_table('seller')
+    op.drop_index(op.f('ix_consumer_user_id'), table_name='consumer')
+    op.drop_table('consumer')
     op.drop_index(op.f('ix_user_user_id'), table_name='user')
     op.drop_table('user')
     # ### end Alembic commands ###

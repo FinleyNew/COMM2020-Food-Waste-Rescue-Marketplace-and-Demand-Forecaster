@@ -14,16 +14,16 @@ if TYPE_CHECKING:
 
 class BundlePosting(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, primary_key=True, index=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
     category: Category
     allergens: str | None
     available: int
-    reserved: int
+    reserved: int = 0
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
     status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
 
-    seller: "Seller" = Relationship(back_populates="posting")
-    reservation: List["Reservation"] = Relationship(back_populates="posting")
+    seller: "Seller" = Relationship(back_populates="postings")
+    reservations: List["Reservation"] = Relationship(back_populates="posting")
     record: "Record" = Relationship(back_populates="posting")
     forecast: "Forecast" = Relationship(back_populates="posting")

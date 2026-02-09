@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class Consumer(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.user_id", index=True)
     display_name: str
-    streak: int
+    streak: int = 0
 
     user: "User" = Relationship(back_populates="consumer")
     reservations: List["Reservation"] = Relationship(back_populates="consumer")

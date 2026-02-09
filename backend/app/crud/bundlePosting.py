@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from typing import Sequence
-from app.models.bundlePosting import BundlePosting
+from app.models import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
 from psycopg.types.range import Range
 

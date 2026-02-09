@@ -16,7 +16,7 @@ def generate_claim_code() -> str:
 class Reservation(SQLModel, table=True):
     reservation_id: Optional[int] = Field(default=None, primary_key=True,index=True)
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.user_id", index=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="consumer.user_id", index=True)
     timestamp: datetime = Field(sa_column=Column(DateTime(timezone=True), nullable=False),
         default_factory=lambda: datetime.now(timezone.utc)
     )
@@ -27,5 +27,5 @@ class Reservation(SQLModel, table=True):
         index=True
     )
 
-    consumer: "Consumer" = Relationship(back_populates="reservation")
-    posting: "BundlePosting" = Relationship(back_populates="reservation")
+    consumer: "Consumer" = Relationship(back_populates="reservations")
+    posting: "BundlePosting" = Relationship(back_populates="reservations")

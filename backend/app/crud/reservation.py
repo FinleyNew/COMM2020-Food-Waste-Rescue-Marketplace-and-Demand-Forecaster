@@ -1,7 +1,8 @@
 from sqlmodel import Session, select, col
 from typing import Sequence
 from sqlalchemy.exc import IntegrityError
-from app.models.reservation import Reservation, generate_claim_code
+from app.models import Reservation
+from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationCreate
 
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session) -> Reservation:
