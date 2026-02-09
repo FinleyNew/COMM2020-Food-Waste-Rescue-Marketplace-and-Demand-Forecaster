@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, col
 from typing import Sequence
 from sqlalchemy.exc import IntegrityError
 from app.models.reservation import Reservation, generate_claim_code
@@ -22,7 +22,7 @@ def get_reservations_by_posting(posting_id: int, db: Session) -> Sequence[Reserv
     return db.exec(statement).all()
 
 def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Reservation]:
-    statement = select(Reservation).where(Reservation.user_id == consumer_id)
+    statement = select(Reservation).where(Reservation.user_id == consumer_id).order_by(col(Reservation.timestamp).desc())
     return db.exec(statement).all()
 
 def get_reservation_by_claim_code(claim_code: str, seller_id, db: Session) -> Reservation:

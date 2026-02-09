@@ -8,4 +8,6 @@ router = APIRouter()
 
 @router.get("/me", response_model = ConsumerPublic)
 def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
+    if current_consumer.streak > 0:
+        consumer_service.check_streak(consumer_id=current_consumer.user_id, db=db)
     return current_consumer
