@@ -2,9 +2,6 @@
 node_modules/
 __pycache__/
 
-# Ignore local environment secrets
-.env
-
 # Ignore the local database file
 backend/data/*.db
 
