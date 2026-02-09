@@ -3,10 +3,11 @@ from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
 from app.crud import bundlePosting as bundlePosting_crud
+from psycopg2.extras import DateTimeRange
 from psycopg.types.range import Range
 
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
-    pickup_range = Range(bundle_in.start_time, bundle_in.end_time)
+    pickup_range = f"[{bundle_in.start_time.isoformat()}, {bundle_in.end_time.isoformat()})"
 
     return bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, pickup_window=pickup_range, db=db)
 

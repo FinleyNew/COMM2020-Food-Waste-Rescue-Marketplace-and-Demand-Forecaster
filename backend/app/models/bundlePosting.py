@@ -1,4 +1,5 @@
-from typing import Any, Optional, List, TYPE_CHECKING
+from datetime import datetime
+from typing import Any, Optional, List, TYPE_CHECKING, Tuple
 from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column

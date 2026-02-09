@@ -2,11 +2,15 @@ from fastapi import FastAPI
 from app.api.v1.api import api_router
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(
+    title="Prototype API",
+    # This keeps your token saved even if you refresh the browser!
+    swagger_ui_parameters={"persistAuthorization": True}
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["*"], # Simplified for prototype
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

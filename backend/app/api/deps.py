@@ -1,6 +1,6 @@
 from typing import Generator, Annotated
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import ValidationError
 from sqlmodel import Session
 import jwt
@@ -21,20 +21,23 @@ def get_db() -> Generator:
         yield session
     # Once the request is finished, the session automatically closes here.
     
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_STR}/login/access-token"
-)
+# reusable_oauth2 = OAuth2PasswordBearer(
+#     tokenUrl=f"{settings.API_STR}/login/access-token"
+# )
+
+reusable_oauth2 = HTTPBearer()
 
 SessionDep = Annotated[Session, Depends(get_db)]
 
-def get_current_user(db: SessionDep, token: str = Depends(reusable_oauth2)) -> User:
+def get_current_user(db: SessionDep, token_obj: HTTPAuthorizationCredentials = Depends(reusable_oauth2)) -> User:
+    token = token_obj.credentials
     try:
         #Decode the JWT token using the secret key
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms = [security.ALGORITHM])
         token_data = TokenPayload(**payload)
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
-            status_code = status.HTTP_03_UNAUTHORISED,
+            status_code = 401,
             detail="Could not validate credentials",
         )
     

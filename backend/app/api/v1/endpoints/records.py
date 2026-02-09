@@ -6,4 +6,4 @@ router = APIRouter()
 
 @router.get("/me", response_model= RecordPublic)
 def get_current_sellers_records(current_seller: SellerDep, db: SessionDep):
-    current_seller.records
+    return current_seller.records

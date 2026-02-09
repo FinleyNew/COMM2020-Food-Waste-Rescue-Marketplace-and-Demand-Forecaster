@@ -13,8 +13,8 @@ def is_database_already_seeded(db: Session):
     return user_count > 0
 
 def seed_users(db: Session):
-    test_consumer_user = User(user_id=1, role=Role.CONSUMER)
-    test_seller_user = User(user_id=2, role=Role.SELLER)
+    test_consumer_user = User(role=Role.CONSUMER)
+    test_seller_user = User(role=Role.SELLER)
     db.add(test_consumer_user)
     db.add(test_seller_user)
     db.commit()
@@ -31,12 +31,12 @@ def seed_bundle_posting(db: Session):
     start_time = datetime(2026, 2, 15, 14, tzinfo=timezone.utc)
     end_time = start_time + timedelta(hours=2)
     pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
-    test_bundle_posting = BundlePosting(posting_id=1, user_id=2, category=Category.BAKED_GOODS, allergens="TestAllergens", available=10, price=Decimal(4.50), pickup_window=pickup_window)
+    test_bundle_posting = BundlePosting(user_id=2, category=Category.BAKED_GOODS, allergens="TestAllergens", available=10, price=Decimal(4.50), pickup_window=pickup_window)
     db.add(test_bundle_posting)
     db.commit()
 
 def seed_reservation(db: Session):
-    test_reservation = Reservation(reservation_id=1, posting_id=1, user_id=2)
+    test_reservation = Reservation(posting_id=1, user_id=2)
 
 #def seed_record(db: Session):
 
