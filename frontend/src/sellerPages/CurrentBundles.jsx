@@ -37,6 +37,7 @@ function CurrentBundles() {
           <p className="button">Edit</p> 
           <p className="button">Delete</p>
         </div>
+
         </section>
     </>
   );
