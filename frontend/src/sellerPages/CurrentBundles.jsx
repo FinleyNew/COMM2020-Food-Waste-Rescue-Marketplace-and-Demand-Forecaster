@@ -1,11 +1,11 @@
-
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function CurrentBundles() {
-
+  
   const [bundles, setBundles] = useState([]); //create state
-
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('token');
     fetch("http://127.0.0.1:8000/api/v1/bundles/me",{
@@ -24,6 +24,20 @@ function CurrentBundles() {
         alert("No data ");
       });
   }, []);
+  const deleteBundle = (posting_id) => {
+    if (!window.confirm("Delete this bundle?")) return;
+
+    fetch(`http://127.0.0.1:8000/api/v1/bundles/${posting_id}`, {
+    method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Deleted:", data);
+      alert("Bundle deleted");
+    })
+    
+    .catch(err => console.error(err));
+};
 
   return (
     <>
@@ -72,14 +86,16 @@ function CurrentBundles() {
               <p className="desc">Company Name - {bundle.companyName}</p>
             </div>
 
-            <div className="formatter">
-              <p className="button">Edit</p>
-              <p className="button">Delete</p>
-            </div>
+            <button onClick={() => deleteBundle(bundle.posting_id)}>
+              Delete Bundle
+            </button>
 
           </div>
+          
         ))}
+        
       </section>
+      
     </>
   );
 }
