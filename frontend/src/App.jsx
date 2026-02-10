@@ -53,13 +53,6 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/unauthorised" element={<Unauthorised />} />
       </Routes>
-      <details>
-          <summary>Settings</summary>
-          <label>
-            <input type="checkbox" name="darkmode"/>
-              Enable Dark Mode DOESNT WORK YET
-          </label>
-        </details>
     </>
   );
 }
