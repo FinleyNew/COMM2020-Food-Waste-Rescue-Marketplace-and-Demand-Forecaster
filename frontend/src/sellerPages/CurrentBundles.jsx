@@ -7,7 +7,13 @@ function CurrentBundles() {
   const [bundles, setBundles] = useState([]); //create state
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/v1/bundles/") //fetch here , useeffect means it only fetches once
+    const token = localStorage.getItem('token');
+    fetch("http://127.0.0.1:8000/api/v1/bundles/me",{
+      headers:{
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    }) //fetch here , useeffect means it only fetches once
       .then(res => res.json())
       .then(data => {
         console.log("API DATA:", data); 
@@ -40,9 +46,11 @@ function CurrentBundles() {
                 className="leftImg"
               />
               <div className="desc">
+                <p classname="desc">user_id - {bundle.user_id} </p>
                 <p className="desc">Company - Amazon</p>
                 <p className="desc">Price - {bundle.price}</p>
                 <p className="desc">Category - {bundle.category}</p>
+                <p classname="desc">Available - {bundle.available}</p>
               </div>
             </div>
 

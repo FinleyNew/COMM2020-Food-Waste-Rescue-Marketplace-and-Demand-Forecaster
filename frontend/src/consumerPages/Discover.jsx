@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
+import {useState, useEffect} from "react";
 import './Discover.css'
 function Discover() {
   let companyName = "Amazon";
@@ -6,6 +7,25 @@ function Discover() {
   let bundleName = "idk";
   let location = "EX1 2HR";
   let collectionTime = "12:00";
+  const [bundles, setBundles] = useState([]);
+
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      fetch("http://127.0.0.1:8000/api/v1/bundles/",{
+        headers:{
+          "Content-Type": "application/json"
+        }
+      }) //fetch here , useeffect means it only fetches once
+        .then(res => res.json())
+        .then(data => {
+          console.log("API DATA:", data); 
+          setBundles(data);
+        })
+        .catch(err => {
+          console.error("Error fetching bundles:", err);
+          alert("No data ");
+        });
+    }, []);
   return (
     <>
       <nav class="row">
@@ -23,28 +43,36 @@ function Discover() {
         </details>
       </nav>
       <h1 className="headline">Bundles</h1>
-      <Link to="/bundle-select" className="sectionPage">
-        <section>
-          <div className="textBlock">
-            <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
-            <div className="desc">
-              <p className="desc">{companyName}</p>
-              <p className="desc">{category}</p>
-            </div>
-          </div>
-          <div className="textBlock">
-            <div className="desc">
-              <p className="desc">Bundle Name - {bundleName}</p>
-              <p className="desc">Location - {location}</p>
-              <p className="desc">Collection Time - {collectionTime}</p>
-            </div>
-          </div>
-          <div className="formatter">
-            <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="thumbnail"/>
-              <p className="desc">{companyName}</p>
-            </div>
-          </section>
-      </Link>
+      
+      <section>
+            {bundles.map(bundle => (
+              <div key={bundle.posting_id}>
+                <Link to={`/bundle/${bundle.posting_id}`} className="sectionPage">
+
+                  <section>
+                    <div className="textBlock">
+                      <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
+                      <div className="desc">
+                        <p className="desc">Category - {bundle.category}</p>
+                        <p className="desc">Allergens - {bundle.allergens}</p>
+                      </div>
+                    </div>
+                    <div className="textBlock">
+                      <div className="desc">
+                      <p className="desc">Availbale - {bundle.available}</p>
+                      <p className="desc">Price - {bundle.price_display}</p>
+                      <p className="desc">Collection Time - {bundle.end_time}</p>
+                       </div>
+                    </div>
+                    <div className="formatter">
+                      <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="thumbnail"/>
+                      <p className="desc">{companyName}</p>
+                    </div>
+                  </section>
+                </Link>
+              </div>
+            ))}
+      </section>
     </>
   );
 }
