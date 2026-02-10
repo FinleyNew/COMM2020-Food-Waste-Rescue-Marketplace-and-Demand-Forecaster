@@ -14,6 +14,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         role:"consumer"
       })
       localStorage.setItem("user",JSON.stringify({username:"harry",role: "consumer"}));
+      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5NTgsInN1YiI6IjEifQ.TBw2UD-s4nuWlWTcBzj95SNjuHKC0KaBmf49cW2DJrU");
       navigate("/discover");
     } 
     else if(username === "harrySeller" && password === "lewis"){
@@ -22,6 +23,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         role:"seller"
       })
       localStorage.setItem("user",JSON.stringify({username:"harry",role: "seller"}));
+      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5MDksInN1YiI6IjIifQ.Ayy7RYQGz3dhAFC9txefYLdAe_hbvjtzHMtOTm2utU4")
       navigate("/current-bundles");
     }
     else if(username === "harryAdmin" && password === "lewis"){

@@ -52,6 +52,9 @@ function App() {
 
         <Route path="/" element={<HomePage />} />
         <Route path="/unauthorised" element={<Unauthorised />} />
+        <Route path="/bundle/:id" element={<BundleSelect />} />
+        
+
       </Routes>
     </>
   );
