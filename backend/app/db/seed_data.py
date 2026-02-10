@@ -67,7 +67,7 @@ def seed_bundle_posting(db: Session):
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
             category=fake.random_element(elements=Category).value,
-            allergens=fake.random_elements(elements=example_allergens, unique=True),
+            allergens=', '.join(fake.random_elements(elements=example_allergens, unique=True)),
             available=randint(0, 25),
             reserved=randint(0, 25),
             price=Decimal(uniform(5.0, 15.0)),
@@ -92,7 +92,29 @@ def seed_reservation(db: Session):
         db.add(reservation)
     db.commit()
 
-#def seed_record(db: Session):
+def seed_record(db: Session):
+    postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.EXPIRED)).all()
+
+    for post in postings:
+        reservations = db.exec(select(func.count()).select_from(Reservation).where(
+            Reservation.status.in_([ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW]))
+        ).one()
+        no_show = db.exec(select(func.count()).select_from(Reservation).where(
+            Reservation.status == ReservationStatus.NO_SHOW)
+        ).one()
+
+        record = Record(
+            user_id=post.user_id,
+            posting_id=post.posting_id,
+            pickup_window=post.pickup_window,
+            category=post.category,
+            price=post.price,
+            raining=fake.boolean(chance_of_getting_true=10),
+            observed_reservations=reservations,
+            observed_no_show=no_show
+        )
+        db.add(record)
+    db.commit()
 
 #def seed_forecast(db: Session):
 
