@@ -1,3 +1,4 @@
+from typing import Sequence
 from fastapi import HTTPException
 from datetime import datetime, timezone
 from sqlmodel import Session
@@ -10,7 +11,7 @@ from app.crud import consumer as consumer_crud
 
 def check_streak(consumer_id: int, db: Session):
     # Get the latest reservation that the consumer has placed
-    reservations: list[Reservation] = get_reservations_by_consumer(consumer_id=consumer_id, db=db)
+    reservations: Sequence[Reservation] = get_reservations_by_consumer(consumer_id=consumer_id, db=db)
     if not reservations:
         raise HTTPException(status_code = 404, detail = "No reservations found for this ID")
     # Get the timestamp from that reservation
