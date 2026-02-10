@@ -1,4 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
+import {useState} from "react"
 function BundleSelect() {
   let companyName = "Amazon";
   let category = "Fruit";
@@ -6,14 +7,29 @@ function BundleSelect() {
   let location = "EX1 2HR";
   let collectionTime = "12:00";
   let allergens = "none";
+  const [Popup, setPopup] = useState(false);
+  function openPopup(){
+    setPopup(true);
+  }
+  function closePopup(){
+    setPopup(false);
+  }
   return (
       <>
-      
-       <nav class="row">
+       <nav className="row">
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/discover" className="button"><b>Discover</b></Link>
         <Link to="/streaks" className="button"><b>Streaks</b></Link>
         <Link to="/codes" className="button"><b>Codes</b></Link>
+        <details>
+          <summary>
+            <img className="setting" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdndCKhAJ4SlVEaNCkA4U6BN4tDXZsRtxSw&s"></img>
+          </summary>
+          <label>
+            <input type="checkbox" name="darkmode"/>
+              Enable Dark Mode DOESNT WORK YET
+          </label>
+        </details>
       </nav>
       <h1 className="headline">Bundles</h1>
       <section>
@@ -39,10 +55,16 @@ function BundleSelect() {
         <div className="formatter">
           <button>+</button>
           <button>-</button>
+          <button className="button" onClick={openPopup}>Pay</button>
+          {Popup &&(
+            <div className="popup open-popup" id="payment">
+              <h1>Payment Successful!</h1>
+              <button className="button" onClick={closePopup}>Confirm</button>
+            </div>
+          )}
         </div>
         </section>
       </>
     );
 }
-
 export default BundleSelect;
