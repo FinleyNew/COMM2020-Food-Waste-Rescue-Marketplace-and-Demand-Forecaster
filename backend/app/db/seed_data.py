@@ -60,7 +60,7 @@ def seed_bundle_posting(db: Session):
     example_allergens = ['Milk', 'Eggs', 'Nuts', 'Shellfish', 'Gluten', 'Soy', 'Wheat', 'Fish', 'Sesame', 'Celery']
 
     for _ in range(250):
-        start_time = datetime(2026, randint(1,2), randint(1, 28), randint(9, 5))
+        start_time = datetime(2026, randint(1,2), randint(1, 28), randint(9, 17))
         end_time = start_time + timedelta(hours=2)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
@@ -89,6 +89,8 @@ def seed_reservation(db: Session):
             timestamp=fake.date_time_between(datetime(2026, 1, 1), datetime(2026, 2, 10)),
             status=fake.random_element(elements=ReservationStatus).value
         )
+        db.add(reservation)
+    db.commit()
 
 #def seed_record(db: Session):
 
