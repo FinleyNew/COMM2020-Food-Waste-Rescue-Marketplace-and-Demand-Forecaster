@@ -20,7 +20,9 @@ def seed_users(db: Session):
     db.commit()
 
 def seed_consumer(db: Session):
-    test_consumer = Consumer(user_id=2, display_name="TopConsumer")
+    test_consumer = Consumer(user_id=1, streak=2, display_name="TopConsumer")
+    db.add(test_consumer)
+    db.commit()
 
 def seed_seller(db: Session):
     test_seller = Seller(user_id=2, name="TopSeller", location="Test, Address", opening_hours="11:00 - 21:00")
@@ -36,7 +38,9 @@ def seed_bundle_posting(db: Session):
     db.commit()
 
 def seed_reservation(db: Session):
-    test_reservation = Reservation(posting_id=1, user_id=2)
+    test_reservation = Reservation(posting_id=1, user_id=1, timestamp= datetime(2026,2,1))
+    db.add(test_reservation)
+    db.commit()
 
 #def seed_record(db: Session):
 
