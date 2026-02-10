@@ -2,7 +2,7 @@ from decimal import Decimal
 from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
 from random import randint, uniform
@@ -96,12 +96,17 @@ def seed_record(db: Session):
     postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.EXPIRED)).all()
 
     for post in postings:
-        reservations = db.exec(select(func.count()).select_from(Reservation).where(
-            Reservation.status.in_([ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW]))
-        ).one()
-        no_show = db.exec(select(func.count()).select_from(Reservation).where(
-            Reservation.status == ReservationStatus.NO_SHOW)
-        ).one()
+        reservations_query = select(func.count()).select_from(Reservation).where(
+            Reservation.posting_id == post.posting_id,
+            Reservation.status.in_([ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
+        )
+        reservations = db.exec(reservations_query).one()
+
+        no_show_query = select(func.count()).select_from(Reservation).where(
+            Reservation.posting_id == post.posting_id,
+            Reservation.status == ReservationStatus.NO_SHOW
+        )
+        no_show = db.exec(no_show_query).one()
 
         record = Record(
             user_id=post.user_id,
@@ -116,7 +121,21 @@ def seed_record(db: Session):
         db.add(record)
     db.commit()
 
-#def seed_forecast(db: Session):
+def seed_forecast(db: Session):
+    postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)).all()
+
+    for i in range(3):
+        post = postings[i]
+
+        forecast = Forecast(
+            user_id=post.user_id,
+            posting_id=post.posting_id,
+            predicted_reservations=randint(5, 50),
+            predicted_no_show_prob=uniform(0, 0.25)
+        )
+        db.add(forecast)
+    db.commit()
+
 
 def seed_tables():
     with Session(engine) as db:
@@ -129,6 +148,8 @@ def seed_tables():
         seed_seller(db=db)
         seed_bundle_posting(db=db)
         seed_reservation(db=db)
+        seed_record(db=db)
+        seed_forecast(db=db)
     print("Seeding complete")
 
 if __name__ == "__main__":
