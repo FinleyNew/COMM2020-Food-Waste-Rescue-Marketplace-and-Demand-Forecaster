@@ -11,6 +11,7 @@ import LoginPage from "./pages/loginPage";
 import AddBundles from "./sellerPages/AddBundles";
 import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
+import Forecasts from "./sellerPages/Forecasts";
 import DeploymentHistory from "./adminPages/DeploymentHistory";
 import Testing from "./adminPages/testing";
 import ViewReports from "./adminPages/ViewReports";
@@ -43,6 +44,8 @@ function App() {
         <Route path="/add-bundles" element={<ProtectedRoute user={user} requireRole="seller"><AddBundles /></ProtectedRoute>} />
         <Route path="/analytics" element={<ProtectedRoute user={user} requireRole="seller"><Analytics /></ProtectedRoute>} />
         <Route path="/current-bundles" element={<ProtectedRoute user={user} requireRole="seller"><CurrentBundles /></ProtectedRoute>} />
+        <Route path="/forecasts" element={<ProtectedRoute user={user} requireRole="seller"><Forecasts /></ProtectedRoute>} />
+
 
 
         <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />

@@ -43,6 +43,7 @@ function AddBundles() {
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
         <Link to="/analytics" className="button"><b>Analytics</b></Link>
+        <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
       </nav>
 
       <h1 className="headline">Add Bundles</h1>

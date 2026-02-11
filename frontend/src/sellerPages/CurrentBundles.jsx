@@ -45,6 +45,7 @@ function CurrentBundles() {
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
         <Link to="/analytics" className="button"><b>Analytics</b></Link>
+        <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
       </nav>
 
       <h1 className="headline">Bundles</h1>
