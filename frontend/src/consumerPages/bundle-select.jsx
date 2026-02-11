@@ -30,18 +30,38 @@ function BundleSelect() {
 
 
   function createReservation(postingID){
-    const data = {
-      posting_id : postingID
-    };
     const token = localStorage.getItem(`token`);
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userID = parseInt(payload.sub);
+    /*const data = {
+      posting_id : postingID,
+      user_id: userID
+    };*/
+    //console.log("Creating reservation with:", data);
+    console.log("Sending reservation: ", {postingID,userID});
+    
     fetch("http://127.0.0.1:8000/api/v1/reservations/", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(data)
-    });
+      body: JSON.stringify({
+        posting_id:postingID,
+        user_id:userID
+      })
+    })
+      .then(async res => {
+        const data = await res.json();
+
+        if(!res.ok){
+          console.error("reservation failed",data);
+          return;
+        }
+        console.log("reservation created",data);
+      })
+      .catch(err => console.error("Error : ",err));
+    
   }
 
 

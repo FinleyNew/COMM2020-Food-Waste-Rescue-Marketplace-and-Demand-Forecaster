@@ -50,35 +50,6 @@ function AddBundles() {
 
       <section>
         <div className="textBlock">
-
-          <label htmlFor="bundle_name">Enter Bundle Name :</label>
-          <input
-            id="bundle_name"
-            type="text"
-            value={bundleName}
-            onChange={(e) => setBundleName(e.target.value)}
-          />
-
-          <br />
-
-          <label htmlFor="location">Enter Location :</label>
-          <input
-            id="location"
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-
-          <br />
-
-          <label htmlFor="collectionTime">Enter Collection Time :</label>
-          <input
-            id="collectionTime"
-            type="text"
-            value={collectionTime}
-            onChange={(e) => setCollectionTime(e.target.value)}
-          />
-          <br></br>
           <label htmlFor="price">Enter Bundle Price :</label>
           <input
             id="price"
@@ -108,7 +79,7 @@ function AddBundles() {
           <br></br>
 
 
-          <label htmlFor="numAvailable">Enter Bundle Allergens :</label>
+          <label htmlFor="numAvailable">Enter Number Available :</label>
           <input
             id="numAvailable"
             type="text"

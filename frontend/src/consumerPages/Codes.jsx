@@ -22,12 +22,8 @@ function Codes() {
           alert("No data ");
         });
     }, []);
-    //if (!bundle) return <p>Loading bundle...</p>;
-  let companyName = "Amazon";
-  let code = "example code";
-  let bundleName = "idk";
-  let location = "EX1 2HR";
-  let collectionTime = "12:00";
+    if (!bundles) return <p>Loading bundle...</p>;
+  
   return (
       <>
         <nav class="row">
