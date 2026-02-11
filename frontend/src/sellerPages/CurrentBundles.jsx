@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
+  const [code, setCode] = useState("");
+
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -28,7 +30,7 @@ function CurrentBundles() {
     if (!window.confirm("Delete this bundle?")) return;
 
     fetch(`http://127.0.0.1:8000/api/v1/bundles/${posting_id}`, {
-    method: "DELETE"
+    method: "POST"
     })
     .then(res => res.json())
     .then(data => {
@@ -38,6 +40,27 @@ function CurrentBundles() {
     
     .catch(err => console.error(err));
 };
+
+const enterCode = (claim_code) => {
+  if (!window.confirm("Collect this bundle?")) return;
+
+  const token = localStorage.getItem('token');
+
+  fetch(`http://127.0.0.1:8000/api/v1/reservations/collect/${claim_code}`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Collected:", data);
+      alert("Bundle collected");
+    })
+    .catch(err => console.error(err));
+};
+
 
   return (
     <>
@@ -49,7 +72,21 @@ function CurrentBundles() {
       </nav>
 
       <h1 className="headline">Bundles</h1>
+       <form onSubmit={(e) => {
+              e.preventDefault();
+              enterCode(code);
+            }}>
+              <input
+                id="enterCode"
+                type="text"
+                placeholder="enter code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+              <button type="submit">BIGGER</button>
 
+            </form>
+            <br></br>
       <section>
         {bundles.map(bundle => ( //.map allows us to display
           <div key={bundle.posting_id}>
@@ -90,6 +127,10 @@ function CurrentBundles() {
             <button onClick={() => deleteBundle(bundle.posting_id)}>
               Delete Bundle
             </button>
+            <br></br>
+            <label htmlFor="numAvailable">Enter Code : </label>
+            
+           
 
           </div>
           

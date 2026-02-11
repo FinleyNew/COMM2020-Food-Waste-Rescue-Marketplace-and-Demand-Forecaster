@@ -1,4 +1,5 @@
 from sqlmodel import Session
+from fastapi import HTTPException
 from typing import Sequence
 from app.models.reservation import Reservation
 from app.schemas.reservation import ReservationCreate
@@ -22,7 +23,10 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, post
     
 def collect_by_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
     reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, seller_id=seller_id, db=db)
+    if not reservation:
+        raise HTTPException(status_code = 404, detail = "No reservation with that code")
     reservation.status = ReservationStatus.COLLECTED
+    db.add(reservation)
     db.commit()
     db.refresh(reservation)
     return reservation

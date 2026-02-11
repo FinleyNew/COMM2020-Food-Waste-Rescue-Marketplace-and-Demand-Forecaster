@@ -1,3 +1,4 @@
+from app.models.bundlePosting import BundlePosting
 from sqlmodel import Session, select, col
 from typing import Sequence
 from sqlalchemy.exc import IntegrityError
@@ -27,8 +28,9 @@ def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Rese
     return db.exec(statement).all()
 
 def get_reservation_by_claim_code(claim_code: str, seller_id, db: Session) -> Reservation:
-    statement = select(Reservation).where(Reservation.claim_code == claim_code).where(Reservation.user_id == seller_id)
-    return db.exec(statement).one()
+    #statement = select(Reservation).join(BundlePosting, Reservation.posting_id == BundlePosting.posting_id).where(Reservation.claim_code == claim_code).where(BundlePosting.user_id == seller_id)
+    statement = select(Reservation).where(Reservation.claim_code == claim_code)
+    return db.exec(statement).first()
 
 def delete_reservation(reservation_id: int, db: Session):
     statement = select(Reservation).where(Reservation.reservation_id == reservation_id)
