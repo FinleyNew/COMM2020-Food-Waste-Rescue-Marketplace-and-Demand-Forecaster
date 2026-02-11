@@ -18,6 +18,11 @@ def is_database_already_seeded(db: Session):
     return user_count > 0
 
 def seed_users(db: Session):
+    consumer_user = User(role=Role.CONSUMER)
+    seller_user = User(role=Role.SELLER)
+    db.add(consumer_user)
+    db.add(seller_user)
+
     for _ in range(100):
         role = fake.random_element(elements=Role).value
         user = User(
