@@ -28,6 +28,23 @@ function BundleSelect() {
 
   if (!bundle) return <p>Loading bundle...</p>;
 
+
+  function createReservation(postingID){
+    const data = {
+      posting_id : postingID
+    };
+    const token = localStorage.getItem(`token`);
+    fetch("http://127.0.0.1:8000/api/v1/reservations/", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+  }
+
+
   return (
     <>
       <nav className="row">
@@ -85,10 +102,12 @@ function BundleSelect() {
         </div>
 
         <div className="formatter">
-          <button>+</button>
-          <button>-</button>
+          
 
-          <button className="button" onClick={openPopup}>Pay</button>
+          <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}>
+            Pay
+
+          </button>
 
           {Popup && (
             <div className="popup open-popup" id="payment">
