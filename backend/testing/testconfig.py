@@ -1,11 +1,17 @@
 
 import pytest
+import app.schemas.consumer
 
 # Fixture for a Mock Database Session 
 # (Once the DB is built, you swap this for a real SQL action) -- james
 @pytest.fixture
 def mock_db():
     return "Database_Connection_Placeholder"
+
+def sample_consumer():
+    return {
+        
+    }
 
 # Fixture for a Seller 
 @pytest.fixture
