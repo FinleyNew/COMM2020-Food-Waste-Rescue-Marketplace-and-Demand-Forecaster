@@ -30,7 +30,7 @@ function CurrentBundles() {
     if (!window.confirm("Delete this bundle?")) return;
 
     fetch(`http://127.0.0.1:8000/api/v1/bundles/${posting_id}`, {
-    method: "POST"
+    method: "GET"
     })
     .then(res => res.json())
     .then(data => {
