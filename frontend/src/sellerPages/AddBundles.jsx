@@ -13,20 +13,22 @@ function AddBundles() {
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
   const token = localStorage.getItem('token');
+  const payload = JSON.parse(atob(token.split('.')[1]));
   function addBundle(){
     const data = {
       //bundleName: bundleName,
       //location: location,
       //collectionTime: collectionTime
-      user_id: token,
+      //user_id: token,
+      user_id: Number(payload.sub),
       category: bundleCategory,
       allergens: bundleAllergens,
-      available: numberAvailable,
-      price: bundlePrice,
-      start_time: startTime,
-      end_time: endTime
+      available: Number(numberAvailable),
+      price: Number(bundlePrice),
+      start_time: new Date(startTime).toISOString(),
+      end_time: new Date(endTime).toISOString()
     };
-    
+    console.log(data);
     fetch("http://127.0.0.1:8000/api/v1/bundles/", {
       method: "POST",
       headers: {
@@ -49,15 +51,18 @@ function AddBundles() {
       <h1 className="headline">Add Bundles</h1>
 
       <section>
+        
+
         <div className="textBlock">
-          <label htmlFor="price">Enter Bundle Price :</label>
+          <label htmlFor="category">Enter Bundle Category :</label>
           <input
-            id="price"
+            id="category"
             type="text"
-            value={bundlePrice}
-            onChange={(e) => setBundlePrice(e.target.value)}
+            value={bundleCategory}
+            onChange={(e) => setBundleCategory(e.target.value)}
           />
           <br></br>
+
 
           <label htmlFor="allergens">Enter Bundle Allergens :</label>
           <input
@@ -69,29 +74,38 @@ function AddBundles() {
           <br></br>
 
 
-          <label htmlFor="category">Enter Bundle Category :</label>
-          <input
-            id="category"
-            type="text"
-            value={bundleCategory}
-            onChange={(e) => setBundleCategory(e.target.value)}
-          />
-          <br></br>
 
 
           <label htmlFor="numAvailable">Enter Number Available :</label>
           <input
             id="numAvailable"
-            type="text"
+            type="number"
             value={numberAvailable}
             onChange={(e) => setNumberAvailable(e.target.value)}
           />
           <br></br>
 
-          <label htmlFor="startTime">Enter Start Time :</label>
+
+          <label htmlFor="price">Enter Bundle Price :</label>
+          <input
+            id="price"
+            type="number"
+            value={bundlePrice}
+            onChange={(e) => setBundlePrice(e.target.value)}
+          />
+          <br></br>
+
+          
+
+
+          
+
+          
+
+          <label htmlFor="startTime">Enter Start Timel :</label>
           <input
             id="startTime"
-            type="text"
+            type="datetime-local"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
           />
@@ -101,7 +115,7 @@ function AddBundles() {
           <label htmlFor="endTime">Enter End Time :</label>
           <input
             id="endTime"
-            type="text"
+            type="datetime-local"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />

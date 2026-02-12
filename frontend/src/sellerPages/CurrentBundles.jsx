@@ -83,7 +83,7 @@ const enterCode = (claim_code) => {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
               />
-              <button type="submit">BIGGER</button>
+              <button type="submit">Confirm Collection</button>
 
             </form>
             <br></br>
