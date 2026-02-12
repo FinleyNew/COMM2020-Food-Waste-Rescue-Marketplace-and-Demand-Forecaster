@@ -37,8 +37,7 @@ function Forecasts() {
           <p>Loading forecasts...</p>
         ) : (
           forecasts.map(forecast => (
-            <div key={forecast.forecast_id}>
-              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+            <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
               <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
               <p>User ID: {forecast.user_id}</p>
               <hr />
