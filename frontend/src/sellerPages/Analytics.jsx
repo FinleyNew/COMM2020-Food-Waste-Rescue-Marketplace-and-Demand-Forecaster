@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function Analytics() {
-  const [analytics, setAnalytics] = useState(null)
+  const [analytics, setAnalytics] = useState([])
   useEffect(() => {
     const token = localStorage.getItem('token');
     fetch("http://127.0.0.1:8000/api/v1/records/me",{
@@ -21,8 +21,7 @@ function Analytics() {
         alert("No data ");
       });
   }, []);
-  if (!analytics) return <p>Loading analytics...</p>;
-
+  
   return (
     <>
       <nav class="row">
@@ -31,16 +30,20 @@ function Analytics() {
         <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
         <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
       </nav>
+      
       <section>
-        {analytics && (
-          <div className="desc">
-            <p className="desc">user_id - {analytics.user_id}</p>
-            <p className="desc">Company - Amazon</p>
-            <p className="desc">Price - {analytics.price}</p>
-            <p className="desc">Category - {analytics.category}</p>
-            <p className="desc">Raining - {analytics.raining.toString()}</p>
-          </div>
-        )}
+        {analytics.map(analytic => (
+            <div key={analytic.posting_id}>
+              <div className="desc">
+               <p className="desc">user_id - {analytic.user_id}</p>
+                <p className="desc">Company - Amazon</p>
+                <p className="desc">Price - {analytic.price}</p>
+                <p className="desc">Category - {analytic.category}</p>
+                <p className="desc">Raining - {analytic.raining.toString()}</p>
+              </div>
+            </div>
+          ))
+        }
       </section>
 
     </>
