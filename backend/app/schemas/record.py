@@ -11,7 +11,7 @@ class RecordBase(SQLModel):
     price: Decimal
     raining: bool
     observed_reservations: int
-    observed_no_show_prob: float
+    observed_no_show: int
 
 class RecordCreate(RecordBase):
     start_time: datetime
