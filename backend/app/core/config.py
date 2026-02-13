@@ -1,8 +1,8 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 from pathlib import Path
-#from typing import Optional
 
+# This class stores any settings that the API will use
 class Settings(BaseSettings):
     #App Settings
     PROJECT_NAME: str = "MyAPI"
