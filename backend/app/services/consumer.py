@@ -7,8 +7,7 @@ from app.crud.reservation import get_reservations_by_consumer
 from app.models.reservation import Reservation
 from app.crud import consumer as consumer_crud
 
-# def create_consumer():
-
+# Service for checking whether a consumers streak is still valid
 def check_streak(consumer_id: int, db: Session):
     # Get the latest reservation that the consumer has placed
     reservations: Sequence[Reservation] = get_reservations_by_consumer(consumer_id=consumer_id, db=db)
