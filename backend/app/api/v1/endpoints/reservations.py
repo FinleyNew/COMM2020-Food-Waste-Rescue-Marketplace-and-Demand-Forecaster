@@ -24,7 +24,6 @@ def collect_by_code(claim_code: str, current_seller: SellerDep, db: SessionDep):
     if user_id:
         return reservation_service.collect_by_code(
             claim_code=claim_code,
-            seller_id=user_id,
             db=db
         )
 

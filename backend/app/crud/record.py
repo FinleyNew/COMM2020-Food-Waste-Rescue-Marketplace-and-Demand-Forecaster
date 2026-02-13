@@ -4,10 +4,13 @@ from datetime import datetime
 from app.models.enums import Category
 from app.models import Record
 
+# Crud function for getting all the records from the database
+# Is used for training the model
 def get_all_records(db: Session) -> Sequence[Record]:
     statement = select(Record)
     return db.exec(statement).all()
 
+# Crud function for getting all records with the same time window and day of week
 def get_same_time_records(search_start: Time, search_end: Time, day_of_week: int, db: Session) -> Sequence[Record]:
     statement = (
         select(Record)

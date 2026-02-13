@@ -21,8 +21,8 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, post
     db.refresh(new_reservation)
     return new_reservation
     
-def collect_by_code(claim_code: str, seller_id: int, db: Session) -> Reservation:
-    reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, seller_id=seller_id, db=db)
+def collect_by_code(claim_code: str, db: Session) -> Reservation:
+    reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, db=db)
     if not reservation:
         raise HTTPException(status_code = 404, detail = "No reservation with that code")
     reservation.status = ReservationStatus.COLLECTED
