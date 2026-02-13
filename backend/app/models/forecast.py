@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from .seller import Seller
     from .bundlePosting import BundlePosting
 
+# The database table model for Forecasts
 class Forecast(SQLModel, table=True):
     forecast_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
@@ -12,5 +13,6 @@ class Forecast(SQLModel, table=True):
     predicted_reservations: int
     predicted_no_show_prob: float
 
+    # These are automatic relationships to other tables
     seller: "Seller" = Relationship(back_populates="forecasts")
     posting: "BundlePosting" = Relationship(back_populates="forecast")

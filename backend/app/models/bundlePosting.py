@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .record import Record
     from .forecast import Forecast
 
-
+# The database table model for BundlePostings
 class BundlePosting(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
@@ -24,6 +24,8 @@ class BundlePosting(SQLModel, table=True):
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
     status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
 
+    # These are automatic relationships to other tables
+    # so posting.seller will return the seller from the seller table that links to this posting
     seller: "Seller" = Relationship(back_populates="postings")
     reservations: List["Reservation"] = Relationship(back_populates="posting")
     record: "Record" = Relationship(back_populates="posting")

@@ -1,5 +1,6 @@
 from enum import Enum
 
+# These are enums that are used within models and schemas
 class Role(str, Enum):
     ADMIN = "admin"
     SELLER = "seller"
