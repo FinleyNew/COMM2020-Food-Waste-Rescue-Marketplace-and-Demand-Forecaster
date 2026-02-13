@@ -1,0 +1,78 @@
+section{
+    display: flex;
+    justify-content: flex-start;
+    gap: 200px;
+    background-color: rgb(81, 155, 81);
+}
+.row{
+    display: flex;
+    text-align:  center;
+    gap: 10px; 
+}
+.button {
+    background-color: green;
+    font-family: Arial;
+    color: white;
+    padding: 10px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.desc{
+    font-family: Arial;
+    font-size: 20px;
+    margin-top: 10px;
+    flex: 1;
+}
+.gridRow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  gap: 500px;
+}
+.gridRow img{
+  display: block;
+  border: 4px solid #ddd;  
+  padding: 10px;
+  width: 500px; 
+  margin-bottom: 10px;
+}
+.gridColumn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+.gridColumn p{
+    text-align: center;
+    margin-bottom: 100px;
+}
+.gridColumn img{
+    border-radius: 50%;
+}
+.circleObject{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.circleObject img{
+    display: block;
+    width: 250px;
+    height: 250px;
+    margin-bottom: 50px;
+}
+.weight{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

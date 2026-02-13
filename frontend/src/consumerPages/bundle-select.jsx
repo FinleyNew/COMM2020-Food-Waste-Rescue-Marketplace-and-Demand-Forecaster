@@ -122,11 +122,8 @@ function BundleSelect() {
         </div>
 
         <div className="formatter">
-          
-
           <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}>
             Pay
-
           </button>
 
           {Popup && (
