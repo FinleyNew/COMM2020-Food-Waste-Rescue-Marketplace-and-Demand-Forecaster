@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlmodel import SQLModel
 
 class ForcastBase(SQLModel):
@@ -10,4 +11,4 @@ class ForecastCreate(ForcastBase):
     pass
 
 class ForecastPublic(ForcastBase):
-    forecast_id: int
+    forecast_id: Optional[int] = None

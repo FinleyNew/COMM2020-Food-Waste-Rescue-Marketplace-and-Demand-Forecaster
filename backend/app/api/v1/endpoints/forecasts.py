@@ -15,7 +15,7 @@ def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
     return forecasts
 
 @router.get("/", response_model=ForecastPublic)
-def get_new_forecast(bundle_in: BundlePostingCreate,db: SessionDep):
+def get_new_forecast(bundle_in: BundlePostingCreate, db: SessionDep):
     forecast = get_forecast(bundle_in=bundle_in, db=db)
     if not forecast:
         raise HTTPException(status_code=404, detail="No forecast made")

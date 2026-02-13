@@ -16,4 +16,6 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     # current_dow = (datetime.now().weekday() + 1) % 7 Get's the current dow in that form
     #Process that data into something usable
     #Call the create_forecast crud function to actually add it to the database
+    #This function needs to return a forecast in the type Forecast which has
+    #user_id, posting_id, predicted_reservations and predicted_no_show_prob
     return
