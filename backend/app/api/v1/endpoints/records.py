@@ -5,6 +5,7 @@ from typing import List
 
 router = APIRouter()
 
+# Endpoint for getting the current sellers records
 @router.get("/me", response_model= List[RecordPublic])
 def get_current_sellers_records(current_seller: SellerDep, db: SessionDep):
     records = current_seller.records

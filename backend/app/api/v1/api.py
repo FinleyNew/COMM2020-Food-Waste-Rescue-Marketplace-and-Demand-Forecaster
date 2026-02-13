@@ -4,6 +4,8 @@ from app.api.v1.endpoints import bundlesPostings
 
 api_router = APIRouter()
 
+#This file will route a request to the corresponding endpoint based on the prefix
+
 api_router.include_router(consumers.router, prefix = "/consumers", tags=["consumers"])
 api_router.include_router(sellers.router, prefix = "/sellers", tags=["sellers"])
 api_router.include_router(bundlesPostings.router, prefix = "/bundles", tags=["bundles"])

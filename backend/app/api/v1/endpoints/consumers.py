@@ -6,9 +6,11 @@ from app.services import consumer as consumer_service
 
 router = APIRouter()
 
+# Endpoint for getting the current consumer
 @router.get("/me", response_model = ConsumerPublic)
 def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
     consumer_id = current_consumer.user_id
     if current_consumer.streak > 0 and consumer_id:
+        # This will correct the streak by checking if it's in date
         consumer_service.check_streak(consumer_id=consumer_id, db=db)
     return current_consumer

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from .seller import Seller
     from .bundlePosting import BundlePosting
 
-
+# The database table model for Records
 class Record(SQLModel, table=True):
     record_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
@@ -21,5 +21,6 @@ class Record(SQLModel, table=True):
     observed_reservations: int
     observed_no_show: int
 
+    # These are automatic relationships to other tables
     seller: "Seller" = Relationship(back_populates="records")
     posting: "BundlePosting" = Relationship(back_populates="record")

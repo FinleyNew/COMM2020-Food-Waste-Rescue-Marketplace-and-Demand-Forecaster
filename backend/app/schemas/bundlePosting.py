@@ -7,6 +7,7 @@ from pydantic import computed_field
 
 from app.models.enums import Category, BundleStatus
 
+# The base schema for bundle postings
 class BundlePostingBase(SQLModel):
     user_id: int
     category: Category
@@ -14,26 +15,32 @@ class BundlePostingBase(SQLModel):
     available: int
     price: Decimal
     
-
+# The create schema for bundle postings
+# Inherits from base 
 class BundlePostingCreate(BundlePostingBase):
     start_time: datetime
     end_time: datetime
 
+# The public schema for bundle postings
+# Inherits from base 
 class BundlePostingPublic(BundlePostingBase):
     posting_id: int
     reserved: int
     status: BundleStatus
     pickup_window: Any = Field(exclude=True)
 
+    # This is a coputed field to return the price as a string
     @computed_field
     def price_display(self) -> str:
         return f"{self.price:.2f}"
     
+    # This is a computed field to get the start of the time range
     @computed_field
     def start_time(self) -> datetime:
         #automatically pulls from the db_bundle.pickup_window.lower
         return self.pickup_window.lower
     
+    #This is a computed field to get the end of the time range
     @computed_field
     def end_time(self) -> datetime:
         return self.pickup_window.upper
