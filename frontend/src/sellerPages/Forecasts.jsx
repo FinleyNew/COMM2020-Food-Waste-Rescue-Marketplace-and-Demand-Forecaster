@@ -45,6 +45,28 @@ function Forecasts() {
           ))
         )}
       </section>
+      <section>
+        <div className="textBlock">
+          <form>
+            <p>Seller ID:</p>
+              <input type="text"/>
+            <p>Number of Bundles:</p>
+              <input type="text"/>
+            <p>Day of the Week:</p>
+              <input type="text"/>
+            <p>Pickup Time Window:</p>
+              <input type="text"/>
+            <p>Product Type:</p>
+              <input type="text"/>
+            <p>Price:</p>
+              <input type="text"/>
+              <br></br>
+              <br></br>
+            <button className="button" type="submit">Generate</button>
+          </form>
+        </div>
+
+      </section>
     </>
   );
 }
