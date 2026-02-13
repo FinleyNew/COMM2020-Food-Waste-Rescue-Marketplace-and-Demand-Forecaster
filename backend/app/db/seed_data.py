@@ -18,11 +18,13 @@ def is_database_already_seeded(db: Session):
     return user_count > 0
 
 def seed_users(db: Session):
+    #Hardcode first 2 users as consumer and seller
     consumer_user = User(role=Role.CONSUMER)
     seller_user = User(role=Role.SELLER)
     db.add(consumer_user)
     db.add(seller_user)
 
+    #Add 100 users with a random role
     for _ in range(100):
         role = fake.random_element(elements=Role).value
         user = User(
@@ -32,9 +34,12 @@ def seed_users(db: Session):
     db.commit()
 
 def seed_consumer(db: Session):
+    #Get all the users with consumer role
     consumers = db.exec(select(User).where(User.role == Role.CONSUMER)).all()
     
+    #Add users with the consumer role to the consumer table
     for user in consumers:
+        #Give consumer random and and streak between 1 and 10
         consumer = Consumer(
             user_id=user.user_id,
             display_name=fake.name(),
@@ -44,13 +49,17 @@ def seed_consumer(db: Session):
     db.commit()
 
 def seed_seller(db: Session):
+    #Get all the seller
     sellers = db.exec(select(User).where(User.role == Role.SELLER)).all()
 
+    #Add users with the seller role to the seller table
     for user in sellers:
+        #Create random opening hours
         opening_time = randint(8, 11)
         closing_time = randint(16, 20)
         opening_hours = f"{opening_time}:00 - {closing_time}:00"
 
+        #Give seller fake name and address
         seller = Seller(
             user_id=user.user_id,
             name=fake.company(),
@@ -61,14 +70,18 @@ def seed_seller(db: Session):
     db.commit()
 
 def seed_bundle_posting(db: Session):
+    #Get all the sellers
     sellers = db.exec(select(Seller)).all()
     example_allergens = ['Milk', 'Eggs', 'Nuts', 'Shellfish', 'Gluten', 'Soy', 'Wheat', 'Fish', 'Sesame', 'Celery']
 
+    #Add 250 bundle postings
     for _ in range(250):
+        #Create random 1 hour pickup window
         start_time = datetime(2026, randint(1,2), randint(1, 28), randint(9, 17))
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
+        #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
             category=fake.random_element(elements=Category).value,
@@ -84,10 +97,13 @@ def seed_bundle_posting(db: Session):
 
 
 def seed_reservation(db: Session):
+    #Get all the consumers and posts
     consumers = db.exec(select(Consumer)).all()
     postings = db.exec(select(BundlePosting)).all()
 
+    #Add 400 reservations
     for _ in range(400):
+        #Assign each reservation to a random consumer and posting
         reservation = Reservation(
             posting_id=fake.random_element(elements=postings).posting_id,
             user_id=fake.random_element(elements=consumers).user_id,
@@ -100,13 +116,16 @@ def seed_reservation(db: Session):
 def seed_record(db: Session):
     postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.EXPIRED)).all()
 
+    #Create record for every expired post
     for post in postings:
+        #Get total number of reservations for the post
         reservations_query = select(func.count()).select_from(Reservation).where(
             Reservation.posting_id == post.posting_id,
             Reservation.status.in_([ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
         )
         reservations = db.exec(reservations_query).one()
 
+        #Get total number of no shows for the post
         no_show_query = select(func.count()).select_from(Reservation).where(
             Reservation.posting_id == post.posting_id,
             Reservation.status == ReservationStatus.NO_SHOW
@@ -129,6 +148,7 @@ def seed_record(db: Session):
 def seed_forecast(db: Session):
     postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)).all()
 
+    #Create 3 forecasts with random values
     for i in range(3):
         post = postings[i]
 
