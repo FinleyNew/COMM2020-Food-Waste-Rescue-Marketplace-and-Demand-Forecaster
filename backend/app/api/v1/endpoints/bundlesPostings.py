@@ -5,6 +5,7 @@ from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
 
+# Endpoint for creating a posting
 @router.post("/", response_model = BundlePostingPublic)
 def create_posting(bundle_in: BundlePostingCreate, current_seller: SellerDep, db: SessionDep):
     user_id = current_seller.user_id
@@ -15,14 +16,23 @@ def create_posting(bundle_in: BundlePostingCreate, current_seller: SellerDep, db
             db=db
         )
 
+# Endpoint for getting all available bundles
 @router.get("/", response_model = list[BundlePostingPublic])
 def get_active_bundles(db: SessionDep):
-    return bundle_posting_service.get_active_bundle_postings(db=db)
+    bundle_postings = bundle_posting_service.get_active_bundle_postings(db=db)
+    if not bundle_postings:
+        raise HTTPException(status_code=404, detail="No bundles found")
+    return bundle_postings
 
+# Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
-    return current_seller.postings
+    postings = current_seller.postings
+    if not postings:
+        raise HTTPException(status_code=404, detail="No bundles found")
+    return postings
 
+# Endpoint for getting a specific bundle posting
 @router.get("/{posting_id}", response_model = BundlePostingPublic)
 def get_bundle(posting_id: int, db: SessionDep):
     bundle = bundle_posting_service.get_bundle_posting(
@@ -31,9 +41,10 @@ def get_bundle(posting_id: int, db: SessionDep):
     )
     if bundle is None:
         raise HTTPException(status_code=404, detail="Bundle not found")
-    
     return bundle
 
+# Endpoint for deleting a specific bundle
+# Currently not in use
 @router.delete("/{posting_id}")
 def delete_bundle(posting_id: int, db: SessionDep):
     bundle_posting_service.delete_bundle_posting(posting_id=posting_id, db=db)

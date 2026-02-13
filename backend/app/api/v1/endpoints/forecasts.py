@@ -7,6 +7,7 @@ from app.schemas.bundlePosting import BundlePostingCreate
 
 router = APIRouter()
 
+# Endpoint for getting the current sellers forecasts
 @router.get("/me", response_model= List[ForecastPublic])
 def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
     forecasts = current_seller.forecasts
@@ -14,6 +15,7 @@ def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
         raise HTTPException(status_code = 404, detail = "No forecasts found")
     return forecasts
 
+# Endpoint for getting the predicted sales and no show for a given BundlepostingCreate input
 @router.post("/", response_model=ForecastPublic)
 def get_new_forecast(bundle_in: BundlePostingCreate, db: SessionDep):
     forecast = get_forecast(bundle_in=bundle_in, db=db)
