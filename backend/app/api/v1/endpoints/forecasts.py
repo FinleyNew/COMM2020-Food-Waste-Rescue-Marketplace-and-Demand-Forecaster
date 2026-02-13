@@ -14,7 +14,7 @@ def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
         raise HTTPException(status_code = 404, detail = "No forecasts found")
     return forecasts
 
-@router.get("/", response_model=ForecastPublic)
+@router.post("/", response_model=ForecastPublic)
 def get_new_forecast(bundle_in: BundlePostingCreate, db: SessionDep):
     forecast = get_forecast(bundle_in=bundle_in, db=db)
     if not forecast:
