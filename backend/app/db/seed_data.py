@@ -66,7 +66,7 @@ def seed_bundle_posting(db: Session):
 
     for _ in range(250):
         start_time = datetime(2026, randint(1,2), randint(1, 28), randint(9, 17))
-        end_time = start_time + timedelta(hours=2)
+        end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
         posting = BundlePosting(

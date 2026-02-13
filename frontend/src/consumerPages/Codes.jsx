@@ -32,7 +32,7 @@ function Codes() {
         <Link to="/streaks" className="button"><b>Streaks</b></Link>
       </nav>
       <h1 className="headline">Codes</h1>
-      <section>
+      <section className="column">
         {bundles.map(bundle => (
           <div key={bundle.posting_id}>
               <section>

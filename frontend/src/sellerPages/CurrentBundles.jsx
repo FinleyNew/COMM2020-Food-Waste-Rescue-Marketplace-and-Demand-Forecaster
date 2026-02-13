@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import './CurrentBundles.css'
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
@@ -87,51 +87,47 @@ const enterCode = (claim_code) => {
 
             </form>
             <br></br>
-      <section>
+      <section className="column">
         {bundles.map(bundle => ( //.map allows us to display
           <div key={bundle.posting_id}>
-
-            <div className="textBlock">
-              <img
-                src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                alt="Food"
-                className="leftImg"
-              />
-              <div className="desc">
-                <p classname="desc">user_id - {bundle.user_id} </p>
-                
-                <p className="desc">Price - {bundle.price}</p>
-                <p className="desc">Category - {bundle.category}</p>
-                <p classname="desc">Available - {bundle.available}</p>
+            <div className="bundleEntry">
+              <div className="textBlock">
+                <img
+                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
+                  alt="Food"
+                  className="leftImg"
+                />
+                <div className="desc">
+                  <p classname="desc">user_id - {bundle.user_id} </p>
+                  
+                  <p className="desc">Price - {bundle.price}</p>
+                  <p className="desc">Category - {bundle.category}</p>
+                  <p classname="desc">Available - {bundle.available}</p>
+                </div>
               </div>
-            </div>
 
-            <div className="textBlock">
-              <div className="desc">
-                <p className="desc">Allergens - {bundle.allergens} </p>
-                <p className="desc">Location - </p>
-                <p className="desc">Collection Time -{bundle.start_time} </p>
-                <p className="desc">Collection Time2 -{bundle.end_time} </p>
+              <div className="textBlock">
+                <div className="desc">
+                  <p className="desc">Allergens - {bundle.allergens} </p>
+                  <p className="desc">Location - </p>
+                  <p className="desc">Collection Time -{bundle.start_time} </p>
+                  <p className="desc">Collection Time2 -{bundle.end_time} </p>
+                </div>
               </div>
-            </div>
 
-            <div className="formatter">
-              <img
-                src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                alt="Food"
-                className="thumbnail"
-              />
-              <p className="desc">Company Name - {bundle.companyName}</p>
+              <div className="formatter">
+                <img
+                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
+                  alt="Food"
+                  className="thumbnail"
+                />
+                <p className="desc">Company Name - {bundle.companyName}</p>
+              </div>
+              <br></br>
             </div>
-
             <button onClick={() => deleteBundle(bundle.posting_id)}>
-              Delete Bundle
-            </button>
-            <br></br>
-            <label htmlFor="numAvailable">Enter Code : </label>
-            
-           
-
+                Delete Bundle
+              </button>
           </div>
           
         ))}
@@ -143,4 +139,3 @@ const enterCode = (claim_code) => {
 }
 
 export default CurrentBundles;
-
