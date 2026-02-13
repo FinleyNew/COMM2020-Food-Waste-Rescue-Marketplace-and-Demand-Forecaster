@@ -77,7 +77,7 @@ def seed_bundle_posting(db: Session):
     #Add 250 bundle postings
     for _ in range(250):
         #Create random 1 hour pickup window
-        start_time = datetime(2026, randint(1,2), randint(1, 28), randint(9, 17))
+        start_time = datetime(2026, randint(1,2), randint(1, 28), randint(8, 18))
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
