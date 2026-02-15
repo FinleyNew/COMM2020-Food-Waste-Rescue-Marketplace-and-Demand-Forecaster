@@ -40,6 +40,10 @@ function Analytics() {
                 <p className="desc">Company - Amazon</p>
                 <p className="desc">Price - {analytic.price}</p>
                 <p className="desc">Category - {analytic.category}</p>
+                <p className="desc">Reservations - {analytic.observed_reservations}</p>
+                <p className="desc">No Shows - {analytic.observed_no_show}</p>
+                <p className="desc">Pickup Date - {analytic.pickup_date}</p>
+                <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
                 <p className="desc">Raining - {analytic.raining.toString()}</p>
               </div>
             </div>

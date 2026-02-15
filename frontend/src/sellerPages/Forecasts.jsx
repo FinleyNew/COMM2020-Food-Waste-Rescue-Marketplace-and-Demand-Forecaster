@@ -40,12 +40,14 @@ function Forecasts() {
             <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
               <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
               <p>User ID: {forecast.user_id}</p>
+              <p></p>
               <hr />
             </div>
           ))
         )}
       </section>
-      <section>
+      {/*
+        <section>
         <div className="textBlock">
           <form>
             <p>Seller ID:</p>
@@ -67,6 +69,8 @@ function Forecasts() {
         </div>
 
       </section>
+      */}
+      
     </>
   );
 }
