@@ -3,9 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AddBundles() {
-  const [bundleName, setBundleName] = useState("");
-  const [location, setLocation] = useState("");
-  const [collectionTime, setCollectionTime] = useState("");
+  
   const [bundlePrice,setBundlePrice] = useState("");
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
@@ -14,19 +12,25 @@ function AddBundles() {
   const [startTime, setStartTime] = useState("");
   const token = localStorage.getItem('token');
   const payload = JSON.parse(atob(token.split('.')[1]));
+  const today = new Date(); //need to get todays date to use to use the iso format
+  const dateString = today.toISOString().split("T")[0]; // YYYY-MM-DD, removing the time to replace with the selected time
+  const startDateTime = new Date(`${dateString}T${startTime}:00`); //creating new start time
+  const endDateTime = new Date(`${dateString}T${endTime}:00`); //creating new end time
+  const slots = Array.from({ length: 24 }, (_, i) => 
+    { const start = i;
+      const end = i + 1; 
+      return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
+     });
+  const [data, setForecastData] = useState([]);
   function addBundle(){
     const data = {
-      //bundleName: bundleName,
-      //location: location,
-      //collectionTime: collectionTime
-      //user_id: token,
       user_id: Number(payload.sub),
       category: bundleCategory,
       allergens: bundleAllergens,
       available: Number(numberAvailable),
       price: Number(bundlePrice),
-      start_time: new Date(startTime).toISOString(),
-      end_time: new Date(endTime).toISOString()
+      start_time: startDateTime.toISOString(),
+      end_time: endDateTime.toISOString()
     };
     console.log(data);
     fetch("http://127.0.0.1:8000/api/v1/bundles/", {
@@ -38,7 +42,42 @@ function AddBundles() {
       body: JSON.stringify(data)
     });
   }
-
+  function forecastData(){
+    const data = {
+      
+      user_id: Number(payload.sub),
+      category: bundleCategory,
+      allergens: bundleAllergens,
+      available: Number(numberAvailable),
+      price: Number(bundlePrice),
+      start_time: startDateTime.toISOString(),
+      end_time: endDateTime.toISOString()
+    };
+    console.log(data);
+    fetch("http://127.0.0.1:8000/api/v1/forecasts/", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => {
+      if(!res.ok){
+        throw new Error(`Server Error: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      setForecastData(data);
+    })
+    .catch(err => {
+      console.error("Error fetching bundles ",err);
+      alert("No data")
+    })
+    
+  }
+  
   return (
     <>
       <nav className="row">
@@ -97,11 +136,28 @@ function AddBundles() {
 
           
 
+         <label htmlFOr="collectionTime">Collection Time</label>
+         <select
+          id="collectionTime"
+          onChange={(e) => {
+            const[start,end] = e.target.value.split(" - ");
+            
+            setStartTime(start);
+            setEndTime(end);
+          }}
+         >
+          {slots.map((slot,idx) =>(
+            <option key={idx} value={slot}>
+              {slot}
+            </option>
+          ))}
+         </select>
 
           
 
-          
 
+          
+          {/*
           <label htmlFor="startTime">Enter Start Timel :</label>
           <input
             id="startTime"
@@ -111,6 +167,8 @@ function AddBundles() {
           />
           <br></br>
 
+          
+      
 
           <label htmlFor="endTime">Enter End Time :</label>
           <input
@@ -120,8 +178,12 @@ function AddBundles() {
             onChange={(e) => setEndTime(e.target.value)}
           />
           <br></br>
+          
+          */}
+          <br></br>
           <button onClick={addBundle}>Add Bundle</button>
-
+          <br></br>
+          <button onClick={forecastData}>Forecast Data</button>
         </div>
       </section>
     </>
