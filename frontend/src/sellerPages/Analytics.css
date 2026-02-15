@@ -77,3 +77,36 @@ section{
 .imageFormatter{
     padding: 2px;
 }
+.barChart {
+  display: flex;
+  gap: 40px;
+  align-items: flex-end;
+  margin-top: 20px;
+}
+
+.barContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.barLabel {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.bar {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  border-radius: 5px 5px 0 0;
+  position: relative;
+}
+
+.barValue {
+  color: white;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+

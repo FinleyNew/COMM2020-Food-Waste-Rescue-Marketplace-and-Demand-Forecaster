@@ -1,5 +1,8 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+
+
+
 import './Analytics.css'
 
 function Analytics() {
@@ -22,7 +25,25 @@ function Analytics() {
         alert("No data ");
       });
   }, []);
-  
+  const totalReservations = analytics.reduce(
+    (sum,item) => sum + item.observed_reservations,
+    0
+  );
+
+  const totalNoShows = analytics.reduce(
+    (sum, item) => sum + item.observed_no_show,
+    0
+  );
+
+  const chartData = [
+    { label: "Reservations", value: totalReservations, color: "#4CAF50" },
+    { label: "No Shows", value: totalNoShows, color: "#FF5722" }
+  ];
+
+  const maxValue = Math.max(totalReservations,totalNoShows);
+
+
+
   return (
     <>
       <nav class="row">
@@ -50,6 +71,24 @@ function Analytics() {
           ))
         }
       </section>
+      {/*idx = index */}
+      <div className="barChart">
+        {chartData.map((item, idx) => (  
+          <div key={idx} className="barContainer">
+          <div className="barLabel">{item.label}</div>
+          <div
+            className="bar"
+            style={{
+              height: `${(item.value / maxValue) * 200}px`, // scale bar height
+              backgroundColor: item.color
+            }}
+          >
+        <span className="barValue">{item.value}</span>
+      </div>
+      </div>
+        ))}
+      </div>
+
       <div className="gridRow">
         <img className="companyImage" src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
         <div className="gridColumn">
