@@ -48,7 +48,7 @@ function Codes() {
               <div className="textBlock">
                 <div className="desc">
                   <p className="codeText">Status - {bundle.status}</p>
-                  
+                  <p>Bundle ID - {bundle.posting_id}</p>
                   <p>Collection Time - {bundle.timestamp}</p>
                 </div>
               </div>

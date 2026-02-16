@@ -21,7 +21,7 @@ function AddBundles() {
       const end = i + 1; 
       return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
      });
-  const [data, setForecastData] = useState([]);
+  const [data, setForecastData] = useState({});
   function addBundle(){
     const data = {
       user_id: Number(payload.sub),
@@ -215,9 +215,9 @@ function AddBundles() {
         </div>
       </section>
       <section>
-        <h4>Forecasting</h4>
-        <p>Predicted Reservations - {data.predicted_reservations}</p>
-        <p>Predicted Reservations - {data.predicted_no_show_prob}</p>
+        <h4>Forecasts</h4>
+            <p>Predicted Reservations : {data.predicted_reservations}</p>
+            <p>No Show Probability : {data.predicted_no_show_prob}</p>
       </section>
     </>
   );
