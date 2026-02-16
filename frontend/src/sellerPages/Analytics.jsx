@@ -71,26 +71,25 @@ function Analytics() {
           ))
         }
       </section>
-      {/*idx = index */}
-      <div className="barChart">
-        {chartData.map((item, idx) => (  
-          <div key={idx} className="barContainer">
-          <div className="barLabel">{item.label}</div>
-          <div
-            className="bar"
-            style={{
-              height: `${(item.value / maxValue) * 200}px`, // scale bar height
-              backgroundColor: item.color
-            }}
-          >
-        <span className="barValue">{item.value}</span>
-      </div>
-      </div>
-        ))}
-      </div>
 
       <div className="gridRow">
-        <img className="companyImage" src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+        {/*idx = index */}
+        <div className="barChart">
+          {chartData.map((item, idx) => (  
+            <div key={idx} className="barContainer">
+            <div className="barLabel">{item.label}</div>
+            <div
+              className="bar"
+              style={{
+                height: `${(item.value / maxValue) * 200}px`, // scale bar height
+                backgroundColor: item.color
+              }}
+            >
+          <span className="barValue">{item.value}</span>
+        </div>
+        </div>
+          ))}
+        </div>
         <div className="gridColumn">
           <p className="bubbleText">Total Waste Prevented</p>
           <div className="circleObject">
