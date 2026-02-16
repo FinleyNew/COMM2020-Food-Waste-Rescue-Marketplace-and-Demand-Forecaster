@@ -117,7 +117,7 @@ function BundleSelect() {
               alt="Food"
               className="thumbnail"
             />
-            <p className="desc">Company Name - {bundle.companyName}</p>
+            {/*<p className="desc">Company Name - {bundle.companyName}</p>*/}
           </div>
 
           <div className="formatter">
