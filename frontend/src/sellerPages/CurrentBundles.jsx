@@ -102,7 +102,7 @@ const enterCode = (claim_code) => {
                 <div className="desc">
                   <p classname="desc">user_id - {bundle.user_id} </p>
                   
-                  <p className="desc">Price - {bundle.price}</p>
+                  <p className="desc">Price - £{bundle.price}</p>
                   <p className="desc">Category - {bundle.category}</p>
                   <p classname="desc">Available - {bundle.available}</p>
                 </div>
