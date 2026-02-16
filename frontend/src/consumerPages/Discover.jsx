@@ -1,6 +1,8 @@
 import { Routes, Route, Link } from "react-router-dom";
 import {useState, useEffect} from "react";
 import './Discover.css'
+import Company from "../Assets/Company.png";
+import Bundle from "../Assets/Bundleimage.png";
 function Discover() {
   let companyName = "Amazon";
   let category = "Fruit";
@@ -51,7 +53,7 @@ function Discover() {
 
                   <section className="bundleEntry">
                     <div className="textBlock">
-                      <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
+                      <img src={Company} alt="Company" className="leftImg"/>
                       <div className="desc">
                         <p className="desc">Category - {bundle.category}</p>
                         <p className="desc">Allergens - {bundle.allergens}</p>
@@ -65,11 +67,12 @@ function Discover() {
                        </div>
                     </div>
                     <div className="formatter">
-                      <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="thumbnail"/>
-                      <p className="desc">{companyName}</p>
+                      <img src={Bundle} alt="Food" className="thumbnail"/>
+                      {/*<p className="desc">{companyName}</p>*/}
                     </div>
                   </section>
                 </Link>
+                <div className="whitespace" aria-hidden="true"></div>
               </div>
             ))}
       </section>

@@ -1,19 +1,21 @@
-import { Link, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-
+import { Link, useParams } from "react-router-dom"; //to use the buttons to change to other pages
+import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
+import './Discover.css'
+import Company from "../Assets/Company.png";
+import Bundle from "../Assets/Bundleimage.png";
 function BundleSelect() {
 
   const { id } = useParams();
 
-  const [bundle, setBundle] = useState(null);
+  const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
 
   function openPopup() {
-    setPopup(true);
+    setPopup(true); //if variable is true then popUp needs to be opened 
   }
 
   function closePopup() {
-    setPopup(false);
+    setPopup(false); //if variable is false then popUp needs to be closed
   }
 
   useEffect(() => {
@@ -91,47 +93,47 @@ function BundleSelect() {
       <h1 className="headline">Bundles</h1>
 
       <section>
-        <div className="textBlock">
-          <img
-            src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-            alt="Food"
-            className="leftImg"
-          />
-          <div className="desc">
-            <p className="desc">Category - {bundle.category}</p>
-            <p className="desc">Allergens - {bundle.allergens}</p>
-          </div>
-        </div>
-
-        <div className="textBlock">
-          <div className="desc">
-            <p className="desc">Bundle Name - {bundle.bundleName}</p>
-            <p className="desc">Location - {bundle.location}</p>
-            <p className="desc">Collection Time - {bundle.collectionTime}</p>
-            <p className="desc">Allergens - {bundle.allergens}</p>
-          </div>
-        </div>
-
-        <div className="formatter">
-          <img
-            src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-            alt="Food"
-            className="thumbnail"
-          />
-          <p className="desc">Company Name - {bundle.companyName}</p>
-        </div>
-
-        <div className="formatter">
-          <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}>
-            Pay
-          </button>
-
-          {Popup && (
-            <div className="popup open-popup" id="payment">
-              <h1>Payment Successful!</h1>
-              <button className="button" onClick={closePopup}>Confirm</button>
+        <div className="bundleEntry">
+          <div className="textBlock">
+            <img
+              src={Company}
+              alt="Company"
+              className="leftImg"
+            />
+            <div className="desc">
+              <p className="desc">Category - {bundle.category}</p>
+              <p className="desc">Allergens - {bundle.allergens}</p>
             </div>
-          )}
+          </div>
+
+          <div className="textBlock">
+            <div className="desc">
+              <p className="desc">Collection Time - {bundle.end_time}</p>
+              <p className="desc">Allergens - {bundle.allergens}</p>
+            </div>
+          </div>
+
+          <div className="formatter">
+            <img
+              src={Bundle}
+              alt="Bundle"
+              className="thumbnail"
+            />
+            {/*<p className="desc">Company Name - {bundle.companyName}</p>*/}
+          </div>
+
+          <div className="formatter">
+            <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}>
+              Pay
+            </button>
+
+            {Popup && (
+              <div className="popup open-popup" id="payment">
+                <h1>Payment Successful!</h1>
+                <button className="button" onClick={closePopup}>Confirm</button>
+              </div>
+            )}
+          </div>
         </div>
       </section>
     </>

@@ -8,7 +8,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const navigate = useNavigate();
 
   function loginFunction() {
-    if (username=== "harryConsumer" && password === "lewis") {
+    if (username=== "consumer" && password === "1") {
       setUser({
         username:"harry",
         role:"consumer"
@@ -17,7 +17,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5NTgsInN1YiI6IjEifQ.TBw2UD-s4nuWlWTcBzj95SNjuHKC0KaBmf49cW2DJrU");
       navigate("/discover");
     } 
-    else if(username === "harrySeller" && password === "lewis"){
+    else if(username === "seller" && password === "1"){
       setUser({
         username:"harry",
         role:"seller"

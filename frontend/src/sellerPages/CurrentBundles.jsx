@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './CurrentBundles.css'
+import Company from "../Assets/Company.png";
+import Bundle from "../Assets/Bundleimage.png";
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
@@ -47,7 +49,7 @@ const enterCode = (claim_code) => {
   const token = localStorage.getItem('token');
 
   fetch(`http://127.0.0.1:8000/api/v1/reservations/collect/${claim_code}`, {
-    method: "POST",
+    method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
@@ -93,8 +95,8 @@ const enterCode = (claim_code) => {
             <div className="bundleEntry">
               <div className="textBlock">
                 <img
-                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                  alt="Food"
+                  src={Company}
+                  alt="Company"
                   className="leftImg"
                 />
                 <div className="desc">
@@ -109,7 +111,7 @@ const enterCode = (claim_code) => {
               <div className="textBlock">
                 <div className="desc">
                   <p className="desc">Allergens - {bundle.allergens} </p>
-                  <p className="desc">Location - </p>
+                  {/*<p className="desc">Location - </p>*/}
                   <p className="desc">Collection Time -{bundle.start_time} </p>
                   <p className="desc">Collection Time2 -{bundle.end_time} </p>
                 </div>
@@ -117,23 +119,22 @@ const enterCode = (claim_code) => {
 
               <div className="formatter">
                 <img
-                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                  alt="Food"
+                  src={Bundle}
+                  alt="Bundle"
                   className="thumbnail"
                 />
-                <p className="desc">Company Name - {bundle.companyName}</p>
+                {/* <p className="desc">Company Name - {bundle.companyName}</p> */}
               </div>
               <br></br>
             </div>
             <button onClick={() => deleteBundle(bundle.posting_id)}>
                 Delete Bundle
               </button>
-          </div>
-          
+              {/*works but need to use docker compose down -v */}
+              <div className="whitespace" aria-hidden="true"></div>
+        </div>
         ))}
-        
       </section>
-      
     </>
   );
 }

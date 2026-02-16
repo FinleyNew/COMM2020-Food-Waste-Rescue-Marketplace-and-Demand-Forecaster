@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
+import Company from "../Assets/Company.png";
 function Codes() {
   const [bundles, setBundles] = useState([]); //create state
     
@@ -35,27 +36,27 @@ function Codes() {
       <section className="column">
         {bundles.map(bundle => (
           <div key={bundle.posting_id}>
-              <section>
-          <div className="textBlock">
-            <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
-            <div className="desc">
-              <p className="desc">Reservation ID : {bundle.reservation_id}</p>
-              <p className="desc">Claim Code - {bundle.claim_code}</p>
+          <section>
+            <div className="bundleEntry">
+              <div className="textBlock">
+                <img src={Company} alt="Company" className="leftImg"/>
+                <div className="desc">
+                  <p className="desc">Reservation ID : {bundle.reservation_id}</p>
+                  <p className="desc">Claim Code - {bundle.claim_code}</p>
+                </div>
+              </div>
+              <div className="textBlock">
+                <div className="desc">
+                  <p className="codeText">Status - {bundle.status}</p>
+                  
+                  <p>Collection Time - {bundle.timestamp}</p>
+                </div>
+              </div>
+              </div>
+            </section>
+            <div className="whitespace" aria-hidden="true"></div>
             </div>
-          </div>
-          <div className="textBlock">
-            <div className="desc">
-              <p className="codeText">Status - {bundle.status}</p>
-              
-              <p>Collection Time - {bundle.timestamp}</p>
-            </div>
-          </div>
-          </section>
-          </div>
         ))}
-
-
-
       </section>
       
       </>

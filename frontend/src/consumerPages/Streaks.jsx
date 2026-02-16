@@ -32,7 +32,11 @@ function Streaks() {
         <Link to="/codes" className="button"><b>Codes</b></Link>
       </nav>
       <h1 className="headline">Streaks</h1>
-      <p className="textCentre">You have rescued for  weeks in a row!</p><hr></hr>
+      {bundle && (
+        <div>
+          <p className="textCentre">You have rescued for {bundle.streak} week(s) in a row!</p><hr></hr>
+        </div>
+      )}
       <div className="rowIcons">
         <p className="headline">Badges:</p>
         <img className="icon" src="https://thumbs.dreamstime.com/b/modern-bronze-circle-metal-badges-labels-design-elements-vector-illustration-84952346.jpg" alt="Bronze Badge"/>   

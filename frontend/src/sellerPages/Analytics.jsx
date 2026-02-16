@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Company from "../Assets/Company.png";
 import './Analytics.css'
 
 function Analytics() {
@@ -22,7 +23,25 @@ function Analytics() {
         alert("No data ");
       });
   }, []);
-  
+  const totalReservations = analytics.reduce(
+    (sum,item) => sum + item.observed_reservations,
+    0
+  );
+
+  const totalNoShows = analytics.reduce(
+    (sum, item) => sum + item.observed_no_show,
+    0
+  );
+
+  const chartData = [
+    { label: "Collected", value: totalReservations, color: "#4CAF50" },
+    { label: "No Shows", value: totalNoShows, color: "#FF5722" }
+  ];
+
+  const maxValue = Math.max(totalReservations,totalNoShows);
+
+
+
   return (
     <>
       <nav class="row">
@@ -36,18 +55,23 @@ function Analytics() {
         {analytics.map(analytic => (
             <div key={analytic.posting_id}>
               <div className="desc">
-               <p className="desc">user_id - {analytic.user_id}</p>
+              <p className="desc">user_id - {analytic.user_id}</p>
                 <p className="desc">Company - Amazon</p>
                 <p className="desc">Price - {analytic.price}</p>
                 <p className="desc">Category - {analytic.category}</p>
+                <p className="desc">Reservations - {analytic.observed_reservations}</p>
+                <p className="desc">No Shows - {analytic.observed_no_show}</p>
+                <p className="desc">Pickup Date - {analytic.pickup_date}</p>
+                <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
                 <p className="desc">Raining - {analytic.raining.toString()}</p>
               </div>
             </div>
           ))
         }
       </section>
+
       <div className="gridRow">
-        <img className="companyImage" src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+        <img className="companyImage" src={Company}></img>
         <div className="gridColumn">
           <p className="bubbleText">Total Waste Prevented</p>
           <div className="circleObject">
@@ -58,7 +82,23 @@ function Analytics() {
         </div>
       </div>
         <div className="gridRow">
-          <img className="imageFormatter" src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+          {/*idx = index */}
+          <div className="barChart">
+            {chartData.map((item, idx) => (  
+              <div key={idx} className="barContainer">
+              <div className="barLabel">{item.label}</div>
+              <div
+                className="bar"
+                style={{
+                  height: `${(item.value / maxValue) * 200}px`, // scale bar height
+                  backgroundColor: item.color
+                }}
+              >
+            <span className="barValue">{item.value}</span>
+          </div>
+          </div>
+            ))}
+          </div>
               <div className="gridColumn">
                 <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
               </div>

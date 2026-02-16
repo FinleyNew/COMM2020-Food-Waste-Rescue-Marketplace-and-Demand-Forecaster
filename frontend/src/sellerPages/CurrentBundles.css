@@ -1,13 +1,19 @@
 section{
     display: flex;
-    justify-content: flex-start;
-    gap: 200px;
+    flex-direction: column;
+    gap: 20px;
+}
+.bundleEntry{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
     background-color: rgb(81, 155, 81);
+    margin-bottom: 20px;
 }
 .column{
     display: flex;
     flex-direction: column;
-    gap: 50px;
 }
 .sectionPage{
     text-decoration: none;
@@ -47,6 +53,8 @@ section{
 
 .formatter{
     text-align: center;
+    flex-direction: column;
+    align-items: flex-end;
     width: 325px;
     margin: 20px;
     flex-shrink: 0;
@@ -67,8 +75,7 @@ section{
   margin-bottom: 10px;
   margin-left: auto;
 }
-.column{
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
+.whitespace{
+    background-color: white;
+    height: 15px;
 }
