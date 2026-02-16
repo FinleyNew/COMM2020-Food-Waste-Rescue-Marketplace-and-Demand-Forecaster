@@ -5,7 +5,7 @@ from sklearn.linear_model import PoissonRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from pprint import pprint
+from datetime import datetime
 import pandas as pd
 import numpy as np
 
@@ -22,9 +22,27 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     #Use record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=?, db=db)
     same_time_records = record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=0, db=db)
     #For day_of_week 0 is Sunday and 6 is Saturday
-    # current_dow = (datetime.now().weekday() + 1) % 7 Get's the current dow in that form
-    current_dow = (datetime.now().weekday() + 1) % 7
+    dow = (bundle_in.start_time.weekday() + 1) % 7
+    hour = bundle_in.start_time.hour
     #Process that data into something usable
+    df = create_dataframe(records)
+    model = train_model(df)
+    #Call the create_forecast crud function to actually add it to the database
+    #This function needs to return a forecast in the type Forecast which has
+    #user_id, posting_id, predicted_reservations and predicted_no_show_prob
+    X_new = pd.DataFrame([{
+        "user_id": str(bundle_in.user_id),
+        "category": str(bundle_in.category),
+        "price": np.log(float(bundle_in.price)),
+        "raining": int(bool(getattr(bundle_in, "raining", False))),
+        "hour_sin": np.sin(2*np.pi*hour/24),
+        "hour_cos": np.cos(2*np.pi*hour/24),
+        "dow": dow
+    }])
+    y_pred = float(model.predict(X_new)[0])
+    return max(0.0, y_pred)
+
+def create_dataframe(records) -> pd.DataFrame:
     user_ids = [str(r.user_id) for r in records]
     categories = [str(r.category) for r in records]
     prices = [np.log(float(r.price)) for r in records]
@@ -44,11 +62,7 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
         'dow': dows,
         'observed_reservations': observed_reservations
     })
-    model = train_model(df)
-    #Call the create_forecast crud function to actually add it to the database
-    #This function needs to return a forecast in the type Forecast which has
-    #user_id, posting_id, predicted_reservations and predicted_no_show_prob
-    return
+    return df
 
 def train_model(df: pd.DataFrame) -> Pipeline:
     X = df.drop(columns=['observed_reservations'])
