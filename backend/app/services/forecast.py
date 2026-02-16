@@ -11,7 +11,8 @@ import pandas as pd
 import numpy as np
 
 
-def create_forecast(bundle_in: BundlePostingCreate, owner_id: int, pickup_range: str, db: Session):
+def create_forecast(bundle_in: BundlePostingCreate, owner_id: int, db: Session):
+    forecast = get_forecast(bundle_in=bundle_in, db=db)
     return
 
 def get_forecast(bundle_in: BundlePostingCreate, db: Session):
