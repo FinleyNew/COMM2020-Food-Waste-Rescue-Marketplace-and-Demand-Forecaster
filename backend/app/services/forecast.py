@@ -1,17 +1,26 @@
 from sqlmodel import Session
 from app.schemas.bundlePosting import BundlePostingCreate
 from app.crud import record as record_crud
+from app.crud import forecast as forecast_crud
 from sklearn.linear_model import PoissonRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from datetime import datetime
-from app.schemas.forecast import ForecastPublic, ForecastBase
+from app.schemas.forecast import ForecastPublic, ForecastCreate
 import pandas as pd
 import numpy as np
 
 
-def create_forecast(bundle_in: BundlePostingCreate, owner_id: int, pickup_range: str, db: Session):
+def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: Session):
+    forecast = get_forecast(bundle_in=bundle_in, db=db)
+    create_forecast = ForecastCreate(
+        user_id=forecast.user_id,
+        posting_id=posting_id,
+        predicted_reservations=forecast.predicted_reservations,
+        predicted_no_show_prob=forecast.predicted_no_show_prob
+    )
+    forecast_crud.create_forecast(forecast=create_forecast, db=db)
     return
 
 def get_forecast(bundle_in: BundlePostingCreate, db: Session):
