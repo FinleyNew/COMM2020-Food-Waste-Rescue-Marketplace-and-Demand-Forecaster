@@ -1,19 +1,19 @@
-import { Link, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom"; //to use the buttons to change to other pages
+import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
 
 function BundleSelect() {
 
   const { id } = useParams();
 
-  const [bundle, setBundle] = useState(null);
+  const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
 
   function openPopup() {
-    setPopup(true);
+    setPopup(true); //if variable is true then popUp needs to be opened 
   }
 
   function closePopup() {
-    setPopup(false);
+    setPopup(false); //if variable is false then popUp needs to be closed
   }
 
   useEffect(() => {
