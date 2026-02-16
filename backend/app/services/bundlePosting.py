@@ -11,8 +11,9 @@ from psycopg.types.range import Range
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
     # Creates the pickup range from the start and end time
     pickup_range = f"[{bundle_in.start_time.isoformat()}, {bundle_in.end_time.isoformat()})"
-    forecast_service.create_forecast(bundle_in=bundle_in, owner_id=owner_id, db=db)
-    return bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, pickup_window=pickup_range, db=db)
+    bundle_posting = bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, pickup_window=pickup_range, db=db)
+    forecast_service.create_forecast(bundle_in=bundle_in, posting_id=bundle_posting.posting_id, db=db)
+    return bundle_posting
 
 # The service for getting all bundle postings
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
