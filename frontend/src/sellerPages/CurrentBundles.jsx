@@ -128,6 +128,7 @@ const enterCode = (claim_code) => {
             <button onClick={() => deleteBundle(bundle.posting_id)}>
                 Delete Bundle
               </button>
+              {/*works but need to use docker compose down -v */}
           </div>
           
         ))}
