@@ -121,7 +121,7 @@ const enterCode = (claim_code) => {
                   alt="Food"
                   className="thumbnail"
                 />
-                <p className="desc">Company Name - {bundle.companyName}</p>
+                {/* <p className="desc">Company Name - {bundle.companyName}</p> */}
               </div>
               <br></br>
             </div>
@@ -129,12 +129,10 @@ const enterCode = (claim_code) => {
                 Delete Bundle
               </button>
               {/*works but need to use docker compose down -v */}
-          </div>
-          
+              <div className="whitespace" aria-hidden="true"></div>
+        </div>
         ))}
-        
       </section>
-      
     </>
   );
 }
