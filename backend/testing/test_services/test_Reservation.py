@@ -17,7 +17,7 @@ class SimpleReservation:
         self.posting = posting
 
 #Tests collect_by_code is functional with a correct claim code and seller.
-def test_collection_with_valid_code_success(mock_db):
+def test_collection_with_valid_code_success_and_test_double_collection(mock_db):
     post = SimplePosting(id=201, owner_id=2)
     res = SimpleReservation(
         id=101, 
@@ -48,12 +48,12 @@ def test_collection_with_valid_code_success(mock_db):
     
     assert res.status == ReservationStatus.COLLECTED 
     mock_db.commit.assert_called_once() 
-
-#tests if the collection fails for the right collection code but wrong seller 
-
+    
 
 
 
+
+#Tests collect_by_code raises an error with an incorrect claim code and that the reservation is not collected.
 def test_collection_with_invalid_code(mock_db):
     post = SimplePosting(id=201, owner_id=2)
     res = SimpleReservation(
