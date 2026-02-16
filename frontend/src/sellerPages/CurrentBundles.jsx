@@ -47,7 +47,7 @@ const enterCode = (claim_code) => {
   const token = localStorage.getItem('token');
 
   fetch(`http://127.0.0.1:8000/api/v1/reservations/collect/${claim_code}`, {
-    method: "POST",
+    method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"

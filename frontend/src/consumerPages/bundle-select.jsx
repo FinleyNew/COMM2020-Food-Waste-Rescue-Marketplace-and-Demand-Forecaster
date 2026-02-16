@@ -106,9 +106,7 @@ function BundleSelect() {
 
           <div className="textBlock">
             <div className="desc">
-              <p className="desc">Bundle Name - {bundle.bundleName}</p>
-              <p className="desc">Location - {bundle.location}</p>
-              <p className="desc">Collection Time - {bundle.collectionTime}</p>
+              <p className="desc">Collection Time - {bundle.end_time}</p>
               <p className="desc">Allergens - {bundle.allergens}</p>
             </div>
           </div>
