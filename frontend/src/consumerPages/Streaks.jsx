@@ -46,12 +46,7 @@ function Streaks() {
       <hr></hr>
       <p>Summary PIS</p>
 
-      {bundle && (
-        <div>
-          <h1>streak: {bundle.streak}</h1>
-          <h1>userID: {bundle.user_id}</h1>
-        </div>
-      )}
+      
 
 
       </>

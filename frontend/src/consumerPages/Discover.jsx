@@ -61,8 +61,8 @@ function Discover() {
                     </div>
                     <div className="textBlock">
                       <div className="desc">
-                      <p className="desc">Availbale - {bundle.available}</p>
-                      <p className="desc">Price - {bundle.price_display}</p>
+                      <p className="desc">Available - {bundle.available}</p>
+                      <p className="desc">Price - £{bundle.price_display}</p>
                       <p className="desc">Collection Time - {bundle.end_time}</p>
                        </div>
                     </div>
