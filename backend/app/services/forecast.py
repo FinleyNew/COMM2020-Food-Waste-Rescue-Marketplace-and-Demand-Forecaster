@@ -6,6 +6,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from datetime import datetime
+from app.schemas.forecast import ForecastPublic, ForecastBase
 import pandas as pd
 import numpy as np
 
@@ -26,9 +27,10 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     hour = bundle_in.start_time.hour
     #Process that data into something usable
     df = create_dataframe(records)
-    model = train_model(df)
+    model_res, model_no_show = train_model(df)
     #Call the create_forecast crud function to actually add it to the database
     #This function needs to return a forecast in the type Forecast which has
+    posting_id=getattr(bundle_in, "posting_id", 0)
     #user_id, posting_id, predicted_reservations and predicted_no_show_prob
     X_new = pd.DataFrame([{
         "user_id": str(bundle_in.user_id),
@@ -39,8 +41,17 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
         "hour_cos": np.cos(2*np.pi*hour/24),
         "dow": dow
     }])
-    y_pred = float(model.predict(X_new)[0])
-    return max(0.0, y_pred)
+    y_pred_res = float(model_res.predict(X_new)[0])
+    y_pred_no_show = float(model_no_show.predict(X_new)[0])
+    predicted_reservations = max(0, int(round(y_pred_res)))
+    predicted_no_show_prob = min(1.0, max(0.0, y_pred_no_show / y_pred_res)) if y_pred_res > 0 else 0.0
+    forecast = ForecastPublic(
+        user_id=bundle_in.user_id,
+        posting_id=posting_id,
+        predicted_reservations=predicted_reservations,
+        predicted_no_show_prob=predicted_no_show_prob
+    )
+    return forecast
 
 def create_dataframe(records) -> pd.DataFrame:
     user_ids = [str(r.user_id) for r in records]
@@ -52,6 +63,7 @@ def create_dataframe(records) -> pd.DataFrame:
     hour_sin = [np.sin(2*np.pi*h/24) for h in hours]
     hour_cos = [np.cos(2*np.pi*h/24) for h in hours]
     observed_reservations = [float(r.observed_reservations) for r in records]
+    observed_no_shows = [float(r.observed_no_show) for r in records]
     df = pd.DataFrame({
         'user_id': user_ids,
         'category': categories,
@@ -60,24 +72,37 @@ def create_dataframe(records) -> pd.DataFrame:
         'hour_sin': hour_sin,
         'hour_cos': hour_cos,
         'dow': dows,
-        'observed_reservations': observed_reservations
+        'observed_reservations': observed_reservations,
+        'observed_no_shows': observed_no_shows
     })
     return df
 
 def train_model(df: pd.DataFrame) -> Pipeline:
-    X = df.drop(columns=['observed_reservations'])
-    y = df['observed_reservations']
+    X = df.drop(columns=['observed_reservations', 'observed_no_shows'])
+    y_res = df['observed_reservations']
+    y_no_show = df['observed_no_shows']
     categorical = ["user_id", "category", "dow"]
     numeric = ["raining", "hour_sin", "hour_cos", "price"]
-    preProcess = ColumnTransformer(
+    preProcess_res = ColumnTransformer(
         transformers=[
             ("cat", OneHotEncoder(handle_unknown="ignore"), categorical),
             ("num", "passthrough", numeric)
         ]
     )
-    clf = Pipeline([
-        ("preprocess", preProcess),
+    preProcess_no_show = ColumnTransformer(
+        transformers=[
+            ("cat", OneHotEncoder(handle_unknown="ignore"), categorical),
+            ("num", "passthrough", numeric)
+        ]
+    )
+    clf_res = Pipeline([
+        ("preprocess", preProcess_res),
         ("model", PoissonRegressor(alpha=0.1, max_iter=2000)),
     ])
-    clf.fit(X, y)
-    return clf
+    clf_no_show = Pipeline([
+        ("preprocess", preProcess_no_show),
+        ("model", PoissonRegressor(alpha=0.1, max_iter=2000)),
+    ])
+    clf_res.fit(X, y_res)
+    clf_no_show.fit(X, y_no_show)
+    return clf_res, clf_no_show
