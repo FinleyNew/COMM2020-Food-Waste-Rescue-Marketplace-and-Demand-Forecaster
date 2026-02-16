@@ -214,6 +214,11 @@ function AddBundles() {
           <button onClick={forecastData}>Forecast Data</button>
         </div>
       </section>
+      <section>
+        <h4>Forecasting</h4>
+        <p>Predicted Reservations - {data.predicted_reservations}</p>
+        <p>Predicted Reservations - {data.predicted_no_show_prob}</p>
+      </section>
     </>
   );
 }
