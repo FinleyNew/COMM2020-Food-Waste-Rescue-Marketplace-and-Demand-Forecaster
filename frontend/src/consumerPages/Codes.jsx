@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
+import Company from "../Assets/Company.png";
 function Codes() {
   const [bundles, setBundles] = useState([]); //create state
     
@@ -38,7 +39,7 @@ function Codes() {
           <section>
             <div className="bundleEntry">
               <div className="textBlock">
-                <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=" alt="Food" className="leftImg"/>
+                <img src={Company} alt="Company" className="leftImg"/>
                 <div className="desc">
                   <p className="desc">Reservation ID : {bundle.reservation_id}</p>
                   <p className="desc">Claim Code - {bundle.claim_code}</p>

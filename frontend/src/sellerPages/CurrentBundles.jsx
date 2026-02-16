@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './CurrentBundles.css'
+import Company from "../Assets/Company.png";
+import Bundle from "../Assets/Bundleimage.png";
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
@@ -93,8 +95,8 @@ const enterCode = (claim_code) => {
             <div className="bundleEntry">
               <div className="textBlock">
                 <img
-                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                  alt="Food"
+                  src={Company}
+                  alt="Company"
                   className="leftImg"
                 />
                 <div className="desc">
@@ -117,8 +119,8 @@ const enterCode = (claim_code) => {
 
               <div className="formatter">
                 <img
-                  src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-                  alt="Food"
+                  src={Bundle}
+                  alt="Bundle"
                   className="thumbnail"
                 />
                 {/* <p className="desc">Company Name - {bundle.companyName}</p> */}

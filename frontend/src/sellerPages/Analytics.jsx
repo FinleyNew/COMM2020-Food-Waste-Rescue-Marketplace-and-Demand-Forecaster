@@ -1,8 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
-
-
+import Company from "../Assets/Company.png";
 import './Analytics.css'
 
 function Analytics() {
@@ -73,7 +71,7 @@ function Analytics() {
       </section>
 
       <div className="gridRow">
-        <img className="companyImage" src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+        <img className="companyImage" src={Company}></img>
         <div className="gridColumn">
           <p className="bubbleText">Total Waste Prevented</p>
           <div className="circleObject">

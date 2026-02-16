@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom"; //to use the buttons to change to other pages
 import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
 import './Discover.css'
+import Company from "../Assets/Company.png";
+import Bundle from "../Assets/Bundleimage.png";
 function BundleSelect() {
 
   const { id } = useParams();
@@ -94,8 +96,8 @@ function BundleSelect() {
         <div className="bundleEntry">
           <div className="textBlock">
             <img
-              src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-              alt="Food"
+              src={Company}
+              alt="Company"
               className="leftImg"
             />
             <div className="desc">
@@ -113,8 +115,8 @@ function BundleSelect() {
 
           <div className="formatter">
             <img
-              src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="
-              alt="Food"
+              src={Bundle}
+              alt="Bundle"
               className="thumbnail"
             />
             {/*<p className="desc">Company Name - {bundle.companyName}</p>*/}
