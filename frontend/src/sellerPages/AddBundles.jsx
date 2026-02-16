@@ -91,8 +91,33 @@ function AddBundles() {
 
       <section>
         
+        
 
+        
         <div className="textBlock">
+          <label htmlFor="category">Enter Bundle Category :</label>
+
+          <select
+            name="category"
+            id="category"
+            value={bundleCategory}
+            onChange={(e) => setBundleCategory(e.target.value)}
+          >
+          <option value="">Select category</option>
+          <option value="baked_goods">Baked Goods</option>
+          <option value="fruit">Fruit</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="meat">Meat</option>
+          
+          <option value="seafood">Seafood</option>
+          <option value="SNACKS">Snacks</option>
+          <option value="dairy">Dairy</option>
+          <option value="drinks">Drinks</option>
+          </select>
+
+
+
+          {/*
           <label htmlFor="category">Enter Bundle Category :</label>
           <input
             id="category"
@@ -100,6 +125,9 @@ function AddBundles() {
             value={bundleCategory}
             onChange={(e) => setBundleCategory(e.target.value)}
           />
+          
+          */ }
+          
           <br></br>
 
 
@@ -136,7 +164,7 @@ function AddBundles() {
 
           
 
-         <label htmlFOr="collectionTime">Collection Time</label>
+         <label htmlFor="collectionTime">Collection Time</label>
          <select
           id="collectionTime"
           onChange={(e) => {
