@@ -1,6 +1,6 @@
 section{
     display: flex;
-    justify-content: flex-start;
+    justify-content: row;
     gap: 200px;
     background-color: rgb(81, 155, 81);
 }

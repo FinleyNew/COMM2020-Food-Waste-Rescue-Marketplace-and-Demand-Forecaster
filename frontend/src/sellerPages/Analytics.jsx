@@ -57,7 +57,7 @@ function Analytics() {
         {analytics.map(analytic => (
             <div key={analytic.posting_id}>
               <div className="desc">
-               <p className="desc">user_id - {analytic.user_id}</p>
+              <p className="desc">user_id - {analytic.user_id}</p>
                 <p className="desc">Company - Amazon</p>
                 <p className="desc">Price - {analytic.price}</p>
                 <p className="desc">Category - {analytic.category}</p>
