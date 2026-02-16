@@ -34,7 +34,7 @@ function Analytics() {
   );
 
   const chartData = [
-    { label: "Reservations", value: totalReservations, color: "#4CAF50" },
+    { label: "Collected", value: totalReservations, color: "#4CAF50" },
     { label: "No Shows", value: totalNoShows, color: "#FF5722" }
   ];
 
