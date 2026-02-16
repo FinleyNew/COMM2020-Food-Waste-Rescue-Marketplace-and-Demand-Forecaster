@@ -53,7 +53,7 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     )
     return forecast
 
-def create_dataframe(records) -> pd.DataFrame:
+def create_dataframe(records):
     user_ids = [str(r.user_id) for r in records]
     categories = [str(r.category) for r in records]
     prices = [np.log(float(r.price)) for r in records]
@@ -77,7 +77,7 @@ def create_dataframe(records) -> pd.DataFrame:
     })
     return df
 
-def train_model(df: pd.DataFrame) -> Pipeline:
+def train_model(df: pd.DataFrame):
     X = df.drop(columns=['observed_reservations', 'observed_no_shows'])
     y_res = df['observed_reservations']
     y_no_show = df['observed_no_shows']
@@ -106,3 +106,11 @@ def train_model(df: pd.DataFrame) -> Pipeline:
     clf_res.fit(X, y_res)
     clf_no_show.fit(X, y_no_show)
     return clf_res, clf_no_show
+
+def get_baseline(train_df: pd.DataFrame, dow: int, start_time: int):
+    mask = (train_df["dow"] == dow) & (train_df["start_time"] == start_time)
+    subset = train_df.loc[mask, "observed_reservations"]
+    if len(subset) > 0:
+        return float(subset.mean())
+    # fallback if no exact matches:
+    return float(train_df["observed_reservations"].mean())
