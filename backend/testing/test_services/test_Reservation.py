@@ -29,7 +29,7 @@ def test_collection_with_valid_code_success(mock_db):
     import app.crud.reservation as reservation_crud
     
     # Ensures when the mock database is used in the CRUD it returns the reservation with the correct claim code
-    def dynamic_get(claim_code, seller_id, db):
+    def dynamic_get(claim_code, db):
         if claim_code == "ABC123":
             return res
         return None 
@@ -41,7 +41,7 @@ def test_collection_with_valid_code_success(mock_db):
     
     reservation_service.collect_by_code(
         claim_code="ABC123",
-        seller_id=2,
+        
         db=mock_db
     )
 
@@ -51,38 +51,7 @@ def test_collection_with_valid_code_success(mock_db):
 
 #tests if the collection fails for the right collection code but wrong seller 
 
-def test_collection_with_wrong_seller(mock_db):
-    
-    post = SimplePosting(id=201, owner_id=2)
-    res = SimpleReservation(
-        id=101, 
-        status="PENDING", 
-        claim_code="ABC123",
-        posting=post
-    )
 
-    import app.crud.reservation as reservation_crud
-    
-    # Ensures when the mock database is used in the CRUD it returns the reservation with the correct claim code
-    def dynamic_get(claim_code, seller_id, db):
-        if claim_code == "ABC123":
-            return res
-        return None 
-
-    reservation_crud.get_reservation_by_claim_code = MagicMock(side_effect=dynamic_get)
-    mock_db.commit.return_value = None
-    mock_db.refresh.return_value = None
-
-    with pytest.raises(Exception): #Should raise an error because the seller ID does not match the posting owner ID
-        reservation_service.collect_by_code(
-        claim_code="ABC123",
-        seller_id=100,  # Wrong seller ID
-        db=mock_db
-    )
-
-    
-    assert res.status == ReservationStatus.RESERVED
-    mock_db.commit.assert_called_once() 
 
 
 def test_collection_with_invalid_code(mock_db):
@@ -97,7 +66,7 @@ def test_collection_with_invalid_code(mock_db):
     import app.crud.reservation as reservation_crud
     
     # Ensures when the mock database is used in the CRUD it returns the reservation with the correct claim code
-    def dynamic_get(claim_code, seller_id, db):
+    def dynamic_get(claim_code, db):
         if claim_code == "ABC123":
             return res
         return None 
@@ -108,7 +77,7 @@ def test_collection_with_invalid_code(mock_db):
     with pytest.raises(Exception): 
         reservation_service.collect_by_code(
             claim_code="WRONGCODE",
-            seller_id=2,
+            
             db=mock_db
         )
 
