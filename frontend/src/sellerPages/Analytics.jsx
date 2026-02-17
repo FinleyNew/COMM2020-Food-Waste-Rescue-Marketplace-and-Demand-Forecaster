@@ -32,13 +32,22 @@ function Analytics() {
     (sum, item) => sum + item.observed_no_show,
     0
   );
+  const totalWeight = analytics.reduce(
+    (sum,item) => sum + item.weight,
+    0
+  );
+  const totalExpired = analytics.reduce(
+    (sum,item) => sum + item.observed_expired,
+    0
+  );
 
   const chartData = [
     { label: "Collected", value: totalReservations, color: "#4CAF50" },
-    { label: "No Shows", value: totalNoShows, color: "#FF5722" }
+    { label: "No Shows", value: totalNoShows, color: "#fc3d03" },
+    { label : "Expired", value: totalExpired, color: "#6f00ff"}
   ];
 
-  const maxValue = Math.max(totalReservations,totalNoShows);
+  const maxValue = Math.max(totalReservations,totalNoShows, totalExpired);
 
 
 
@@ -61,9 +70,12 @@ function Analytics() {
                 <p className="desc">Category - {analytic.category}</p>
                 <p className="desc">Reservations - {analytic.observed_reservations}</p>
                 <p className="desc">No Shows - {analytic.observed_no_show}</p>
+                <p className="desc">Expired - {analytic.observed_expired}</p>
                 <p className="desc">Pickup Date - {analytic.pickup_date}</p>
                 <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
                 <p className="desc">Raining - {analytic.raining.toString()}</p>
+                <p className="desc">Weight - {analytic.weight}</p>
+                
               </div>
             </div>
           ))
@@ -77,7 +89,7 @@ function Analytics() {
           <div className="circleObject">
             <img className="circleBubble" 
               src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
-            <p className="weight">52kg</p>
+            <p className="weight">{totalWeight}</p>
           </div>
         </div>
       </div>
@@ -90,7 +102,7 @@ function Analytics() {
               <div
                 className="bar"
                 style={{
-                  height: `${(item.value / maxValue) * 200}px`, // scale bar height
+                  height: `${(item.value / maxValue) * 350}px`, // scale bar height
                   backgroundColor: item.color
                 }}
               >

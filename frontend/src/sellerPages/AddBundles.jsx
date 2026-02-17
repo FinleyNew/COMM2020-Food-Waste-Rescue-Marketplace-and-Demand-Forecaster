@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AddBundles() {
-  
+  const [bundleWeight, setBundleWeight] = useState("");
   const [bundlePrice,setBundlePrice] = useState("");
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
@@ -29,6 +29,7 @@ function AddBundles() {
       allergens: bundleAllergens,
       available: Number(numberAvailable),
       price: Number(bundlePrice),
+      weight: Number(bundleWeight),
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
@@ -50,6 +51,7 @@ function AddBundles() {
       allergens: bundleAllergens,
       available: Number(numberAvailable),
       price: Number(bundlePrice),
+      weight: Number(bundleWeight),
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
@@ -161,7 +163,16 @@ function AddBundles() {
             onChange={(e) => setBundlePrice(e.target.value)}
           />
           <br></br>
+          
 
+          <label htmlFor="weight">Enter Bundle Weight :</label>
+          <input
+            id="weight"
+            type="number"
+            value={bundleWeight}
+            onChange={(e) => setBundleWeight(e.target.value)}
+          />
+          <br></br>
           
 
          <label htmlFor="collectionTime">Collection Time</label>
