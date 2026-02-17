@@ -120,8 +120,7 @@ def seed_record(db: Session):
     for post in postings:
         #Get total number of reservations for the post
         reservations_query = select(func.count()).select_from(Reservation).where(
-            Reservation.posting_id == post.posting_id,
-            Reservation.status.in_([ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
+            Reservation.posting_id == post.posting_id
         )
         reservations = db.exec(reservations_query).one()
 
