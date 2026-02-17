@@ -14,6 +14,7 @@ class BundlePostingBase(SQLModel):
     allergens: str
     available: int
     price: Decimal
+    weight: int
     
 # The create schema for bundle postings
 # Inherits from base 

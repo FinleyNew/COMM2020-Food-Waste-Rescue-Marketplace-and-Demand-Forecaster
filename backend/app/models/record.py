@@ -21,6 +21,7 @@ class Record(SQLModel, table=True):
     observed_reservations: int
     observed_no_show: int
     observed_expired: int
+    weight: int
 
     # These are automatic relationships to other tables
     seller: "Seller" = Relationship(back_populates="records")
