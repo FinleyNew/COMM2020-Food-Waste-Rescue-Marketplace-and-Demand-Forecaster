@@ -120,10 +120,8 @@ function BundleSelect() {
               alt="Bundle"
               className="thumbnail"
             />
-            {/*<p className="desc">Company Name - {bundle.companyName}</p>*/}
-          </div>
-
-          <div className="formatter">
+            <br></br>
+            <div className="formatter">
             <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}>
               Pay
             </button>
@@ -134,6 +132,8 @@ function BundleSelect() {
                 <button className="button" onClick={closePopup}>Confirm</button>
               </div>
             )}
+          </div>
+            {/*<p className="desc">Company Name - {bundle.companyName}</p>*/}
           </div>
         </div>
       </section>
