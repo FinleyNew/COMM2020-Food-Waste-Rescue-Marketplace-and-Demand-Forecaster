@@ -91,7 +91,7 @@ def seed_bundle_posting(db: Session):
             price=Decimal(uniform(5.0, 15.0)),
             pickup_window=pickup_window,
             status=fake.random_element(elements=BundleStatus).value,
-            weight=uniform(0.25, 2)
+            weight=randint(250, 2000)
         )
         db.add(posting)
     db.commit()
@@ -158,7 +158,7 @@ def seed_forecast(db: Session):
             user_id=post.user_id,
             posting_id=post.posting_id,
             predicted_reservations=randint(5, 50),
-            predicted_no_show_prob=uniform(0, 0.25)
+            predicted_no_show_prob=round(uniform(0, 0.25), 2)
         )
         db.add(forecast)
     db.commit()
