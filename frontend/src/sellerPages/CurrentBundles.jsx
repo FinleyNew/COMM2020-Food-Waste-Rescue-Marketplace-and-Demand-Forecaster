@@ -102,7 +102,7 @@ const enterCode = (claim_code) => {
                 <div className="desc">
                   
                   
-                  <p className="desc">Price - £{bundle.price}</p>
+                  <p className="desc">Price - £{bundle.price_display}</p>
                   <p className="desc">Category - {bundle.category}</p>
                   <p classname="desc">Available - {bundle.available}</p>
                 </div>
@@ -112,8 +112,10 @@ const enterCode = (claim_code) => {
                 <div className="desc">
                   <p className="desc">Allergens - {bundle.allergens} </p>
                   {/*<p className="desc">Location - </p>*/}
-                  <p className="desc">Pickup Start Time -{bundle.start_time} </p>
-                  <p className="desc">Pickup End Time -{bundle.end_time} </p>
+                  <p className="desc">Date to Collect - {bundle.formatted_date}</p>
+                  <p className="desc">Time to Collect - {bundle.formatted_time_range}</p>
+                  <p className="desc">Weight - {bundle.weight}</p>
+                  <p className="desc">Reserved - {bundle.reserved}</p>
                 </div>
               </div>
 

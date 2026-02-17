@@ -63,7 +63,8 @@ function Discover() {
                       <div className="desc">
                       <p className="desc">Available - {bundle.available}</p>
                       <p className="desc">Price - £{bundle.price_display}</p>
-                      <p className="desc">Collection Time - {bundle.end_time}</p>
+                      <p className="desc">Date to Collect - {bundle.formatted_date}</p>
+                      <p className="desc">Time to Collect - {bundle.formatted_time_range}</p>
                        </div>
                     </div>
                     <div className="formatter">
