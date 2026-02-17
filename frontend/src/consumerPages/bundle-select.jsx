@@ -103,7 +103,7 @@ function BundleSelect() {
             <div className="desc">
               <p className="desc">Category - {bundle.category}</p>
               <p className="desc">Allergens - {bundle.allergens}</p>
-              <p classname="desc">Price - {bundle.price}</p>
+              <p classname="desc">Price - £{bundle.price}</p>
             </div>
           </div>
 
