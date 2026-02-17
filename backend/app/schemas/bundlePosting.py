@@ -46,4 +46,11 @@ class BundlePostingPublic(BundlePostingBase):
     def end_time(self) -> datetime:
         return self.pickup_window.upper
     
+    #This gets the time range in the form HH:MM
+    @computed_field
+    def formatted_time_range(self) -> str:
+        start: datetime = self.pickup_window.lower
+        end: datetime = self.pickup_window.upper
+        return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
+    
     model_config = {"from_attributes": True}
