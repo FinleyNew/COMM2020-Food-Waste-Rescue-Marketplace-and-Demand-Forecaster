@@ -19,7 +19,8 @@ def create_record(bundle_posting: BundlePosting, db: Session) -> Record:
         update={
             "raining": is_raining(),
             "observed_reservations": bundle_posting.reserved,
-            "observed_no_show": get_no_show(posting_id=posting_id, db=db)
+            "observed_no_show": get_no_show(posting_id=posting_id, db=db),
+            "observed_expired": bundle_posting.available
         }
     )
     db.add(record)
