@@ -35,16 +35,10 @@ class BundlePostingPublic(BundlePostingBase):
     def price_display(self) -> str:
         return f"{self.price:.2f}"
     
-    # This is a computed field to get the start of the time range
+    #This gets the data of the pickup in the form DD/MM/YYYY
     @computed_field
-    def start_time(self) -> datetime:
-        #automatically pulls from the db_bundle.pickup_window.lower
-        return self.pickup_window.lower
-    
-    #This is a computed field to get the end of the time range
-    @computed_field
-    def end_time(self) -> datetime:
-        return self.pickup_window.upper
+    def formatted_date(self) -> str:
+        return self.pickup_window.lower.strftime("%d/%m/%Y")
     
     #This gets the time range in the form HH:MM
     @computed_field
