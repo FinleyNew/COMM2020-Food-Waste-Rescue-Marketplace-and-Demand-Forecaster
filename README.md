@@ -58,3 +58,6 @@ Collaborators
 ## Tests
 
 Go the extra mile and write tests for your application. Then provide examples on how to run them here.
+Must have pytest 9.0.2 installed.
+To run all tests, use command python -m pytest .\backend\testing\ in the terminal
+To run specific test files add the file on the end of the command eg python -m pytest .\backend\testing\test_Reservation.py
