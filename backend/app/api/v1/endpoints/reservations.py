@@ -2,17 +2,19 @@ from fastapi import APIRouter
 from app.api.deps import SellerDep, ConsumerDep, SessionDep
 from app.schemas.reservation import ReservationCreate, ReservationPublic
 from app.services import reservation as reservation_service
+from app.services import consumer as consumer_service
 
 router = APIRouter()
 
 # Endpoint for creating a new reservation
 @router.post("/", response_model= ReservationPublic)
 def create_reservation(reservation_in: ReservationCreate, current_consumer: ConsumerDep, db: SessionDep):
-    user_id = current_consumer.user_id
-    if user_id:
+    consumer_id = current_consumer.user_id
+    if consumer_id:
+        consumer_service.increment_streak(consumer_id=consumer_id, streak=current_consumer.streak, db=db)
         return reservation_service.create_reservation(
             reservation_in=reservation_in,
-            consumer_id=user_id,
+            consumer_id=consumer_id,
             posting_id=reservation_in.posting_id,
             db=db
         )
