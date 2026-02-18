@@ -2,22 +2,22 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
 function Streaks() {
-  const [bundle,setBundle] = useState(null);
-  useEffect(() => {
-  const token = localStorage.getItem('token');
+  const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
+  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
+  const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
 
-  fetch("http://127.0.0.1:8000/api/v1/consumers/me", {
+  fetch("http://127.0.0.1:8000/api/v1/consumers/me", { //the backend server url to get the information for 
     headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
+      "Authorization": `Bearer ${token}`, //sending the token to verify the user
+      "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
     }
   })
-    .then(res => res.json())
+    .then(res => res.json()) //converts the data into an object JSON
     .then(data => {
-      setBundle(data);
+      setBundle(data); //updates the react state so the page can rerender with the new info
     })
     .catch(err => {
-      console.error("Error fetching bundles:", err);
+      console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
       alert("No data");
     });
 
@@ -28,23 +28,23 @@ function Streaks() {
       <>
         <nav class="row">
         <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/discover" className="button"><b>Discover</b></Link>
+        <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
         <Link to="/codes" className="button"><b>Codes</b></Link>
       </nav>
       <h1 className="headline">Streaks</h1>
       {bundle && (
         <div>
-          <p className="textCentre">You have rescued for {bundle.streak} week(s) in a row!</p><hr></hr>
+          <p className="textCentre">You have rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
         </div>
       )}
       <div className="rowIcons">
         <p className="headline">Badges:</p>
         <img className="icon" src="https://thumbs.dreamstime.com/b/modern-bronze-circle-metal-badges-labels-design-elements-vector-illustration-84952346.jpg" alt="Bronze Badge"/>   
         <img className="icon" src="https://img.favpng.com/11/16/23/gold-medal-silver-medal-illustration-png-favpng-vJK1hRCuK1bUdtG0Hb4dJ7VkU.jpg" alt="Silver Badge"/>   
-        <img className="icon" src="https://www.onlygfx.com/wp-content/uploads/2022/04/blank-gold-badge-label-2.png" alt="Gold Badge"/>   
+        <img className="icon" src="https://www.onlygfx.com/wp-content/uploads/2022/04/blank-gold-badge-label-2.png" alt="Gold Badge"/>   {/* badge images */}
       </div>
       <hr></hr>
-      <p>Summary PIS</p>
+      <p>Summary PIS</p> {/* summary statement */}
 
       
 
