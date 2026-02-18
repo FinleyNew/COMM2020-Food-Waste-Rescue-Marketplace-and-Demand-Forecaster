@@ -14,6 +14,7 @@ class BundlePostingBase(SQLModel):
     allergens: str
     available: int
     price: Decimal
+    weight: int
     
 # The create schema for bundle postings
 # Inherits from base 
@@ -34,15 +35,16 @@ class BundlePostingPublic(BundlePostingBase):
     def price_display(self) -> str:
         return f"{self.price:.2f}"
     
-    # This is a computed field to get the start of the time range
+    #This gets the data of the pickup in the form DD/MM/YYYY
     @computed_field
-    def start_time(self) -> datetime:
-        #automatically pulls from the db_bundle.pickup_window.lower
-        return self.pickup_window.lower
+    def formatted_date(self) -> str:
+        return self.pickup_window.lower.strftime("%d/%m/%Y")
     
-    #This is a computed field to get the end of the time range
+    #This gets the time range in the form HH:MM
     @computed_field
-    def end_time(self) -> datetime:
-        return self.pickup_window.upper
+    def formatted_time_range(self) -> str:
+        start: datetime = self.pickup_window.lower
+        end: datetime = self.pickup_window.upper
+        return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
     
     model_config = {"from_attributes": True}

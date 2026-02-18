@@ -5,9 +5,9 @@ import './Analytics.css'
 
 function Analytics() {
   const [analytics, setAnalytics] = useState([])
-  useEffect(() => {
+  useEffect(() => { //Retrieves user tocken
     const token = localStorage.getItem('token');
-    fetch("http://127.0.0.1:8000/api/v1/records/me",{
+    fetch("http://127.0.0.1:8000/api/v1/records/me",{ //Fetch data for the user
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -18,11 +18,12 @@ function Analytics() {
         console.log("API DATA:", data); 
         setAnalytics(data);
       })
-      .catch(err => {
+      .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
         alert("No data ");
       });
   }, []);
+  //Calculated totals from arrays retrieved from the backend
   const totalReservations = analytics.reduce(
     (sum,item) => sum + item.observed_reservations,
     0
@@ -32,18 +33,29 @@ function Analytics() {
     (sum, item) => sum + item.observed_no_show,
     0
   );
+  const totalWeight = analytics.reduce(
+    (sum,item) => sum + item.weight,
+    0
+  );
+  const totalExpired = analytics.reduce(
+    (sum,item) => sum + item.observed_expired,
+    0
+  );
 
+  //Structure for the bar chart displau
   const chartData = [
     { label: "Collected", value: totalReservations, color: "#4CAF50" },
-    { label: "No Shows", value: totalNoShows, color: "#FF5722" }
+    { label: "No Shows", value: totalNoShows, color: "#fc3d03" },
+    { label : "Expired", value: totalExpired, color: "#6f00ff"}
   ];
-
-  const maxValue = Math.max(totalReservations,totalNoShows);
+  //Maximum scaling the bar chart could use
+  const maxValue = Math.max(totalReservations,totalNoShows, totalExpired);
 
 
 
   return (
     <>
+    {/* Initialises the navifation bar where sellers can move between pages */}
       <nav class="row">
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
@@ -52,6 +64,7 @@ function Analytics() {
       </nav>
       
       <section>
+        {/* Desciption entries outputted to screen with the user_id */}
         {analytics.map(analytic => (
             <div key={analytic.posting_id}>
               <div className="desc">
@@ -61,15 +74,18 @@ function Analytics() {
                 <p className="desc">Category - {analytic.category}</p>
                 <p className="desc">Reservations - {analytic.observed_reservations}</p>
                 <p className="desc">No Shows - {analytic.observed_no_show}</p>
+                <p className="desc">Expired - {analytic.observed_expired}</p>
                 <p className="desc">Pickup Date - {analytic.pickup_date}</p>
                 <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
                 <p className="desc">Raining - {analytic.raining.toString()}</p>
+                <p className="desc">Weight - {analytic.weight}</p>
+                
               </div>
             </div>
           ))
         }
       </section>
-
+      {/* Makes a grid structure with top row containing the company image and circle object with waste prevention stats */}
       <div className="gridRow">
         <img className="companyImage" src={Company}></img>
         <div className="gridColumn">
@@ -77,10 +93,11 @@ function Analytics() {
           <div className="circleObject">
             <img className="circleBubble" 
               src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
-            <p className="weight">52kg</p>
+            <p className="weight">{totalWeight}</p>
           </div>
         </div>
       </div>
+      {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
         <div className="gridRow">
           {/*idx = index */}
           <div className="barChart">
@@ -90,7 +107,7 @@ function Analytics() {
               <div
                 className="bar"
                 style={{
-                  height: `${(item.value / maxValue) * 200}px`, // scale bar height
+                  height: `${(item.value / maxValue) * 350}px`, // scale bar height
                   backgroundColor: item.color
                 }}
               >
@@ -106,5 +123,5 @@ function Analytics() {
     </>
   );
 }
-
+//exports the component so it can be imported in other files
 export default Analytics

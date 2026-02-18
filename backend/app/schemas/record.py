@@ -13,6 +13,8 @@ class RecordBase(SQLModel):
     raining: bool
     observed_reservations: int
     observed_no_show: int
+    observed_expired: int
+    weight: int
 
 # The create schema for records
 class RecordCreate(RecordBase):

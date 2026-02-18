@@ -23,6 +23,7 @@ class BundlePosting(SQLModel, table=True):
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
     status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
+    weight: int
 
     # These are automatic relationships to other tables
     # so posting.seller will return the seller from the seller table that links to this posting

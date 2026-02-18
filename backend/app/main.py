@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.api.v1.api import api_router
+from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -8,10 +9,12 @@ app = FastAPI(
     swagger_ui_parameters={"persistAuthorization": True}
 )
 
+
+
 # Middleware so the backend can talk to the frontend on the same device
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Simplified for prototype
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

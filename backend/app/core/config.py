@@ -1,3 +1,5 @@
+from typing import Any, List, Union
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 from pathlib import Path
@@ -15,6 +17,17 @@ class Settings(BaseSettings):
     POSTGRES_DB: str = ""
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: str = ""
+
+    ALLOWED_ORIGINS: Any = []
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
 
     #Builds the full DB URL
     @property

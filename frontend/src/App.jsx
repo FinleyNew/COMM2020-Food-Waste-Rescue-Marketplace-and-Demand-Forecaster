@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import ProtectedRoute from "./pages/ProtectedRoute";
+import { useState } from "react"; //importing state so we can use it to change the state of the react page when anything changes
+import { Routes, Route, Link } from "react-router-dom"; //needs to be imported so we can add routes between pages
+import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
 
 // Pages (ensure the file names match exactly)
-import Discover from "./consumerPages/Discover";
+import Discover from "./consumerPages/Discover"; //every import allows a page to be accessed via the url from another page
 import BundleSelect from "./consumerPages/bundle-select";
 import Streaks from "./consumerPages/Streaks";
 import Codes from "./consumerPages/Codes";
@@ -36,7 +36,7 @@ function App() {
         
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
-        <Route path="/discover" element={<ProtectedRoute user={user} requireRole="consumer"><Discover /></ProtectedRoute>} />
+        <Route path="/discover" element={<ProtectedRoute user={user} requireRole="consumer"><Discover /></ProtectedRoute>} /> {/* protected route only allows a user with the correct type to access that page */}
         <Route path="/bundle-select" element={<ProtectedRoute user={user} requireRole="consumer"><BundleSelect /></ProtectedRoute>} />
         <Route path="/streaks" element={<ProtectedRoute user={user} requireRole="consumer"><Streaks /></ProtectedRoute>} />
         <Route path="/codes" element={<ProtectedRoute user={user} requireRole="consumer"><Codes /></ProtectedRoute>} />
@@ -53,7 +53,7 @@ function App() {
         <Route path="/view-reports" element={<ProtectedRoute user={user} requireRole="admin"><ViewReports /></ProtectedRoute>} />
 
 
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} /> {/* these pages are accessible by everybody */}
         <Route path="/unauthorised" element={<Unauthorised />} />
         <Route path="/bundle/:id" element={<BundleSelect />} />
         
@@ -63,4 +63,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; //exports the component so it can be imported in other files
