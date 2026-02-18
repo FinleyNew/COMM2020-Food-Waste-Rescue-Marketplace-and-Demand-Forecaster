@@ -34,7 +34,7 @@ function Streaks() {
       <h1 className="headline">Streaks</h1>
       {bundle && (
         <div>
-          <p className="textCentre">You have rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
+          <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
         </div>
       )}
       <div className="rowIcons">
