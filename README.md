@@ -10,6 +10,7 @@ Our motivation for building this project was to help mitigate the the 10.7 milli
 - [Usage](#usage)
 - [Credits](#credits)
 - [Tests](#tests)
+- [Licence](#licence)
 
 ## Installation
 
@@ -97,7 +98,7 @@ test_no_reservations()
 
 trests that a newly created user with no streak or reservation has a streak of 0 - Pass indicates new users with no reservations have the correct starting streak
 
-## License
+## Licence
 
 This project is licensed under the MIT License - see the [LICENCE](LICENCE) file for details.
 
