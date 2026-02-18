@@ -30,6 +30,8 @@ To navigate the project you will have to login as either a seller or consumer. A
  - For the consumer log in with the credentials: consumer, 1
  - For the seller log in with the credentials: seller, 1
 
+![Homepage Screenshot](images/consumerNavigation.png)
+
 Consumer Pages Guide 
 
  Looking at all Bundles - Use the navigation buttons at the top of the screen to get to the "Discover" page. All the bundles and their information are displayed there.
@@ -40,6 +42,7 @@ Consumer Pages Guide
 
  Finding your current streak - Use the navigation buttons at the top of the screen to naviate to the "Streaks" page, there is a users current streak and the badges they have collected.
 
+![Homepage Screenshot](images/sellersNavigation.png)
 
 Sellers Pages Guide
 
