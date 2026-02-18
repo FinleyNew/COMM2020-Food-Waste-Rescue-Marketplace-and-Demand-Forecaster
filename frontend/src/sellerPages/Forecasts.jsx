@@ -7,7 +7,7 @@ function Forecasts() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    fetch("http://127.0.0.1:8000/api/v1/forecasts/me", {
+    fetch("http://127.0.0.1:8000/api/v1/forecasts/me", { //Fetch data for the user
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -17,7 +17,7 @@ function Forecasts() {
       .then(data => {
         setForecasts(data); // data is likely an array
       })
-      .catch(err => {
+      .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching forecasts:", err);
         alert("No data");
       });
@@ -25,6 +25,7 @@ function Forecasts() {
 
   return (
     <>
+    {/* Initialises the navifation bar where sellers can move between pages */}
       <nav>
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
@@ -32,7 +33,9 @@ function Forecasts() {
         <Link to="/analytics" className="button"><b>Analytics</b></Link>
       </nav>
 
+      {/* Forecast data section outputting predictions and IDs */}
       <section>
+        {/* Display message while loading forecasts before outputting data*/}
         {forecasts.length === 0 ? (
           <p>Loading forecasts...</p>
         ) : (
@@ -46,34 +49,9 @@ function Forecasts() {
             </div>
           ))
         )}
-      </section>
-      {/*
-        <section>
-        <div className="textBlock">
-          <form>
-            <p>Seller ID:</p>
-              <input type="text"/>
-            <p>Number of Bundles:</p>
-              <input type="text"/>
-            <p>Day of the Week:</p>
-              <input type="text"/>
-            <p>Pickup Time Window:</p>
-              <input type="text"/>
-            <p>Product Type:</p>
-              <input type="text"/>
-            <p>Price:</p>
-              <input type="text"/>
-              <br></br>
-              <br></br>
-            <button className="button" type="submit">Generate</button>
-          </form>
-        </div>
-
-      </section>
-      */}
-      
+      </section>      
     </>
   );
 }
-
+//exports the component so it can be imported in other files
 export default Forecasts;

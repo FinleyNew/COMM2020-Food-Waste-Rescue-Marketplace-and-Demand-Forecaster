@@ -5,9 +5,9 @@ import './Analytics.css'
 
 function Analytics() {
   const [analytics, setAnalytics] = useState([])
-  useEffect(() => {
+  useEffect(() => { //Retrieves user tocken
     const token = localStorage.getItem('token');
-    fetch("http://127.0.0.1:8000/api/v1/records/me",{
+    fetch("http://127.0.0.1:8000/api/v1/records/me",{ //Fetch data for the user
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -18,11 +18,12 @@ function Analytics() {
         console.log("API DATA:", data); 
         setAnalytics(data);
       })
-      .catch(err => {
+      .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
         alert("No data ");
       });
   }, []);
+  //Calculated totals from arrays retrieved from the backend
   const totalReservations = analytics.reduce(
     (sum,item) => sum + item.observed_reservations,
     0
@@ -41,18 +42,20 @@ function Analytics() {
     0
   );
 
+  //Structure for the bar chart displau
   const chartData = [
     { label: "Collected", value: totalReservations, color: "#4CAF50" },
     { label: "No Shows", value: totalNoShows, color: "#fc3d03" },
     { label : "Expired", value: totalExpired, color: "#6f00ff"}
   ];
-
+  //Maximum scaling the bar chart could use
   const maxValue = Math.max(totalReservations,totalNoShows, totalExpired);
 
 
 
   return (
     <>
+    {/* Initialises the navifation bar where sellers can move between pages */}
       <nav class="row">
         <Link to="/login" className="button"><b>Login Page</b></Link>
         <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
@@ -61,6 +64,7 @@ function Analytics() {
       </nav>
       
       <section>
+        {/* Desciption entries outputted to screen with the user_id */}
         {analytics.map(analytic => (
             <div key={analytic.posting_id}>
               <div className="desc">
@@ -81,7 +85,7 @@ function Analytics() {
           ))
         }
       </section>
-
+      {/* Makes a grid structure with top row containing the company image and circle object with waste prevention stats */}
       <div className="gridRow">
         <img className="companyImage" src={Company}></img>
         <div className="gridColumn">
@@ -93,6 +97,7 @@ function Analytics() {
           </div>
         </div>
       </div>
+      {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
         <div className="gridRow">
           {/*idx = index */}
           <div className="barChart">
@@ -118,5 +123,5 @@ function Analytics() {
     </>
   );
 }
-
+//exports the component so it can be imported in other files
 export default Analytics
