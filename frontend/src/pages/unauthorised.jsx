@@ -2,11 +2,12 @@ import { Routes, Route, Link } from "react-router-dom";
 function Unauthorised() {
   return(
     <>
-      
-      <nav>
+      {/* Gives a clickable link to redirect back to the login page */}
+      <nav> 
           <Link to="/login">Login Page</Link>
       </nav>
-      <h1>You are unauthorised to view this page, please log in with another account </h1>
+      {/* Ouputs a message explaining the user lacks authorisation */}
+      <h1>You are unauthorised to view this page, please log in with another account </h1> 
 
     </>
     
@@ -14,4 +15,4 @@ function Unauthorised() {
 
 }
 
-export default Unauthorised;
+export default Unauthorised; //exports the component so it can be imported in other files
