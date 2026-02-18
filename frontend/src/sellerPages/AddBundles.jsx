@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddBundles() {
   const [bundleWeight, setBundleWeight] = useState("");
+  
   const [bundlePrice,setBundlePrice] = useState("");
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
@@ -33,6 +34,18 @@ function AddBundles() {
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
+    if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
+      alert("Weight must be positive and less than 10,000");
+      return;
+    }
+    else if(Number(numberAvailable)>1000 || Number(numberAvailable)<0){
+      alert("Number available must be positive and less than 1000");
+      return;
+    }
+    else if(Number(bundlePrice)>100 || Number(bundlePrice)<0){
+      alert("Price must be positive and less than 100");
+      return;
+    }
     console.log(data);
     fetch("http://127.0.0.1:8000/api/v1/bundles/", {
       method: "POST",
@@ -55,7 +68,19 @@ function AddBundles() {
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
-    console.log(data);
+    if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
+      alert("Weight must be positive and less than 10,000");
+      return;
+    }
+    else if(Number(numberAvailable)>1000 || Number(numberAvailable)<0){
+      alert("Number available must be positive and less than 1000");
+      return;
+    }
+    else if(Number(bundlePrice)>100 || Number(bundlePrice)<0){
+      alert("Price must be positive and less than 100");
+      return;
+    }
+    
     fetch("http://127.0.0.1:8000/api/v1/forecasts/", {
       method: "POST",
       headers: {
