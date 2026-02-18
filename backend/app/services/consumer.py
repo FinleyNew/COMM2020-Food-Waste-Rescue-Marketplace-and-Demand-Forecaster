@@ -35,4 +35,11 @@ def increment_streak(consumer_id: int, streak: int, db: Session):
         # Get the timestamp from that reservation
         reservation = reservations[0]
         timestamp = reservation.timestamp
+        # Get the current time
+        now = datetime.now(timezone.utc)
         #If this reservation is more than a week old increment the streak
+        time_diff = now - timestamp
+        if time_diff.days >= 7:
+            consumer_crud.increment_consumers_streak(consumer_id=consumer_id, db=db)
+    else:
+        consumer_crud.increment_consumers_streak(consumer_id=consumer_id, db=db)
