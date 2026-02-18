@@ -53,4 +53,4 @@ function Streaks() {
     );
 }
 
-export default Streaks;
+export default Streaks; //exports the component so it can be imported in other files

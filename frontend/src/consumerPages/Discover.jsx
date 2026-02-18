@@ -77,4 +77,4 @@ function Discover() {
   );
 }
 
-export default Discover
+export default Discover; //exports the component so it can be imported in other files

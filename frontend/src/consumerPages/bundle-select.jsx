@@ -136,4 +136,4 @@ function BundleSelect() {
   );
 }
 
-export default BundleSelect;
+export default BundleSelect; //exports the component so it can be imported in other files
