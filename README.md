@@ -112,9 +112,9 @@ Test the amount of no shows is correctly calculated - Pass indicates the count o
 
 **test_Streak**
 
-test_streak_reset_after_7_days()
+test_streak_reset_after_14_days()
 
-Tests the streak successfully resets after 7 days - Pass indicates the streak successfully resets after the specified time.
+Tests the streak successfully resets after 14 days - Pass indicates the streak successfully resets after the specified time.
 
 test_streak_persists_when_active()
 
