@@ -13,34 +13,33 @@ import numpy as np
 
 
 def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: Session):
+    #This function creates and stores a forecast object in the database for a given bundle posting
     forecast = get_forecast(bundle_in=bundle_in, db=db)
+    #Object is created
     create_forecast = ForecastCreate(
         user_id=forecast.user_id,
         posting_id=posting_id,
         predicted_reservations=forecast.predicted_reservations,
         predicted_no_show_prob=forecast.predicted_no_show_prob
     )
+    #Object is stored in the database
     forecast_crud.create_forecast(forecast=create_forecast, db=db)
     return
 
 def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     search_start = bundle_in.start_time.time()
     search_end = bundle_in.end_time.time()
-    #Get any data you need from records
-    #Use record_crud.get_all_records(db=db) to get all records for training the model
+    #Get records to train the model
     records = record_crud.get_all_records(db=db)
-    #Use record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=?, db=db)
     same_time_records = record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=0, db=db)
-    #For day_of_week 0 is Sunday and 6 is Saturday
+    #Collecting the day of week and starting time hour for the new bundle posting to make the prediction
     dow = (bundle_in.start_time.weekday() + 1) % 7
     hour = bundle_in.start_time.hour
-    #Process that data into something usable
+    #Creating the dataframe and training the model
     df = create_dataframe(records)
     model_res, model_no_show = train_model(df)
-    #Call the create_forecast crud function to actually add it to the database
-    #This function needs to return a forecast in the type Forecast which has
     posting_id=getattr(bundle_in, "posting_id", 0)
-    #user_id, posting_id, predicted_reservations and predicted_no_show_prob
+    #Converting attributes to a usable format
     X_new = pd.DataFrame([{
         "user_id": str(bundle_in.user_id),
         "category": str(bundle_in.category),
@@ -50,10 +49,13 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
         "hour_cos": np.cos(2*np.pi*hour/24),
         "dow": dow
     }])
+    #Getting predictions for number of reservations and no show probability
     y_pred_res = float(model_res.predict(X_new)[0])
     y_pred_no_show = float(model_no_show.predict(X_new)[0])
+    #Normalising the predictions so they can't be negative and the no show probability is between 0 and 1
     predicted_reservations = max(0, int(round(y_pred_res)))
     predicted_no_show_prob = min(1.0, max(0.0, y_pred_no_show / y_pred_res)) if y_pred_res > 0 else 0.0
+    #Creates the forecast and returns it
     forecast = ForecastPublic(
         user_id=bundle_in.user_id,
         posting_id=posting_id,
@@ -63,6 +65,8 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     return forecast
 
 def create_dataframe(records):
+    #Parameters are transformed into a format that can be used to train the model.
+    #Categorical variables are converted to strings, price is log transformed, hour is converted to sin and cos components and the day of week is calculated.
     user_ids = [str(r.user_id) for r in records]
     categories = [str(r.category) for r in records]
     prices = [np.log(float(r.price)) for r in records]
@@ -73,6 +77,7 @@ def create_dataframe(records):
     hour_cos = [np.cos(2*np.pi*h/24) for h in hours]
     observed_reservations = [float(r.observed_reservations) for r in records]
     observed_no_shows = [float(r.observed_no_show) for r in records]
+    #Dataframe is created with the transformed parameters
     df = pd.DataFrame({
         'user_id': user_ids,
         'category': categories,
@@ -87,11 +92,14 @@ def create_dataframe(records):
     return df
 
 def train_model(df: pd.DataFrame):
+    #Observed reservations and observed no shows are dropped since these are the target variables we want to predict.
     X = df.drop(columns=['observed_reservations', 'observed_no_shows'])
     y_res = df['observed_reservations']
     y_no_show = df['observed_no_shows']
+    #Categorical features and numeric features and separated
     categorical = ["user_id", "category", "dow"]
     numeric = ["raining", "hour_sin", "hour_cos", "price"]
+    #Preprocessing pipelines are created for both the number of reservations and no show probability predictions, using a column transformer to apply one hot encoding to the categorical features
     preProcess_res = ColumnTransformer(
         transformers=[
             ("cat", OneHotEncoder(handle_unknown="ignore"), categorical),
@@ -104,6 +112,7 @@ def train_model(df: pd.DataFrame):
             ("num", "passthrough", numeric)
         ]
     )
+    #Pipelines are created for both predictions using a poisson regression model
     clf_res = Pipeline([
         ("preprocess", preProcess_res),
         ("model", PoissonRegressor(alpha=0.1, max_iter=2000)),
@@ -112,14 +121,16 @@ def train_model(df: pd.DataFrame):
         ("preprocess", preProcess_no_show),
         ("model", PoissonRegressor(alpha=0.1, max_iter=2000)),
     ])
+    #Fit and return the models
     clf_res.fit(X, y_res)
     clf_no_show.fit(X, y_no_show)
     return clf_res, clf_no_show
 
 def get_baseline(train_df: pd.DataFrame, dow: int, start_time: int):
+    #This function is used to get a baseline prediction for the number of reservations based on the average number of reservations for records with the same day of week and starting hour.
     mask = (train_df["dow"] == dow) & (train_df["start_time"] == start_time)
     subset = train_df.loc[mask, "observed_reservations"]
     if len(subset) > 0:
         return float(subset.mean())
-    # fallback if no exact matches:
+    #Fallback if no exact matches:
     return float(train_df["observed_reservations"].mean())

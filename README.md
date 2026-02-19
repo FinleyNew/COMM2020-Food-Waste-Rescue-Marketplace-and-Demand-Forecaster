@@ -18,7 +18,7 @@ To run the program you will need to have install Docker.
 
  - Open docker desktop and ensure the Docker engine is running.
  - In your terminal navigate to the root folder and run docker compose up --build
- - This starts up the frontend, backend and database and installs any neccessary dependencies.
+ - This starts up the frontend, backend and database and installs any necessary dependencies.
  - You may get an error saying that start.sh is not executable. If this is the case run chmod +x backend/start.sh && ls -l backend/start.sh and try again.
  - Once the logs say the application is running open http://127.0.0.1:5173 on your web browser for the web app.
  - To access the API swagger documentation open http://127.0.0.1:8000/docs
@@ -87,7 +87,6 @@ Collaborators
 
 ## Tests
 
-Go the extra mile and write tests for your application. Then provide examples on how to run them here.
 Must have pytest 9.0.2 installed.
 
 To run all tests, use command python -m pytest .\backend\testing\ in the terminal
