@@ -17,7 +17,7 @@ class SimpleReservation:
         self.posting = posting
 
 #Tests collect_by_code is functional with a correct claim code and seller.
-def test_collection_with_valid_code_success_and_test_double_collection(mock_db):
+def test_collection_with_valid_code_success(mock_db):
     post = SimplePosting(id=201, owner_id=2)
     res = SimpleReservation(
         id=101, 
