@@ -12,12 +12,12 @@ class SimpleUser:
 
 #Tests the check_streak function to ensure that it correctly resets the streak after 7 days of inactivity.
 #TODO When strak is fully implemted check within weeks instead of days.
-def test_streak_reset_after_7_days(mock_db):
+def test_streak_reset_after_14_days(mock_db):
     # Create a simpleUser with a streak of 5
     user = SimpleUser(user_id=1, streak=5)
     
     # Simulate a reservation from 10 days ago
-    ten_days_ago = datetime.now(timezone.utc) - timedelta(days=10)
+    ten_days_ago = datetime.now(timezone.utc) - timedelta(days=15)
     old_res = MagicMock()
     old_res.timestamp = ten_days_ago
     old_res.status = "COLLECTED"
