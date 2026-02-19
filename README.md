@@ -8,6 +8,7 @@ Our motivation for building this project was to help mitigate the the 10.7 milli
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Tech Stack](#tech-stack)
 - [Credits](#credits)
 - [Tests](#tests)
 - [Licence](#licence)
@@ -22,6 +23,7 @@ To run the program you will need to have install Docker.
  - You may get an error saying that start.sh is not executable. If this is the case run chmod +x backend/start.sh && ls -l backend/start.sh and try again.
  - Once the logs say the application is running open http://127.0.0.1:5173 on your web browser for the web app.
  - To access the API swagger documentation open http://127.0.0.1:8000/docs
+ - To shut the program down press ctrl + c to exit the logs and run docker compose down in the terminal to remove the container.
 
 ## Usage
 
@@ -63,15 +65,13 @@ Sellers Pages Guide
 
 
 
-## Tech Stack
+## Tech-Stack
 
 | Category | Tools |
 | :--- | :--- |
 | Frontend | React |
 | Backend | Python, FastAPI, PostgreSQL |
 | DevOps | Docker |
-
-## Features and Roadmap
 
 ## Credits
 
@@ -89,40 +89,40 @@ Collaborators
 
 Must have pytest 9.0.2 installed.
 
-To run all tests, use command python -m pytest .\backend\testing\ in the terminal
+To run all tests, use command python -m pytest .\backend\testing\ in the terminal.
 
-To run specific test files add the file on the end of the command eg python -m pytest .\backend\testing\test_Reservation.
+To run specific test files add the file on the end of the command e.g. python -m pytest .\backend\testing\test_Reservation.
 
-All prototype tests used unittest.mock to mimic a database to fully test the backend code without using the real database
+All prototype tests used unittest.mock to mimic a database to fully test the backend code without using the real database.
 
 
 **test_Reservation.py**
 
 test_collection_with_valid_code_success()
 
-tests the collection feature using a valid code - Pass indicates the collection can be made with a correct code
+Tests the collection feature using a valid code - Pass indicates the collection can be made with a correct code.
 
 test_collection_with_invalid_code()
 
-tests the collection feature using a invalid code - Pass indicates the collection cannot be made with a correct code
+Tests the collection feature using a invalid code - Pass indicates the collection cannot be made with a correct code.
 
 test_no_show_count()
 
-test the amount of no shows is correctly calculated - Pass indicates the count of no shows is correct
+Test the amount of no shows is correctly calculated - Pass indicates the count of no shows is correct.
 
 **test_Streak**
 
 test_streak_reset_after_7_days()
 
-tests the streak successfully resets after 7 days - Pass indicates the streak successfully resets after the specified time 
+Tests the streak successfully resets after 7 days - Pass indicates the streak successfully resets after the specified time.
 
 test_streak_persists_when_active()
 
-tests the streak reamins when a reservation has been made in the last 7 days - Pass indicates the streak will  not reset if a reservation is made within 7 days
+Tests the streak reamins when a reservation has been made in the last 7 days - Pass indicates the streak will  not reset if a reservation is made within 7 days.
 
 test_no_reservations()
 
-trests that a newly created user with no streak or reservation has a streak of 0 - Pass indicates new users with no reservations have the correct starting streak
+Tests that a newly created user with no streak or reservation has a streak of 0 - Pass indicates new users with no reservations have the correct starting streak.
 
 ## Licence
 
