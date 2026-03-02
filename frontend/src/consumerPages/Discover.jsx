@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import {useState, useEffect} from "react";
 import './Discover.css'
+
 import Company from "../Assets/Company.png";
 import Bundle from "../Assets/Bundleimage.png";
 function Discover() {
