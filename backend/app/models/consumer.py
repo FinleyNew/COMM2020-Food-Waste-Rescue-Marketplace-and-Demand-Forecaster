@@ -4,6 +4,7 @@ from sqlmodel import Field, SQLModel, Relationship
 if TYPE_CHECKING:
     from .user import User
     from .reservation import Reservation
+    from .issueReport import IssueReport
 
 # The database table model for Consumers
 class Consumer(SQLModel, table=True):
@@ -14,3 +15,4 @@ class Consumer(SQLModel, table=True):
     # These are automatic relationships to other tables
     user: "User" = Relationship(back_populates="consumer")
     reservations: List["Reservation"] = Relationship(back_populates="consumer")
+    report: List["IssueReport"] = Relationship(back_populates="consumer")

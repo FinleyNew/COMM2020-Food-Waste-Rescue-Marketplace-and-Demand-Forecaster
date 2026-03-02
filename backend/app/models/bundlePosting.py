@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .reservation import Reservation
     from .record import Record
     from .forecast import Forecast
+    from .issueReport import IssueReport
 
 # The database table model for BundlePostings
 class BundlePosting(SQLModel, table=True):
@@ -31,3 +32,4 @@ class BundlePosting(SQLModel, table=True):
     reservations: List["Reservation"] = Relationship(back_populates="posting")
     record: "Record" = Relationship(back_populates="posting")
     forecast: "Forecast" = Relationship(back_populates="posting")
+    report: List["IssueReport"] = Relationship(back_populates="posting")
