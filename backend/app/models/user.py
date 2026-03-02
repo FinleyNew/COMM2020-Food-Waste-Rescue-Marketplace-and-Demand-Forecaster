@@ -10,6 +10,9 @@ if TYPE_CHECKING:
 class User(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     role: Role
+    username: str
+    password: str
+    email: str
 
     # These are automatic relationships to other tables
     seller: Optional["Seller"] = Relationship(back_populates="user")
