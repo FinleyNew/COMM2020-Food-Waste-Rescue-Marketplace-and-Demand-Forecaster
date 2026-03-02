@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./loginPage.css"
 
 function LoginPage({setUser}) {// username is the variable, setUsername changes it and useState means it can be changed throughout the program
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
@@ -40,28 +40,29 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   }
 
   return (
-    <>
-      <h3>Please Enter Username and Password</h3> {/* Writes a prompt to screen for username and password */}
-
-      {/* Creates an input box for the user to send their username and saves it */}
-      <input 
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      {/* Creates a space in the page */}
-      <br /><br />
-      {/* Creates an input box for the user to send their password and saves it */}
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {/* Creates a space in the page */}
-      <br /><br />
-      {/* Makes a button that submits entires to above input boxes when selected*/}
-      <button onClick={loginFunction}>Login</button>
-    </>
+    <div className="loginBox">
+      <div className="loginItems">
+        <h3>Please Enter Username and Password</h3> {/* Writes a prompt to screen for username and password */}
+        {/* Creates an input box for the user to send their username and saves it */}
+        <input 
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        {/* Creates a space in the page */}
+        <br /><br />
+        {/* Creates an input box for the user to send their password and saves it */}
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {/* Creates a space in the page */}
+        <br /><br />
+        {/* Makes a button that submits entires to above input boxes when selected*/}
+        <button onClick={loginFunction}>Login</button>
+      </div>
+    </div>
   );
 }
 

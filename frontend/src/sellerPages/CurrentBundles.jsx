@@ -133,8 +133,6 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             <button onClick={() => deleteBundle(bundle.posting_id)}>
                 Delete Bundle
               </button>
-              {/* Adds whitespace between bundles */}
-              <div className="whitespace" aria-hidden="true"></div>
         </div>
         ))}
       </section>
