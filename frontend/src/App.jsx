@@ -22,23 +22,23 @@ import Unauthorised from "./pages/unauthorised";
 
 function App() {
 
-  const[darkMode, setDarkMode] = useState(false);
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+  const[darkMode, setDarkMode] = useState(false); //store the variable for the current state
+  useEffect(() => { //update the page if the theme is changed
+    const savedTheme = localStorage.getItem("theme"); //store the theme in local storage
 
     if(savedTheme === "dark"){
-      setDarkMode(true);
+      setDarkMode(true); //if dark mode is selected change the theme
       document.documentElement.classList.add("dark");
     }
   },[]);
 
-  const toggleDarkMode = () => {
-    if(darkMode){
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme","light");
+  const toggleDarkMode = () => { //function for turning dark mode on
+    if(darkMode){ //if dark mode is selected (return back to light)
+      document.documentElement.classList.remove("dark"); //adds dark to the html tag
+      localStorage.setItem("theme","light"); //set theme to light
     } else {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme","dark");
+      localStorage.setItem("theme","dark"); //set theme to dark
     }
     setDarkMode(!darkMode)
   }
