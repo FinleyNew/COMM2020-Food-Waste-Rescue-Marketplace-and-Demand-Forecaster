@@ -122,109 +122,112 @@ function AddBundles() {
         <Link to="/analytics" className="button"><b>Analytics</b></Link>
         <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
       </nav>
+    <div className="centreBox">
+      <div className="centreItems">
+          {/* Displays a header which states the name of the current page */}
+        <h1 className="headline">Add Bundles</h1>
 
-    {/* Displays a header which states the name of the current page */}
-      <h1 className="headline">Add Bundles</h1>
+        <section>  
+          <div className="textBlock">
+            {/* Creates a drop down menu for the user to click a bundle category */}
+            <label htmlFor="category">Enter Bundle Category :</label>
 
-      <section>  
-        <div className="textBlock">
-          {/* Creates a drop down menu for the user to click a bundle category */}
-          <label htmlFor="category">Enter Bundle Category :</label>
+            <select
+              name="category"
+              id="category"
+              value={bundleCategory}
+              onChange={(e) => setBundleCategory(e.target.value)}
+            >
+            {/* List of options fo the user to choose from the menu */}
+            <option value="">Select Category</option>
+            <option value="baked_goods">Baked Goods</option>
+            <option value="fruit">Fruit</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="meat">Meat</option>
+            <option value="seafood">Seafood</option>
+            <option value="SNACKS">Snacks</option>
+            <option value="dairy">Dairy</option>
+            <option value="drinks">Drinks</option>
+            </select>
 
+            {/* Creates a space in the page */}         
+            <br></br>
+
+            {/* Outputs an input box with a label asking for bundle allergen inputs */}
+            <label htmlFor="allergens">Enter Bundle Allergens :</label>
+            <input
+              id="allergens"
+              type="text"
+              value={bundleAllergens}
+              onChange={(e) => setBundleAllergens(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+
+            {/* Makes an input box with a label to input the number of bundles to sell */}
+            <label htmlFor="numAvailable">Enter Number Available :</label>
+            <input
+              id="numAvailable"
+              type="number"
+              value={numberAvailable}
+              onChange={(e) => setNumberAvailable(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+
+            {/* An input box with a label to input the bundle price */}
+            <label htmlFor="price">Enter Bundle Price :</label>
+            <input
+              id="price"
+              type="number"
+              value={bundlePrice}
+              onChange={(e) => setBundlePrice(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+            
+            {/* Outputs an input box with a label asking for bundle weight */}
+            <label htmlFor="weight">Enter Bundle Weight :</label>
+            <input
+              id="weight"
+              type="number"
+              value={bundleWeight}
+              onChange={(e) => setBundleWeight(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+            
+          {/* Outputs a drop down menu for the user to click a bundle collection time */}
+          <label htmlFor="collectionTime">Collection Time</label>
           <select
-            name="category"
-            id="category"
-            value={bundleCategory}
-            onChange={(e) => setBundleCategory(e.target.value)}
+            id="collectionTime"
+            onChange={(e) => { {/* Divides the start and end time before saving them seperately */}
+              const[start,end] = e.target.value.split(" - ");
+              setStartTime(start);
+              setEndTime(end);
+            }}
           >
-          {/* List of options fo the user to choose from the menu */}
-          <option value="">Select Category</option>
-          <option value="baked_goods">Baked Goods</option>
-          <option value="fruit">Fruit</option>
-          <option value="vegetables">Vegetables</option>
-          <option value="meat">Meat</option>
-          <option value="seafood">Seafood</option>
-          <option value="SNACKS">Snacks</option>
-          <option value="dairy">Dairy</option>
-          <option value="drinks">Drinks</option>
+            {slots.map((slot,idx) =>(
+              <option key={idx} value={slot}>
+                {slot}
+              </option>
+            ))}
           </select>
-
-          {/* Creates a space in the page */}         
-          <br></br>
-
-          {/* Outputs an input box with a label asking for bundle allergen inputs */}
-          <label htmlFor="allergens">Enter Bundle Allergens :</label>
-          <input
-            id="allergens"
-            type="text"
-            value={bundleAllergens}
-            onChange={(e) => setBundleAllergens(e.target.value)}
-          />
-          {/* Creates a space in the page between boxes */}
-          <br></br>
-
-          {/* Makes an input box with a label to input the number of bundles to sell */}
-          <label htmlFor="numAvailable">Enter Number Available :</label>
-          <input
-            id="numAvailable"
-            type="number"
-            value={numberAvailable}
-            onChange={(e) => setNumberAvailable(e.target.value)}
-          />
-          {/* Creates a space in the page between boxes */}
-          <br></br>
-
-          {/* An input box with a label to input the bundle price */}
-          <label htmlFor="price">Enter Bundle Price :</label>
-          <input
-            id="price"
-            type="number"
-            value={bundlePrice}
-            onChange={(e) => setBundlePrice(e.target.value)}
-          />
-          {/* Creates a space in the page between boxes */}
-          <br></br>
-          
-          {/* Outputs an input box with a label asking for bundle weight */}
-          <label htmlFor="weight">Enter Bundle Weight :</label>
-          <input
-            id="weight"
-            type="number"
-            value={bundleWeight}
-            onChange={(e) => setBundleWeight(e.target.value)}
-          />
-          {/* Creates a space in the page between boxes */}
-          <br></br>
-          
-         {/* Outputs a drop down menu for the user to click a bundle collection time */}
-         <label htmlFor="collectionTime">Collection Time</label>
-         <select
-          id="collectionTime"
-          onChange={(e) => { {/* Divides the start and end time before saving them seperately */}
-            const[start,end] = e.target.value.split(" - ");
-            setStartTime(start);
-            setEndTime(end);
-          }}
-         >
-          {slots.map((slot,idx) =>(
-            <option key={idx} value={slot}>
-              {slot}
-            </option>
-          ))}
-         </select>
-          <br></br>
-          {/* Button to add bundles when clicked and forecast the data */}
-          <button onClick={addBundle}>Add Bundle</button>
-          <br></br>
-          <button onClick={forecastData}>Forecast Data</button>
-        </div>
-      </section>
-      {/* Section with forecast data on added bundle with probabilities */}
-      <section>
-        <h4>Forecasts</h4>
-            <p>Predicted Reservations : {data.predicted_reservations}</p>
-            <p>No Show Probability : {data.predicted_no_show_prob}</p>
-      </section>
+            <br></br>
+            {/* Button to add bundles when clicked and forecast the data */}
+            <button onClick={addBundle}>Add Bundle</button>
+            <br></br>
+            <button onClick={forecastData}>Forecast Data</button>
+          </div>
+        </section>
+        {/* Section with forecast data on added bundle with probabilities */}
+        <section>
+          <h4>Forecasts</h4>
+              <p>Predicted Reservations : {data.predicted_reservations}</p>
+              <p>No Show Probability : {data.predicted_no_show_prob}</p>
+        </section>
+      </div>
+    </div>
     </>
   );
 }

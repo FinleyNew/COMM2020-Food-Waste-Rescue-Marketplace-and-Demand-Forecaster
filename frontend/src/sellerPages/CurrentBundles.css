@@ -77,3 +77,19 @@ section, .column{
   margin-bottom: 10px;
   margin-left: auto;
 }
+.centreBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.centreItems{
+    height: 720px;
+    width: 350px;;
+    border-radius: 2rem;
+    background-color: white;
+    text-align: center;
+    padding: 30px;
+    border: 4px solid green
+}
