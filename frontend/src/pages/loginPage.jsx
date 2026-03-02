@@ -6,7 +6,14 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
   const navigate = useNavigate();
+  const [Popup, setPopup] = useState(false);
+  function openPopup() {
+    setPopup(true); //if variable is true then popUp needs to be opened 
+  }
 
+  function closePopup() {
+    setPopup(false); //if variable is false then popUp needs to be closed
+  }
   function loginFunction() {
     if (username=== "consumer" && password === "1") { //Pathway for if the consumer details are correctly inputted
       setUser({ //Defines username and role constant attributes for this consumer login
@@ -61,6 +68,15 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         <br /><br />
         {/* Makes a button that submits entires to above input boxes when selected*/}
         <button onClick={loginFunction}>Login</button>
+        <button onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+              Register
+        </button>
+            {Popup && (
+              <div className="popupRegister open-popupRegister" id="Register">
+                <h1>Account Registration</h1>  {/*if the button is clicked, open the pop up to pay*/}
+                <button onClick={closePopup}>Confirm</button>
+              </div>
+            )}
       </div>
     </div>
   );
