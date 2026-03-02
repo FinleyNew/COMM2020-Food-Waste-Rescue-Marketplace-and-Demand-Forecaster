@@ -49,31 +49,37 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   return (
     <div className="loginBox">
       <div className="loginItems">
-        <h3>Please Enter Username and Password</h3> {/* Writes a prompt to screen for username and password */}
+        <h3>Please Enter Your Username and Password</h3> {/* Writes a prompt to screen for username and password */}
         {/* Creates an input box for the user to send their username and saves it */}
-        <input 
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        {/* Creates a space in the page */}
-        <br /><br />
+        <div className="rowRegister">
+          <p>Username:</p>
+          <input 
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
         {/* Creates an input box for the user to send their password and saves it */}
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        {/* Creates a space in the page */}
-        <br /><br />
+        <div className="rowRegister">
+          <p>Password:</p>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <br></br>
         {/* Makes a button that submits entires to above input boxes when selected*/}
-        <button onClick={loginFunction}>Login</button>
-        <button onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
-              Register
-        </button>
+        <div className="rowRegister">
+          <button className="loginButton" onClick={loginFunction}>Login</button>
+          <button className="loginButton" onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+                Register
+          </button>
+        </div>
             {Popup && (
               <div className="popupRegister open-popupRegister" id="Register">
                 <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
+                <br></br>
                 <div className="rowRegister">
                   <p>Username: </p>
                   <input 

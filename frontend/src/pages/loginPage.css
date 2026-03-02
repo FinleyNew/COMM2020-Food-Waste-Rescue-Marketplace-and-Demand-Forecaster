@@ -13,13 +13,22 @@ body{
 }
 .loginItems{
     transform: scale(1.5);
-    height: 175px;
+    height: 225px;
     width: 350px;;
     border-radius: 2rem;
     background-color: white;
     text-align: center;
     padding: 30px;
     border: 4px solid green;
+}
+
+.loginButton{
+    width: 100%;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 5px 5px;
 }
 
 .popupRegister{
