@@ -73,8 +73,28 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         </button>
             {Popup && (
               <div className="popupRegister open-popupRegister" id="Register">
-                <h1>Account Registration</h1>  {/*if the button is clicked, open the pop up to pay*/}
-                <button onClick={closePopup}>Confirm</button>
+                <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
+                <div className="rowRegister">
+                  <p>Username: </p>
+                  <input 
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
+                {/* Creates an input box for the user to send their password and saves it */}
+                <div className="rowRegister">
+                  <p>Password:</p>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <div className="rowRegister">
+                  <button onClick={closePopup}>Confirm</button>
+                  <button onClick={closePopup}>Cancel</button>
+                </div>
               </div>
             )}
       </div>
