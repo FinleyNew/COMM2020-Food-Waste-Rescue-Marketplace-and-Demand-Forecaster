@@ -1,7 +1,8 @@
-import { useState } from "react"; //importing state so we can use it to change the state of the react page when anything changes
+import { useState, useEffect } from "react"; //importing state so we can use it to change the state of the react page when anything changes
 import { Routes, Route, Link } from "react-router-dom"; //needs to be imported so we can add routes between pages
 import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
-
+//import './App.css'
+import "./index.css"
 // Pages (ensure the file names match exactly)
 import Discover from "./consumerPages/Discover"; //every import allows a page to be accessed via the url from another page
 import BundleSelect from "./consumerPages/bundle-select";
@@ -20,6 +21,28 @@ import Unauthorised from "./pages/unauthorised";
 //|{" "}
 
 function App() {
+
+  const[darkMode, setDarkMode] = useState(false);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if(savedTheme === "dark"){
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  },[]);
+
+  const toggleDarkMode = () => {
+    if(darkMode){
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme","light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme","dark");
+    }
+    setDarkMode(!darkMode)
+  }
+
   const [user, setUser] = useState(() => { //user = current state, setuser = function to update user and role later,  useState is a hook to remebember data across re-renders
   const savedUser = localStorage.getItem("user"); //reads from local storage under the key of user
   return savedUser ? JSON.parse(savedUser) : null; //if thertes something in local storage, if yes the parse converts back to a js object
@@ -28,11 +51,8 @@ function App() {
 
   return (
     <>
-      {/* <nav>
-        <Link to="/login">LoginPage</Link>
-        
-      </nav>*/}
-      <Routes>
+      
+        <Routes>
         
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
@@ -57,8 +77,17 @@ function App() {
         <Route path="/unauthorised" element={<Unauthorised />} />
         <Route path="/bundle/:id" element={<BundleSelect />} />
         
-
+        
       </Routes>
+      
+      <div>
+        <button className="dark-mode-btn" onClick={toggleDarkMode} >
+          {darkMode ? "Light Mode" : "Dark Mode"} 
+        </button>
+      </div>
+      
+      
+      
     </>
   );
 }

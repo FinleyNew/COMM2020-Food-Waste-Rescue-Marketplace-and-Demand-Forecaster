@@ -1,0 +1,36 @@
+:root {
+  --bg-color: white;
+  --text-color: black;
+  --button-bg: #111827;      /* dark button in light mode */
+  --button-text: white;
+}
+
+.dark {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --button-bg: #f3f4f6;      /* light button in dark mode */
+  --button-text: #111827;
+}
+
+.dark-mode-btn {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.darkModeButton{
+  background-color: #121212;
+}
