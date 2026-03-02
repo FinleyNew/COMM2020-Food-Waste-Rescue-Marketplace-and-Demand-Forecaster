@@ -70,7 +70,6 @@ function Discover() {
                     </div>
                   </section>
                 </Link>
-                <div className="whitespace" aria-hidden="true"></div>
               </div>
             ))}
       </section>
