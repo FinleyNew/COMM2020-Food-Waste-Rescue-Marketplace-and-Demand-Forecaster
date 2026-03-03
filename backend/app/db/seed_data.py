@@ -102,16 +102,16 @@ def seed_reservation(db: Session):
     consumers = db.exec(select(Consumer)).all()
     postings = db.exec(select(BundlePosting)).all()
 
-    #Add 400 reservations
-    for _ in range(400):
-        #Assign each reservation to a random consumer and posting
-        reservation = Reservation(
-            posting_id=fake.random_element(elements=postings).posting_id,
-            user_id=fake.random_element(elements=consumers).user_id,
-            timestamp=fake.date_time_between(datetime(2026, 1, 1), datetime(2026, 2, 10)),
-            status=fake.random_element(elements=ReservationStatus).value
-        )
-        db.add(reservation)
+    #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
+    for post in postings:
+        for i in range(fake.random_int(1, 25)):
+            reservation = Reservation(
+                posting_id=post.posting_id,
+                user_id=fake.random_element(elements=consumers).user_id,
+                timestamp=fake.date_time_between(datetime(2026, 1, 1), datetime(2026, 2, 10)),
+                status=fake.random_element(elements=ReservationStatus).value
+            )
+            db.add(reservation)
     db.commit()
 
 def seed_record(db: Session):
