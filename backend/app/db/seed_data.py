@@ -2,6 +2,7 @@ from decimal import Decimal
 from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
+from app.core.security import get_password_hash
 from datetime import datetime, timedelta
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
@@ -26,17 +27,18 @@ def seed_users(db: Session):
     seller_user = User(
         role=Role.SELLER,
         email="seller@gmail.com",
-        password="12345")
+        password="123")
     db.add(consumer_user)
     db.add(seller_user)
 
     #Add 100 users with a random role
     for _ in range(100):
         role = fake.random_element(elements=Role).value
+        password = fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
         user = User(
             role=role,
             email=fake.email(),
-            password=fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
+            password=get_password_hash(password)
             )
         db.add(user)
     db.commit()
