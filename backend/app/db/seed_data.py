@@ -26,7 +26,7 @@ def seed_users(db: Session):
     seller_user = User(
         role=Role.SELLER,
         email="seller@gmail.com",
-        password="12345")
+        password="123")
     db.add(consumer_user)
     db.add(seller_user)
 
