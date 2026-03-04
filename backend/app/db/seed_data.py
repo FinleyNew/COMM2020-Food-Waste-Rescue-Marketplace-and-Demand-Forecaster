@@ -19,8 +19,14 @@ def is_database_already_seeded(db: Session):
 
 def seed_users(db: Session):
     #Hardcode first 2 users as consumer and seller
-    consumer_user = User(role=Role.CONSUMER)
-    seller_user = User(role=Role.SELLER)
+    consumer_user = User(
+        role=Role.CONSUMER,
+        email="consumer@gmail.com",
+        password="123")
+    seller_user = User(
+        role=Role.SELLER,
+        email="seller@gmail.com",
+        password="12345")
     db.add(consumer_user)
     db.add(seller_user)
 
@@ -28,7 +34,9 @@ def seed_users(db: Session):
     for _ in range(100):
         role = fake.random_element(elements=Role).value
         user = User(
-            role=role
+            role=role,
+            email=fake.email(),
+            password=fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
             )
         db.add(user)
     db.commit()
