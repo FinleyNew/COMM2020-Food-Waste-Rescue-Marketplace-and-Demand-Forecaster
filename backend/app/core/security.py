@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from jose import jwt
+import jwt
 from app.core.config import settings
 
 import bcrypt
@@ -15,6 +15,6 @@ def get_password_hash(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 def create_access_token(subject: int, expires_delta: timedelta = timedelta(hours=8)):
-    expire = datetime.now(timezone.utc)
+    expire = datetime.now(timezone.utc) + expires_delta
     payload = {"sub": str(subject), "exp": expire}
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)

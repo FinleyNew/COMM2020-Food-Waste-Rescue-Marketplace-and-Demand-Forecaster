@@ -23,11 +23,11 @@ def seed_users(db: Session):
     consumer_user = User(
         role=Role.CONSUMER,
         email="consumer@gmail.com",
-        password="123")
+        password=get_password_hash("123"))
     seller_user = User(
         role=Role.SELLER,
         email="seller@gmail.com",
-        password="123")
+        password=get_password_hash("123"))
     db.add(consumer_user)
     db.add(seller_user)
 

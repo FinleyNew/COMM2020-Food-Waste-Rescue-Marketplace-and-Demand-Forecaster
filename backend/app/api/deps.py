@@ -41,8 +41,11 @@ def get_current_user(db: SessionDep, token: str = Depends(reusable_oauth2)) -> U
             detail="Could not validate credentials",
         )
     
+    if token_data.sub is None:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+    
     #Find the user in the database using the ID from the token
-    user = db.get(User, token_data.sub)
+    user = db.get(User, int(token_data.sub))
     if not user:
         raise HTTPException(status_code = 404, detail = "User not found")
 
