@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Any
 from sqlalchemy import Column
 from sqlmodel import Field, SQLModel
-from pydantic import computed_field
+from pydantic import computed_field, model_validator
 
 from app.models.enums import Category, BundleStatus
 
@@ -12,21 +12,32 @@ class BundlePostingBase(SQLModel):
     user_id: int
     category: Category
     allergens: str
-    available: int
-    price: Decimal
-    weight: int
+    # Can't have a negative ammount of bundles
+    available: int = Field(ge=0) 
+    # Price should only have 2 decimal places
+    price: Decimal = Field(ge=0, decimal_places=2) 
+    # Weight is in grams
+    weight: int = Field(gt=0) 
     
 # The create schema for bundle postings
 # Inherits from base 
 class BundlePostingCreate(BundlePostingBase):
     start_time: datetime
     end_time: datetime
+    # When creating available has to be greater than 0
+    available: int = Field(gt=0)
+    # Ensures that the start_time comes afer the end_time
+    @model_validator(mode="after")
+    def check_end_after_start(self):
+        if self.end_time <= self.start_time:
+            raise ValueError("end_time must be after start_time")
+        return self
 
 # The public schema for bundle postings
 # Inherits from base 
 class BundlePostingPublic(BundlePostingBase):
     posting_id: int
-    reserved: int
+    reserved: int = Field(ge=0)
     status: BundleStatus
     pickup_window: Any = Field(exclude=True)
 
