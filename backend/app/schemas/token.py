@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 # The schema for sending tokens
-# Currently not in use
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
