@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import './Discover.css'
 
 import Company from "../assets/Company.png";
-import Bundle from "../assets/Bundleimage.png";
+import Bundle from "../assets/BundleImage.png";
 function Discover() {
   
   const [bundles, setBundles] = useState([]); //defines the state and variable that allows the react page to be rerendered when called

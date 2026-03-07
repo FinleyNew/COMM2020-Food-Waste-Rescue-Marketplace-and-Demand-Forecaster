@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom"; //to use the buttons to chan
 import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
 import './Discover.css' //links to the css page to move and size different components around
 import Company from "../assets/Company.png";
-import Bundle from "../assets/Bundleimage.png"; //here for the base images
+import Bundle from "../assets/BundleImage.png"; //here for the base images
 function BundleSelect() {
 
   const { id } = useParams(); //creates the ID variable to store the bundleID to navigate pages with it

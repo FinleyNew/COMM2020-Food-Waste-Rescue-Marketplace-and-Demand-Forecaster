@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './CurrentBundles.css'
 import Company from "../assets/Company.png";
-import Bundle from "../assets/Bundleimage.png";
+import Bundle from "../assets/BundleImage.png";
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
