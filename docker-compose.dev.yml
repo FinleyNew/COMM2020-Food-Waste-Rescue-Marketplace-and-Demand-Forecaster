@@ -1,0 +1,17 @@
+services:
+  app:
+    ports:
+      - '8000:8000'
+    volumes:
+      - './backend:/app'  # hot reload
+  frontend:
+    ports:
+      - '5173:5173'
+    volumes:
+      - './frontend:/app'
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  db:
+    ports:
+      - '5432:5432'
