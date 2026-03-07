@@ -2,8 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './CurrentBundles.css'
-import Company from "../Assets/Company.png";
-import Bundle from "../Assets/Bundleimage.png";
+import Company from "../assets/Company.png";
+import Bundle from "../assets/Bundleimage.png";
 function CurrentBundles() {
   
   const [bundles, setBundles] = useState([]); //create state
