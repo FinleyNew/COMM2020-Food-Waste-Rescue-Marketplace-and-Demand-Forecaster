@@ -10,5 +10,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ .
 
 RUN chmod +x ./start.sh
+RUN sed -i 's/\r//' ./start.sh
 
 CMD [ "./start.sh" ]
