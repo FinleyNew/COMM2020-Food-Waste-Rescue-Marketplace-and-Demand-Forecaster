@@ -54,3 +54,4 @@ Faker==40.4.0
 scikit-learn==1.8.0
 pytest==9.0.2
 pandas==3.0.0
+bcrypt
