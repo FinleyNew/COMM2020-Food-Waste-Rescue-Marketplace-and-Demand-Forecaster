@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import consumers, sellers, reservations, records, forecasts, login
+from app.api.v1.endpoints import consumers, sellers, reservations, records, forecasts, login, users
 from app.api.v1.endpoints import bundlesPostings
 
 api_router = APIRouter()
@@ -13,3 +13,4 @@ api_router.include_router(reservations.router, prefix = "/reservations", tags=["
 api_router.include_router(records.router, prefix = "/records", tags=["records"])
 api_router.include_router(forecasts.router, prefix = "/forecasts", tags=["forecasts"])
 api_router.include_router(login.router, prefix = "/login", tags=["login"])
+api_router.include_router(users.router, prefix = "/users", tags=["users"])
