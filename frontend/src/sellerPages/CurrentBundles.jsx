@@ -5,14 +5,14 @@ import './CurrentBundles.css'
 import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png";
 function CurrentBundles() {
-  
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //create state
   const [code, setCode] = useState("");
 
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch("http://127.0.0.1:8000/api/v1/bundles/me",{ //Fetch data for the user
+    fetch(`${API_URL}/api/v1/bundles/me`,{ //Fetch data for the user
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -29,9 +29,10 @@ function CurrentBundles() {
       });
   }, []);
   const deleteBundle = (posting_id) => { //Function to delete bundles from backend
+    const API_URL = import.meta.env.VITE_API_URL;
     if (!window.confirm("Delete this bundle?")) return;
 
-    fetch(`http://127.0.0.1:8000/api/v1/bundles/${posting_id}`, {
+    fetch(`${API_URL}/api/v1/bundles/${posting_id}`, {
     method: "GET"
     })
     .then(res => res.json())
@@ -45,10 +46,10 @@ function CurrentBundles() {
 
 const enterCode = (claim_code) => { //Function to return an entered code from the backend
   if (!window.confirm("Collect this bundle?")) return;
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem('token'); 
 
-  fetch(`http://127.0.0.1:8000/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
+  fetch(`${API_URL}/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,

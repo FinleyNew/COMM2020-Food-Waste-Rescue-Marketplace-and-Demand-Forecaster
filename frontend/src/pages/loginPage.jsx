@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import "./loginPage.css"
+
 
 function LoginPage({setUser}) {// username is the variable, setUsername changes it and useState means it can be changed throughout the program
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
@@ -10,6 +12,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [Popup, setPopup] = useState(false);
   const [token,setToken] = useState("");
   const [role,setRole] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -28,10 +31,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     formData.append("username",username);
     formData.append("password",password);
    
+    console.log(import.meta.env);
 
 
-
-    fetch("http://127.0.0.1:8000/api/v1/login/access-token", {
+    fetch(`${API_URL}/api/v1/login/access-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
@@ -51,7 +54,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       //token is set
       //new fetch
 
-      fetch(`http://127.0.0.1:8000/api/v1/users/me`, { //fetches role
+      fetch(`${API_URL}/api/v1/users/me`, { //fetches role
       method: "GET",
       headers:{
         "Authorization": `Bearer ${token}`

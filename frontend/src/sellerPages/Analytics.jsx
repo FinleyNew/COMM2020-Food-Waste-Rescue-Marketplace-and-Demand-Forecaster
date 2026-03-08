@@ -4,10 +4,11 @@ import Company from "../assets/Company.png";
 import './Analytics.css'
 
 function Analytics() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [analytics, setAnalytics] = useState([])
   useEffect(() => { //Retrieves user tocken
     const token = localStorage.getItem('token');
-    fetch("http://127.0.0.1:8000/api/v1/records/me",{ //Fetch data for the user
+    fetch(`${API_URL}/api/v1/records/me`,{ //Fetch data for the user
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"

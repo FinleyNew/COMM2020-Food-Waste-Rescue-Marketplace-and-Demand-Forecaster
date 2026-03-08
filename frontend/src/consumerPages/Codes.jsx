@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 import './Discover.css'
 import Company from "../assets/Company.png";
 function Codes() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //needs an empty array as it will display a list of data instead of of one object
     
     useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
       const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
-      fetch("http://127.0.0.1:8000/api/v1/reservations/me",{ //the backend server url to get the information for 
+      fetch(`${API_URL}/api/v1/reservations/me`,{ //the backend server url to get the information for 
         headers:{ //extra information to send to the backend
           "Authorization": `Bearer ${token}`, //sending the token to verify the user
           "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data

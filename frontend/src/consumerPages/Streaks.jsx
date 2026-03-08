@@ -2,11 +2,12 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
 function Streaks() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
   useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
   const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
 
-  fetch("http://127.0.0.1:8000/api/v1/consumers/me", { //the backend server url to get the information for 
+  fetch(`${API_URL}/api/v1/consumers/me`, { //the backend server url to get the information for 
     headers: {
       "Authorization": `Bearer ${token}`, //sending the token to verify the user
       "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data

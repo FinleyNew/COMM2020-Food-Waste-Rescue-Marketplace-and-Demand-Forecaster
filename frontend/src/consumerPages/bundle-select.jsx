@@ -9,7 +9,7 @@ function BundleSelect() {
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -19,7 +19,7 @@ function BundleSelect() {
   }
 
   useEffect(() => { //useEffect allows the command run on entering the page and if anything happens inside ID
-    fetch(`http://127.0.0.1:8000/api/v1/bundles/${id}`) //links to the backend page on the API with the specific bundle of ID
+    fetch(`${API_URL}/api/v1/bundles/${id}`) //links to the backend page on the API with the specific bundle of ID
       .then(res => res.json()) //converts the response into JSON Data
       .then(data => { //data is the bundle object
         setBundle(data); //updates the react state so the page can rerender with the new info
@@ -34,10 +34,10 @@ function BundleSelect() {
     const token = localStorage.getItem(`token`); //gets the users token, for security and to make sure the site gets THEIR information
     const payload = JSON.parse(atob(token.split('.')[1])); //gets the exact payload from the token, rather than the bundle information, more accurate, the split gets the ...
     const userID = parseInt(payload.sub); // ... part that contains the userID then using sub gets the userID
+    const API_URL = import.meta.env.VITE_API_URL;
     
     
-    
-    fetch("http://127.0.0.1:8000/api/v1/reservations/", {
+    fetch(`${API_URL}/api/v1/reservations/`, {
       method: "POST", //have to define POST as GET is the default, means we are sending data as a priority rather than getting it
       headers: { //extra data we are sending to the backend
         "Authorization": `Bearer ${token}`, //verifies the users as who they are and their token

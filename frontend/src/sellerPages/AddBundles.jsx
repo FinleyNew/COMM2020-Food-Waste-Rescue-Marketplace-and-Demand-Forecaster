@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AddBundles() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("");
   
   const [bundlePrice,setBundlePrice] = useState("");
@@ -51,7 +52,7 @@ function AddBundles() {
       return;
     }
     console.log(data);
-    fetch("http://127.0.0.1:8000/api/v1/bundles/", {
+    fetch(`${API_URL}/api/v1/bundles/`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -61,6 +62,7 @@ function AddBundles() {
     });
   }
   function forecastData(){
+    const API_URL = import.meta.env.VITE_API_URL;
     //Data to be used in th forecast
     const data = {
       user_id: Number(payload.sub),
@@ -88,7 +90,7 @@ function AddBundles() {
       return;
     }
     //Sends forecast data to the backend as a POST request
-    fetch("http://127.0.0.1:8000/api/v1/forecasts/", {
+    fetch(`${API_URL}/api/v1/forecasts/`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
