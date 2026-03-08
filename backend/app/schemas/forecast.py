@@ -13,6 +13,10 @@ class ForecastCreate(ForecastBase):
     # Just pass as there are no extra attributes needed
     pass
 
+class ForecastAdminUpdate(SQLModel):
+    predicted_reservations: int | None = Field(default=None, ge=0)
+    predicted_no_show_prob: float | None = Field(default=None, ge=0, le=1)
+
 # The create schema for forecasts
 class ForecastPublic(ForecastBase):
     forecast_id: Optional[int] = None
