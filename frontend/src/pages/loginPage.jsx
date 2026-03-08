@@ -6,11 +6,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
   const navigate = useNavigate();
+  const [ErrorLogin, setErrorLogin] = useState(false);
   const [Popup, setPopup] = useState(false);
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
-
   function closePopup() {
     setPopup(false); //if variable is false then popUp needs to be closed
   }
@@ -42,17 +42,17 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       navigate("/view-reports"); //Takes the user to the view-reports page in adminPages
     }
     else {
-      alert("Wrong username or password"); //Error message if inputs don't correlate with any provided
+      setErrorLogin(true); //Error message if inputs don't correlate with any provided
     }
   }
 
   return (
     <div className="loginBox">
       <div className="loginItems">
-        <h3>Please Enter Your Username and Password</h3> {/* Writes a prompt to screen for username and password */}
+        <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
         {/* Creates an input box for the user to send their username and saves it */}
         <div className="rowRegister">
-          <p>Username:</p>
+          <p>Email:</p>
           <input 
             type="text"
             value={username}
@@ -68,6 +68,16 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {ErrorLogin && (
+          <div className="popupRegister open-popupRegister">
+            <h3>No Account Found</h3>
+            <br></br>
+            <br></br>
+            <p>We could not find an account associated with this email and password, please try again.</p>
+            <br></br>
+            <button onClick={() => setErrorLogin(false)}>Confirm</button>
+          </div>
+        )}
         <br></br>
         {/* Makes a button that submits entires to above input boxes when selected*/}
         <div className="rowRegister">
@@ -77,11 +87,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           </button>
         </div>
             {Popup && (
-              <div className="popupRegister open-popupRegister" id="Register">
+              <div className="popupRegister open-popupRegister">
                 <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
                 <br></br>
                 <div className="rowRegister">
-                  <p>Username: </p>
+                  <p>Email: </p>
                   <input 
                     type="text"
                     value={username}
