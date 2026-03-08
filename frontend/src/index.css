@@ -1,8 +1,8 @@
 :root {
   --bg-color: white; /*default theme*/
   --text-colour: black;
-  --button-bg: #111827;      /* dark button in light mode */
-  --button-text: white;
+  --button-bg: white;      /* dark button in light mode */
+  --button-text: black;
   --border-colour: green;
   --bg-container: white;
 }
@@ -10,8 +10,8 @@
 .dark {
   --bg-color: #121212; /*when html tag is changed this becomes into effetc*/
   --text-colour: #ffffff;  /*overrides variables when run*/
-  --button-bg: #f3f4f6;      /* light button in dark mode */
-  --button-text: #111827;
+  --button-bg: #111827;      /* light button in dark mode */
+  --button-text: #ffffff;
   --border-colour: #5d5e5f;
   --bg-container: #111827;
 }
