@@ -7,5 +7,5 @@ from app.schemas.user import UserPublic
 router = APIRouter()
 
 @router.get("/me", response_model=UserPublic)
-def get_current_user(current_user: CurrentUser, db: SessionDep):
+def get_current_user(current_user: CurrentUser):
     return current_user
