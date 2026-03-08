@@ -49,10 +49,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   return (
     <div className="loginBox">
       <div className="loginItems">
-        <h3>Please Enter Your Username and Password</h3> {/* Writes a prompt to screen for username and password */}
+        <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
         {/* Creates an input box for the user to send their username and saves it */}
         <div className="rowRegister">
-          <p>Username:</p>
+          <p>Email:</p>
           <input 
             type="text"
             value={username}
@@ -77,11 +77,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           </button>
         </div>
             {Popup && (
-              <div className="popupRegister open-popupRegister" id="Register">
+              <div className="popupRegister open-popupRegister">
                 <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
                 <br></br>
                 <div className="rowRegister">
-                  <p>Username: </p>
+                  <p>Email: </p>
                   <input 
                     type="text"
                     value={username}
