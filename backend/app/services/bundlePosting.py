@@ -15,9 +15,13 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Ses
     forecast_service.create_forecast(bundle_in=bundle_in, posting_id=bundle_posting.posting_id, db=db)
     return bundle_posting
 
-# The service for getting all bundle postings
+# The service for getting all available bundle postings
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_active_bundle_postings(db=db)
+
+# The service for getting all bundles
+def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
+    return bundlePosting_crud.get_all_bundle_postings(db=db)
 
 # The sertvice for getting a specific bundle posting
 def get_bundle_posting(posting_id: int, db: Session, lock: bool = False) -> BundlePosting:

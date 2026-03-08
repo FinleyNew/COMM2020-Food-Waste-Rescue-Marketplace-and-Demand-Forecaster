@@ -3,6 +3,7 @@ from sqlmodel import Session, select
 from typing import Sequence, Tuple
 from app.models import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
+from app.models.enums import BundleStatus
 from psycopg.types.range import Range
 
 # The crud function for creating a new bundle posting
@@ -14,8 +15,13 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_
     db.refresh(db_bundle_posting)
     return db_bundle_posting
 
-# The crud function for getting all bundle postings
+# The crud function for getting all available bundle postings
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
+    statement = select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)
+    return db.exec(statement).all()
+
+# The crud function for getting all bundles
+def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
 
