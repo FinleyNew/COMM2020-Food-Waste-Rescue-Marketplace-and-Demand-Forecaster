@@ -13,7 +13,7 @@ class ConsumerCreate(ConsumerBase):
 
 # Only admin should use this
 class ConsumerUpdate(SQLModel):
-
+    display_name: str | None = Field(default=None, min_length=1, max_length=50)
 
 #The public schema for consumers
 class ConsumerPublic(ConsumerBase):
