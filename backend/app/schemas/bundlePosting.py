@@ -32,6 +32,24 @@ class BundlePostingCreate(BundlePostingBase):
         if self.end_time <= self.start_time:
             raise ValueError("end_time must be after start_time")
         return self
+    
+class BundlePostingUpdate(SQLModel):
+    category: Category | None = None
+    allergens: str | None = None
+    available: int | None = Field(default=None, ge=0)
+    price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
+    weight: int | None = Field(default=None, gt=0)
+    # They could send a new start but not end so need to check in the service
+    start_time: datetime | None = None
+    end_time: datetime | None = None
+
+    @model_validator(mode="after")
+    def check_end_after_start(self):
+        # Only validate if both are provided
+        if self.start_time is not None and self.end_time is not None:
+            if self.end_time <= self.start_time:
+                raise ValueError("end_time must be after start_time")
+        return self
 
 # The public schema for bundle postings
 # Inherits from base 
