@@ -15,6 +15,9 @@ class ConsumerCreate(ConsumerBase):
 class ConsumerUpdate(SQLModel):
     display_name: str | None = Field(default=None, min_length=1, max_length=50)
 
+class ConsumerAdminUpdate(ConsumerUpdate):
+    streak: int | None = Field(default=None, ge=0)
+
 #The public schema for consumers
 class ConsumerPublic(ConsumerBase):
     user_id: int
