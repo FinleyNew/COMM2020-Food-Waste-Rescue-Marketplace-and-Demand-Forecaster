@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Company from "../Assets/Company.png";
+import Company from "../assets/Company.png";
 import './Analytics.css'
 
 function Analytics() {

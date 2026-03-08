@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
-import Company from "../Assets/Company.png";
+import Company from "../assets/Company.png";
 function Codes() {
   const [bundles, setBundles] = useState([]); //needs an empty array as it will display a list of data instead of of one object
     

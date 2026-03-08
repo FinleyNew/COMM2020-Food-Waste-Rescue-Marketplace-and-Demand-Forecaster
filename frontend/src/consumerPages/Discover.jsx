@@ -2,8 +2,8 @@ import { Routes, Route, Link } from "react-router-dom";
 import {useState, useEffect} from "react";
 import './Discover.css'
 
-import Company from "../Assets/Company.png";
-import Bundle from "../Assets/Bundleimage.png";
+import Company from "../assets/Company.png";
+import Bundle from "../assets/BundleImage.png";
 function Discover() {
   
   const [bundles, setBundles] = useState([]); //defines the state and variable that allows the react page to be rerendered when called
