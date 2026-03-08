@@ -51,7 +51,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       //token is set
       //new fetch
 
-      fetch(`http://127.0.0.1:8000/api/v1/users/me`, { //Fetches inputted tocken
+      fetch(`http://127.0.0.1:8000/api/v1/users/me`, { //fetches role
       method: "GET",
       headers:{
         "Authorization": `Bearer ${token}`
@@ -82,8 +82,6 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         else{
           console.error("unknown role")
         }
-
-
 
 
 
