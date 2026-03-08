@@ -8,6 +8,8 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const navigate = useNavigate();
   const [ErrorLogin, setErrorLogin] = useState(false);
   const [Popup, setPopup] = useState(false);
+  const [token,setToken] = useState("");
+  const [role,setRole] = useState("");
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -15,35 +17,100 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     setPopup(false); //if variable is false then popUp needs to be closed
   }
   function loginFunction() {
-    if (username=== "consumer" && password === "1") { //Pathway for if the consumer details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this consumer login
-        username:"harry",
-        role:"consumer"
+
+    const data={
+      grant_type:"password",
+      username:username,
+      password:password.toString()
+    };
+    const formData = new URLSearchParams();
+    formData.append("grant_type","password");
+    formData.append("username",username);
+    formData.append("password",password);
+   
+
+
+
+    fetch("http://127.0.0.1:8000/api/v1/login/access-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: formData
+    })
+    .then(res => {
+      if(!res.ok){
+        throw new Error(`Server Error: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then(data => {
+      const token = data.access_token;
+      setToken(token);
+      if(token){
+      //token is set
+      //new fetch
+
+      fetch(`http://127.0.0.1:8000/api/v1/users/me`, { //Fetches inputted tocken
+      method: "GET",
+      headers:{
+        "Authorization": `Bearer ${token}`
+      }
       })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "consumer"})); //Stores details so that they remain if the page is refreshed or the state changes
-      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5NTgsInN1YiI6IjEifQ.TBw2UD-s4nuWlWTcBzj95SNjuHKC0KaBmf49cW2DJrU"); //Stores the user token for further authentication
-      navigate("/discover"); //Takes the user to the discover page in consumerPages
-    } 
-    else if(username === "seller" && password === "1"){ //Pathway for if the seller details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this seller login
-        username:"harry",
-        role:"seller"
+      .then(res => res.json())
+      .then(data => {
+
+        const role = data.role;
+        setRole(role);
+
+        if(role=="consumer"){
+          setUser({
+            username:username,
+            role:"consumer"
+          })
+          localStorage.setItem('token',token);
+          navigate("/discover")
+        }
+        else if(role=="seller"){
+          setUser({
+            username:username,
+            role:"seller"
+          })
+          localStorage.setItem('token',token);
+          navigate("/current-bundles")
+        }
+        else{
+          console.error("unknown role")
+        }
+
+
+
+
+
       })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "seller"})); //Stores details so that they remain if the page is refreshed or the state changes
-      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5MDksInN1YiI6IjIifQ.Ayy7RYQGz3dhAFC9txefYLdAe_hbvjtzHMtOTm2utU4") //Stores the user token for further authentication
-      navigate("/current-bundles"); //Directs the user to the current-bundles page in sellerPages
+      .catch(err => console.error(err));
     }
-    else if(username === "harryAdmin" && password === "lewis"){ //Pathway for if the admin details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this admin login
-        username:"harry",
-        role:"admin"
-      })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "admin"})); //Stores details so that they remain if the page is refreshed or the state changes
-      navigate("/view-reports"); //Takes the user to the view-reports page in adminPages
-    }
-    else {
-      setErrorLogin(true); //Error message if inputs don't correlate with any provided
-    }
+    })
+    //Alerts upon an error
+    .catch(err => {
+      console.error("Error fetching data ",err);
+      alert("No data")
+    })
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+    
   }
 
   return (
