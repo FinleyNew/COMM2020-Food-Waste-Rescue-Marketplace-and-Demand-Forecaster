@@ -50,6 +50,10 @@ class BundlePostingUpdate(SQLModel):
             if self.end_time <= self.start_time:
                 raise ValueError("end_time must be after start_time")
         return self
+    
+class BundlePostingAdminUpdate(BundlePostingUpdate):
+    user_id: int | None = None
+    status: BundleStatus | None = None
 
 # The public schema for bundle postings
 # Inherits from base 

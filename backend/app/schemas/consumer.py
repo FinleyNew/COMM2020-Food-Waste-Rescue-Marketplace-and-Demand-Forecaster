@@ -11,6 +11,10 @@ class ConsumerCreate(ConsumerBase):
     #password: str
     pass
 
+# Only admin should use this
+class ConsumerUpdate(SQLModel):
+
+
 #The public schema for consumers
 class ConsumerPublic(ConsumerBase):
     user_id: int
