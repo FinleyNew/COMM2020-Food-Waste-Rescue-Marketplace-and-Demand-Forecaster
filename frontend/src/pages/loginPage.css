@@ -1,23 +1,11 @@
-body{
-    background-image: url('../assets/Background.png');
-    background-repeat: repeat;
-    background-size: 400px;
-}
-
-.dark body{
-    background-image: url('../assets/DarkBackground.png');
-    background-repeat: repeat;
-    background-size: 400px;
-}
-
-.loginBox{
+.loginPage .loginBox{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-.loginItems{
+.loginPage .loginItems{
     transform: scale(1.5);
     height: 225px;
     width: 350px;;
@@ -29,7 +17,7 @@ body{
     color: var(--text-colour);
 }
 
-.loginButton{
+.loginPage .loginButton{
     width: 100%;
     padding: 8px 0;
     border: 2px;
@@ -38,7 +26,7 @@ body{
     box-shadow: 0 0 5px;
 }
 
-.popupRegister{
+.loginPage .popupRegister{
     width: 400px;
     border-radius: 6px;
     position: absolute;
@@ -54,13 +42,13 @@ body{
     border-radius: 2rem;
 }
 
-.open-popupRegister{
+.loginPage .open-popupRegister{
     visibility: visible;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
 }
 
-.popupRegister button{
+.loginPage .popupRegister button{
     width: 100%;
     margin-top: 50px;
     padding: 10px 0;
@@ -70,7 +58,7 @@ body{
     box-shadow: 0 0 5px;
 }
 
-.rowRegister{
+.loginPage .rowRegister{
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,11 +1,19 @@
-img {
+.homePage img {
   border-radius: 8px;
 }
 
-h1 {
-  color: green;
+.homePage .h2 {
+  font-size: 100px;
 }
 
-h2 {
-  font-size: 100px;
+body{
+    background-image: url('./assets/Background.png');
+    background-repeat: repeat;
+    background-size: 400px;
+}
+
+.loginPage .dark body{
+    background-image: url('./assets/DarkBackground.png');
+    background-repeat: repeat;
+    background-size: 400px;
 }

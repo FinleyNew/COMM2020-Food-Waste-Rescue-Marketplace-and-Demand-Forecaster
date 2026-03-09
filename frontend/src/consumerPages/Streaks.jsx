@@ -26,29 +26,27 @@ function Streaks() {
 
   return (
       <>
-        <nav class="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
-        <Link to="/codes" className="button"><b>Codes</b></Link>
-      </nav>
-      <h1 className="headline">Streaks</h1>
-      {bundle && (
-        <div>
-          <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
+        <div className="discover">
+          <nav class="row">
+            <Link to="/login" className="button"><b>Login Page</b></Link>
+            <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
+            <Link to="/codes" className="button"><b>Codes</b></Link>
+          </nav>
+          <h1 className="headline">Streaks</h1>
+          {bundle && (
+            <div>
+              <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
+            </div>
+          )}
+          <div className="rowIcons">
+            <p className="headline">Badges:</p>
+            <img className="icon" src="https://thumbs.dreamstime.com/b/modern-bronze-circle-metal-badges-labels-design-elements-vector-illustration-84952346.jpg" alt="Bronze Badge"/>   
+            <img className="icon" src="https://img.favpng.com/11/16/23/gold-medal-silver-medal-illustration-png-favpng-vJK1hRCuK1bUdtG0Hb4dJ7VkU.jpg" alt="Silver Badge"/>   
+            <img className="icon" src="https://www.onlygfx.com/wp-content/uploads/2022/04/blank-gold-badge-label-2.png" alt="Gold Badge"/>   {/* badge images */}
+          </div>
+          <hr></hr>
+          <p>Summary PIS</p> {/* summary statement */}
         </div>
-      )}
-      <div className="rowIcons">
-        <p className="headline">Badges:</p>
-        <img className="icon" src="https://thumbs.dreamstime.com/b/modern-bronze-circle-metal-badges-labels-design-elements-vector-illustration-84952346.jpg" alt="Bronze Badge"/>   
-        <img className="icon" src="https://img.favpng.com/11/16/23/gold-medal-silver-medal-illustration-png-favpng-vJK1hRCuK1bUdtG0Hb4dJ7VkU.jpg" alt="Silver Badge"/>   
-        <img className="icon" src="https://www.onlygfx.com/wp-content/uploads/2022/04/blank-gold-badge-label-2.png" alt="Gold Badge"/>   {/* badge images */}
-      </div>
-      <hr></hr>
-      <p>Summary PIS</p> {/* summary statement */}
-
-      
-
-
       </>
     );
 }

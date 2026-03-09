@@ -66,76 +66,80 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
 
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav className="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
-        <Link to="/analytics" className="button"><b>Analytics</b></Link>
-        <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
-      </nav>
-      {/* Header to display the page name to the user */}
-      <h1 className="headline">Bundles</h1>
-      {/* Section for the code input and submission button */}
-       <form onSubmit={(e) => {
-              e.preventDefault();
-              enterCode(code);
-            }}>
-              <input
-                id="enterCode"
-                type="text"
-                placeholder="enter code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <button type="submit">Confirm Collection</button>
+      <div className="currentBundles">
+        {/* Initialises the navifation bar where sellers can move between pages */}
+          <nav className="row">
+            <Link to="/login" className="button"><b>Login Page</b></Link>
+            <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
+            <Link to="/analytics" className="button"><b>Analytics</b></Link>
+            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
+          </nav>
+          {/* Header to display the page name to the user */}
+          <h1 className="headline">Bundles</h1>
+          {/* Section for the code input and submission button */}
+          <form onSubmit={(e) => {
+                  e.preventDefault();
+                  enterCode(code);
+                }}>
+                  <input
+                    id="enterCode"
+                    type="text"
+                    placeholder="enter code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                  />
+                  <button type="submit">Confirm Collection</button>
 
-            </form>
-            <br></br>
-      {/* Columns structure for displaying bundle infomation */}
-      <section className="column">
-        {bundles.map(bundle => ( //.map allows us to display
-          <div key={bundle.posting_id}>
-            <div className="bundleEntry">
-              {/* Contains company image and first column data */}
-              <div className="textBlock">
-                <img
-                  src={Company}
-                  alt="Company"
-                  className="leftImg"
-                />
-                <div className="desc">
-                  <p className="desc">Price - £{bundle.price_display}</p>
-                  <p className="desc">Category - {bundle.category}</p>
-                  <p classname="desc">Available - {bundle.available}</p>
+                </form>
+                <br></br>
+          {/* Columns structure for displaying bundle infomation */}
+          <div className="mainBox">
+            {bundles.map(bundle => ( //.map allows us to display
+              <div key={bundle.posting_id}>
+                <div className="bundleEntry">
+                  {/* Contains company image and first column data */}
+                  <div className="textBox">
+                    <img
+                      src={Company}
+                      alt="Company"
+                      className="companyIcon"
+                    />
+                    <div className="row">
+                      <p>Price: £{bundle.price_display}</p>
+                      <p>Category: {bundle.category}</p>
+                      <p>Available: {bundle.available}</p>
+                    </div>
+                  </div>
+                  {/* Holds the middle column data for the bundle entry */}
+                  <div className="textBox">
+                    <div className="row">
+                      <p>Allergens - {bundle.allergens} </p>
+                      <p>Date to Collect: {bundle.formatted_date}</p>
+                      <p>Time to Collect: {bundle.formatted_time_range}</p>
+                      <p>Weight: {bundle.weight}</p>
+                      <p>Reserved: {bundle.reserved}</p>
+                    </div>
+                  </div>
+                  {/* Final row bundle image */}
+                  <div className="textBox">
+                    <div className="row">
+                      <img
+                        src={Bundle}
+                        alt="Bundle"
+                        className="thumbnail"
+                      />
+                      {/* Button to delete bundles on click */}
+                      <button onClick={() => deleteBundle(bundle.posting_id)}>
+                          Delete Bundle
+                        </button>
+                    </div>
+                  </div>
+                  <br></br>
                 </div>
-              </div>
-              {/* Holds the middle column data for the bundle entry */}
-              <div className="textBlock">
-                <div className="desc">
-                  <p className="desc">Allergens - {bundle.allergens} </p>
-                  <p className="desc">Date to Collect - {bundle.formatted_date}</p>
-                  <p className="desc">Time to Collect - {bundle.formatted_time_range}</p>
-                  <p className="desc">Weight - {bundle.weight}</p>
-                  <p className="desc">Reserved - {bundle.reserved}</p>
-                </div>
-              </div>
-              {/* Final row bundle image */}
-              <div className="formatter">
-                <img
-                  src={Bundle}
-                  alt="Bundle"
-                  className="thumbnail"
-                />
-              </div>
-              <br></br>
             </div>
-            {/* Button to delete bundles on click */}
-            <button onClick={() => deleteBundle(bundle.posting_id)}>
-                Delete Bundle
-              </button>
+            ))}
+          </div>
         </div>
-        ))}
-      </section>
     </>
   );
 }

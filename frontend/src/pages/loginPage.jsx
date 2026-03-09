@@ -112,72 +112,74 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   }
 
   return (
-    <div className="loginBox">
-      <div className="loginItems">
-        <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
-        {/* Creates an input box for the user to send their username and saves it */}
-        <div className="rowRegister">
-          <p>Email:</p>
-          <input 
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        {/* Creates an input box for the user to send their password and saves it */}
-        <div className="rowRegister">
-          <p>Password:</p>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {ErrorLogin && (
-          <div className="popupRegister open-popupRegister">
-            <h3>No Account Found</h3>
-            <br></br>
-            <br></br>
-            <p>We could not find an account associated with this email and password, please try again.</p>
-            <br></br>
-            <button onClick={() => setErrorLogin(false)}>Confirm</button>
+    <div className="loginPage">
+      <div className="loginBox">
+        <div className="loginItems">
+          <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
+          {/* Creates an input box for the user to send their username and saves it */}
+          <div className="rowRegister">
+            <p>Email:</p>
+            <input 
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
-        )}
-        <br></br>
-        {/* Makes a button that submits entires to above input boxes when selected*/}
-        <div className="rowRegister">
-          <button className="loginButton" onClick={loginFunction}>Login</button>
-          <button className="loginButton" onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
-                Register
-          </button>
+          {/* Creates an input box for the user to send their password and saves it */}
+          <div className="rowRegister">
+            <p>Password:</p>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {ErrorLogin && (
+            <div className="popupRegister open-popupRegister">
+              <h3>No Account Found</h3>
+              <br></br>
+              <br></br>
+              <p>We could not find an account associated with this email and password, please try again.</p>
+              <br></br>
+              <button onClick={() => setErrorLogin(false)}>Confirm</button>
+            </div>
+          )}
+          <br></br>
+          {/* Makes a button that submits entires to above input boxes when selected*/}
+          <div className="rowRegister">
+            <button className="loginButton" onClick={loginFunction}>Login</button>
+            <button className="loginButton" onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+                  Register
+            </button>
+          </div>
+              {Popup && (
+                <div className="popupRegister open-popupRegister">
+                  <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
+                  <br></br>
+                  <div className="rowRegister">
+                    <p>Email: </p>
+                    <input 
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </div>
+                  {/* Creates an input box for the user to send their password and saves it */}
+                  <div className="rowRegister">
+                    <p>Password:</p>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="rowRegister">
+                    <button onClick={closePopup}>Confirm</button>
+                    <button onClick={closePopup}>Cancel</button>
+                  </div>
+                </div>
+              )}
         </div>
-            {Popup && (
-              <div className="popupRegister open-popupRegister">
-                <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
-                <br></br>
-                <div className="rowRegister">
-                  <p>Email: </p>
-                  <input 
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </div>
-                {/* Creates an input box for the user to send their password and saves it */}
-                <div className="rowRegister">
-                  <p>Password:</p>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="rowRegister">
-                  <button onClick={closePopup}>Confirm</button>
-                  <button onClick={closePopup}>Cancel</button>
-                </div>
-              </div>
-            )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import './Discover.css'
+import './Codes.css'
 import Company from "../assets/Company.png";
 function Codes() {
   const [bundles, setBundles] = useState([]); //needs an empty array as it will display a list of data instead of of one object
@@ -27,38 +27,38 @@ function Codes() {
   
   return (
       <>
-        <nav class="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link> {/* defines the links to the other other pages */}
-        <Link to="/discover" className="button"><b>Discover</b></Link>
-        <Link to="/streaks" className="button"><b>Streaks</b></Link>
-      </nav>
-      <h1 className="headline">Codes</h1>
-      <section className="column">
-        {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
-          <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
-          <section>
-            <div className="bundleEntry">
-              <div className="textBlock">
-                <img src={Company} alt="Company" className="leftImg"/>
-                <div className="desc">
-                  <p className="desc">Reservation ID : {bundle.reservation_id}</p>
-                  <p className="desc">Claim Code - {bundle.claim_code}</p> {/* displaying all the information by accessing the specific object */}
+      <div className="codes">
+        <nav className="row">
+          <Link to="/login" className="button"><b>Login Page</b></Link> {/* defines the links to the other other pages */}
+          <Link to="/discover" className="button"><b>Discover</b></Link>
+          <Link to="/streaks" className="button"><b>Streaks</b></Link>
+        </nav>
+        <h1>Codes</h1>
+          {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
+            <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
+              <div className="mainBox">
+                <div className="bundleEntry">
+                  <div className="textBox">
+                    <div className="bundleRow">
+                      <h1>Bundle Name</h1>
+                      <h2>Claim Code: {bundle.claim_code}</h2> {/* displaying all the information by accessing the specific object */}
+                    </div>
+                    <div className="bundleRow">
+                      <div className="column">
+                          <p>Status: {bundle.status}</p>
+                          <p>Reservation ID : {bundle.reservation_id}</p>
+                          <p>Bundle ID: {bundle.posting_id}</p>
+                      </div>
+                      <div className="column">
+                        <img src={Company} alt="Company" className="companyIcon"/>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
                 </div>
               </div>
-              <div className="textBlock">
-                <div className="desc">
-                  <p className="codeText">Status - {bundle.status}</p>
-                  <p>Bundle ID - {bundle.posting_id}</p>
-                  
-                </div>
-              </div>
-              </div>
-            </section>
-            <div className="whitespace" aria-hidden="true"></div>
-            </div>
-        ))}
-      </section>
-      
+          ))}
+      </div>
       </>
     );
 }

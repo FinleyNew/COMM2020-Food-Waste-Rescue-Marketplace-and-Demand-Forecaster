@@ -1,18 +1,18 @@
 /* Spaces out contents of section tag and adds a background colour*/
-section{
+.analytics section{
     display: flex;
     justify-content: row;
     gap: 200px;
     background-color: rgb(81, 155, 81);
 }
 /* Defines a row structure */
-.row{
+.analytics .row{
     display: flex;
     text-align:  center;
     gap: 10px; 
 }
 /* Creates a button structure with colours and spacings*/
-.button {
+.analytics .button {
     background-color: green;
     font-family: Arial;
     color: white;
@@ -25,14 +25,14 @@ section{
     border-radius: 5px;
 }
 /* Defines a description with font sizes and formatting*/
-.desc{
+.analytics .desc{
     font-family: Arial;
     font-size: 20px;
     padding: 10px;
     flex: 1;
 }
 /* Rows for a grid structure with appropriate spacings*/
-.gridRow{
+.analytics .gridRow{
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -40,7 +40,7 @@ section{
   padding: 30px;
 }
 /* Formatting for an image */
-.companyImage{
+.analytics .companyImage{
   display: block;
   border: 4px solid #ddd;  
   padding: 10px;
@@ -48,7 +48,7 @@ section{
   margin-bottom: 10px;
 }
 /* Columns for a grid structure with appropriate spacings*/
-.gridColumn{
+.analytics .gridColumn{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,16 +56,16 @@ section{
   padding: 10px;
 }
 /* Aligns text inside the bubble object*/
-.bubbleText{
+.analytics .bubbleText{
     text-align: center;
     margin-bottom: 70px;
 }
 /* Gives a radius to the analytics circle structure */
-.circleBubble{
+.analytics .circleBubble{
     border-radius: 50%;
 }
 /* Defines how the circle image in the analytics looks and is spaced*/
-.circleObject{
+.analytics .circleObject{
     width: 150px;
     height: 150px;
     position: relative;
@@ -74,42 +74,42 @@ section{
     justify-content: center;
 }
 /* Formats the width and height of images in the circleObject class */
-.circleObject img{
+.analytics .circleObject img{
     display: block;
     width: 250px;
     height: 250px;
 }
 /* Transforms the text to be centre of the circle object*/
-.weight{
+.analytics .weight{
     position: absolute;
     top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 /* Formats images with padding */
-.imageFormatter{
+.analytics .imageFormatter{
     padding: 2px;
 }
 /* Bar chart structure */
-.barChart {
+.analytics .barChart {
   display: flex;
   gap: 40px;
   align-items: flex-end;
   margin-top: 20px;
 }
 /* Container for the analytics bar chart giving spacings*/
-.barContainer {
+.analytics .barContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 /* Label for the bar chart with bold font */
-.barLabel {
+.analytics .barLabel {
   margin-bottom: 8px;
   font-weight: bold;
 }
 /* Bars width and formatting*/
-.bar {
+.analytics .bar {
   width: 60px;
   display: flex;
   justify-content: center;
@@ -118,7 +118,7 @@ section{
   position: relative;
 }
 /*Text inside the bar chart*/
-.barValue {
+.analytics .barValue {
   color: white;
   font-weight: bold;
   margin-bottom: 5px;

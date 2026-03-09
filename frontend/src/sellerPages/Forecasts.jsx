@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import './CurrentBundles.css'
 
 function Forecasts() {
   const [forecasts, setForecasts] = useState([]);
@@ -25,31 +26,33 @@ function Forecasts() {
 
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav>
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
-        <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
-        <Link to="/analytics" className="button"><b>Analytics</b></Link>
-      </nav>
+      <div className="currentBundles">
+      {/* Initialises the navifation bar where sellers can move between pages */}
+        <nav>
+          <Link to="/login" className="button"><b>Login Page</b></Link>
+          <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
+          <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
+          <Link to="/analytics" className="button"><b>Analytics</b></Link>
+        </nav>
 
-      {/* Forecast data section outputting predictions and IDs */}
-      <section>
-        {/* Display message while loading forecasts before outputting data*/}
-        {forecasts.length === 0 ? (
-          <p>Loading forecasts...</p>
-        ) : (
-          forecasts.map(forecast => (
-            <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
-              <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
-              <p>User ID : {forecast.user_id}</p>
-              <p>Posting ID {forecast.posting_id}</p>
-              <p></p>
-              <hr />
-            </div>
-          ))
-        )}
-      </section>      
+        {/* Forecast data section outputting predictions and IDs */}
+        <section>
+          {/* Display message while loading forecasts before outputting data*/}
+          {forecasts.length === 0 ? (
+            <p>Loading forecasts...</p>
+          ) : (
+            forecasts.map(forecast => (
+              <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+                <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                <p>User ID : {forecast.user_id}</p>
+                <p>Posting ID {forecast.posting_id}</p>
+                <p></p>
+                <hr />
+              </div>
+            ))
+          )}
+        </section>     
+      </div> 
     </>
   );
 }

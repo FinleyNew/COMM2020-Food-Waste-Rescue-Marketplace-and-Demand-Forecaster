@@ -1,12 +1,12 @@
 /* Spaces out contents of section tag and adds a background colour*/
-section, .column{
+.currentBundles section, .column{
     background-color: transparent;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 /* Design for the container with the bundles details in the page*/
-.bundleEntry{
+.currentBundles .bundleEntry{
     display: flex;
     align-items: flex-start;
     flex-direction: row;
@@ -14,26 +14,27 @@ section, .column{
     margin-bottom: 20px;
 }
 /* Gives format and colour inheritance to a section of a page */
-.sectionPage{
+.currentBundles .sectionPage{
     text-decoration: none;
     color: inherit;
     display: block;
 }
 /* Defines a row structure */
-.row{
+.discover .row{
     display: flex;
-    text-align:  center;
-    gap: 10px; 
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
 }
 /*Formatter for a block of text with flex options*/
-.textBlock {
+.currentBundles .textBlock {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin: 10px;
 }
 /* Creates a button structure with colours and spacings*/
-.button {
+.currentBundles .button {
     background-color: green;
     font-family: Arial;
     color: white;
@@ -46,13 +47,13 @@ section, .column{
     border-radius: 5px;
 }
 /* Design for headlines */
-.headline{
+.currentBundles .headline{
     color: black;
     font-family: Arial;
     font-size: 24px;
 }
 /* Formats items inside a tag */
-.formatter{
+.currentBundles .formatter{
     text-align: center;
     flex-direction: column;
     align-items: flex-end;
@@ -61,14 +62,14 @@ section, .column{
     flex-shrink: 0;
 }
 /* Defines a description with font sizes and formatting*/
-.desc{
+.currentBundles .desc{
     font-family: Arial;
     font-size: 20px;
     margin-top: 10px;
     flex: 1;
 }
 /* Specifications for thumbnail images  */
-.thumbnail {
+.currentBundles .thumbnail {
   display: block;
   border: 4px solid black;  
   padding: 0px;
@@ -76,14 +77,14 @@ section, .column{
   margin-bottom: 10px;
   margin-left: auto;
 }
-.centreBox{
+.currentBundles .centreBox{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-.centreItems{
+.currentBundles .centreItems{
     height: 720px;
     width: 350px;;
     border-radius: 2rem;
@@ -91,4 +92,43 @@ section, .column{
     text-align: center;
     padding: 30px;
     border: 4px solid green
+}
+
+.currentBundles .mainBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    padding-bottom: 30px;
+}
+.currentBundles .bundleEntry{
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    min-height: 40vh;
+    width: 80%;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    color: var(--text-colour);
+}
+.currentBundles .textBox{
+    padding-inline: 5%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px;
+    margin-top: 20px;
+}
+.currentBundles .companyIcon{
+    height: 100%;
+    width: 100%;
+    border-radius: 1rem;
 }
