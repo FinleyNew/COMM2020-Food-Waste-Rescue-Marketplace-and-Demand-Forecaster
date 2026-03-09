@@ -23,7 +23,7 @@ services:
     expose:
       - "8000"
     labels:
-      - "traefik.http.services.app.loadbalancer.server.port=8000"
+      - "traefik.http.services.https-0-fokk0gskgo0s8wsk808sgswo-app.loadbalancer.server.port=8000"
     depends_on:
       db:
         condition: service_healthy
@@ -39,7 +39,7 @@ services:
     expose:
       - "5173"
     labels:
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.services.https-0-fokk0gskgo0s8wsk808sgswo-frontend.loadbalancer.server.port=5173"
     depends_on:
       - app
 
