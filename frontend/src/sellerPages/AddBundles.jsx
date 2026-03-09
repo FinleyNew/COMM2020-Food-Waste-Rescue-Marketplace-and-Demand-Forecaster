@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 function AddBundles() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("");
@@ -52,14 +52,17 @@ function AddBundles() {
       return;
     }
     console.log(data);
-    fetch(`${API_URL}/api/v1/bundles/`, {
-      method: "POST",
+    
+    axios.post(`${API_URL}/api/v1/bundles/`, data ,{
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+      }
+    })
+      .catch(err => {
+          console.error("Request failed:", err);
+      });
+    
   }
   function forecastData(){
     const API_URL = import.meta.env.VITE_API_URL;
@@ -89,32 +92,36 @@ function AddBundles() {
       alert("Price must be positive and less than 100");
       return;
     }
-    //Sends forecast data to the backend as a POST request
-    fetch(`${API_URL}/api/v1/forecasts/`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+   
+
+      
+    axios.post(`${API_URL}/api/v1/forecasts/`, data, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
     })
-    .then(res => {
-      if(!res.ok){
-        throw new Error(`Server Error: ${res.status}`);
-      }
-      return res.json();
+    .then(response => {
+      setForecastData(response.data);
     })
-    .then(data => {
-      setForecastData(data);
-    })
-    //Alerts upon an error
     .catch(err => {
-      console.error("Error fetching bundles ",err);
-      alert("No data")
-    })
-    
+      console.error("Request failed:", err);
+    });
+      
+      
+
+
+
   }
+
+
+
+
   
+  
+
+  
+
   return (
     <>
     {/* Initialises the navifation bar where sellers can move between pages */}
@@ -219,7 +226,7 @@ function AddBundles() {
             {/* Button to add bundles when clicked and forecast the data */}
             <button onClick={addBundle}>Add Bundle</button>
             <br></br>
-            <button onClick={forecastData}>Forecast Data</button>
+            <button type="button" onClick={forecastData}>Forecast Data</button>
           </div>
         </section>
         {/* Section with forecast data on added bundle with probabilities */}

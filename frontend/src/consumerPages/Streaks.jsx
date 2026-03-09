@@ -1,28 +1,30 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Discover.css'
+import axios from "axios";
 function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
-  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
-  const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
+  
 
-  fetch(`${API_URL}/api/v1/consumers/me`, { //the backend server url to get the information for 
-    headers: {
-      "Authorization": `Bearer ${token}`, //sending the token to verify the user
-      "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
-    }
-  })
-    .then(res => res.json()) //converts the data into an object JSON
-    .then(data => {
-      setBundle(data); //updates the react state so the page can rerender with the new info
+  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
+    const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
+    axios.get(`${API_URL}/api/v1/consumers/me`,{ //the backend server url to get the information for 
+      headers: {
+        "Authorization": `Bearer ${token}`, //sending the token to verify the user
+        "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
+      }
+    })
+    .then(response => {
+      setBundle(response.data); //updates the react state so the page can rerender with the new info
     })
     .catch(err => {
-      console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
-      alert("No data");
+          console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
+          alert("No data ");
     });
+  },[]) //allows the page to rerender if anything changes
 
-}, []);
+
 
 
   return (

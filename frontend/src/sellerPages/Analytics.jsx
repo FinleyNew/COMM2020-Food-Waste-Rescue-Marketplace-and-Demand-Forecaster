@@ -1,29 +1,34 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Company from "../assets/Company.png";
 import './Analytics.css'
 
 function Analytics() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [analytics, setAnalytics] = useState([])
-  useEffect(() => { //Retrieves user tocken
+  
+
+  useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`${API_URL}/api/v1/records/me`,{ //Fetch data for the user
+    axios.get(`${API_URL}/api/v1/records/me`,{
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
-    }) //fetch here , useeffect means it only fetches once
-      .then(res => res.json())
-      .then(data => {
-        console.log("API DATA:", data); 
-        setAnalytics(data);
-      })
-      .catch(err => { //Returns alert if an error occurs
+    })
+    .then(response => {
+      setAnalytics(response.data);
+    })
+    .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
         alert("No data ");
       });
-  }, []);
+
+  },[])
+
+
+
   //Calculated totals from arrays retrieved from the backend
   const totalReservations = analytics.reduce(
     (sum,item) => sum + item.observed_reservations,

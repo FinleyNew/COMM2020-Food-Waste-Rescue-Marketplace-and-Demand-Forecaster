@@ -4,44 +4,52 @@ import { useState, useEffect } from "react";
 import './CurrentBundles.css'
 import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png";
+import axios from "axios";
 function CurrentBundles() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //create state
   const [code, setCode] = useState("");
 
   const navigate = useNavigate();
+  
+
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`${API_URL}/api/v1/bundles/me`,{ //Fetch data for the user
+    axios.get(`${API_URL}/api/v1/bundles/me`, {
       headers:{
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
-    }) //fetch here , useeffect means it only fetches once
-      .then(res => res.json())
-      .then(data => {
-        console.log("API DATA:", data); 
-        setBundles(data);
-      })
-      .catch(err => { //Returns alert if an error occurs
+    })
+    .then(response => {
+      setBundles(response.data);
+    })
+    .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
         alert("No data ");
       });
-  }, []);
+  },[])
+
+
+
   const deleteBundle = (posting_id) => { //Function to delete bundles from backend
     const API_URL = import.meta.env.VITE_API_URL;
     if (!window.confirm("Delete this bundle?")) return;
 
-    fetch(`${API_URL}/api/v1/bundles/${posting_id}`, {
-    method: "GET"
+    axios.get(`${API_URL}/api/v1/bundles/${posting_id}`, {
+    
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Deleted:", data);
+    .then(response => {
+      console.log("Deleted:", response.data);
       alert("Bundle deleted");
     })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        alert("No data ");
+    });
     
-    .catch(err => console.error(err));
+    
 };
 
 const enterCode = (claim_code) => { //Function to return an entered code from the backend
@@ -49,16 +57,14 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem('token'); 
 
-  fetch(`${API_URL}/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
-    method: "GET",
+  axios.get(`${API_URL}/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     }
   })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Collected:", data);
+    .then(response => {
+      console.log("Collected:", response.data);
       alert("Bundle collected");
     })
     .catch(err => console.error(err));

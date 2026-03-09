@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import "./loginPage.css"
 
 
@@ -34,69 +34,59 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     console.log(import.meta.env);
 
 
-    fetch(`${API_URL}/api/v1/login/access-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: formData
+    
+    axios.post(`${API_URL}/api/v1/login/access-token`, formData, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
     })
-    .then(res => {
-      if(!res.ok){
-        throw new Error(`Server Error: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      const token = data.access_token;
-      setToken(token);
-      if(token){
-      //token is set
-      //new fetch
+    .then(response => {
 
-      fetch(`${API_URL}/api/v1/users/me`, { //fetches role
-      method: "GET",
-      headers:{
+    const token = response.data.access_token;
+    setToken(token);
+    if (token) {
+
+      axios.get(`${API_URL}/api/v1/users/me`, {
+      headers: {
         "Authorization": `Bearer ${token}`
       }
       })
-      .then(res => res.json())
-      .then(data => {
+      .then(response => {
 
-        const role = data.role;
+        const role = response.data.role;
         setRole(role);
 
-        if(role=="consumer"){
+        if (role === "consumer") {
           setUser({
-            username:username,
-            role:"consumer"
-          })
-          localStorage.setItem('token',token);
-          navigate("/discover")
-        }
-        else if(role=="seller"){
+            username: username,
+            role: "consumer"
+          });
+
+          localStorage.setItem("token", token);
+          navigate("/discover");
+
+        } else if (role === "seller") {
           setUser({
-            username:username,
-            role:"seller"
-          })
-          localStorage.setItem('token',token);
-          navigate("/current-bundles")
-        }
-        else{
-          console.error("unknown role")
-        }
+            username: username,
+            role: "seller"
+          });
 
+          localStorage.setItem("token", token);
+          navigate("/current-bundles");
 
+        } else {
+          console.error("unknown role");
+        }
 
       })
       .catch(err => console.error(err));
     }
+
     })
-    //Alerts upon an error
     .catch(err => {
-      console.error("Error fetching data ",err);
-      alert("No data")
-    })
+      console.error("Error fetching data", err);
+      alert("No data");
+    });
 
     
     
