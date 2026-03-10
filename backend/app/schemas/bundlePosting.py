@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 from pydantic import computed_field, model_validator
 
 from app.models.enums import Category, BundleStatus
+from app.schemas.seller import SellerSummary
 
 # The base schema for bundle postings
 class BundlePostingBase(SQLModel):
@@ -62,6 +63,8 @@ class BundlePostingPublic(BundlePostingBase):
     reserved: int = Field(ge=0)
     status: BundleStatus
     pickup_window: Any = Field(exclude=True)
+    # Return limited seller info (name)
+    seller: SellerSummary
 
     # This is a coputed field to return the price as a string
     @computed_field

@@ -8,7 +8,6 @@ class ConsumerBase(SQLModel):
 # The create schema for consumers
 # Currently not in use
 class ConsumerCreate(ConsumerBase):
-    #password: str
     pass
 
 # Only admin should use this

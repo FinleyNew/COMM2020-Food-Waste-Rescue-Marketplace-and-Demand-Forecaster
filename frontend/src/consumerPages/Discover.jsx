@@ -1,30 +1,35 @@
 import { Routes, Route, Link } from "react-router-dom";
 import {useState, useEffect} from "react";
 import './Discover.css'
-
+import axios from "axios";
 import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png";
 function Discover() {
-  
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //defines the state and variable that allows the react page to be rerendered when called
 
-  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
-      const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
-      fetch("http://127.0.0.1:8000/api/v1/bundles/",{ //the backend server url to get the information for 
+ 
+
+
+
+    useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
+      
+      axios.get(`${API_URL}/api/v1/bundles/`,{
         headers:{
           "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
         }
-      }) //fetch here , useeffect means it only fetches once
-        .then(res => res.json()) //converts the data into an object JSON
-        .then(data => {
-          console.log("API DATA:", data); 
-          setBundles(data); //updates the react state so the page can rerender with the new info
-        })
-        .catch(err => {
+      })
+      .then(response => {
+        setBundles(response.data); //updates the react state so the page can rerender with the new info
+      })
+      .catch(err => {
           console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
           alert("No data ");
         });
-    }, []);
+    }, [])
+
+
+
   return (
     <>
       <nav class="row">

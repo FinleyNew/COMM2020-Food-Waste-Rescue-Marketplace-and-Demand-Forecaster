@@ -1,58 +1,116 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./loginPage.css"
+
 
 function LoginPage({setUser}) {// username is the variable, setUsername changes it and useState means it can be changed throughout the program
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
   const navigate = useNavigate();
+  const [ErrorLogin, setErrorLogin] = useState(false);
   const [Popup, setPopup] = useState(false);
+  const [token,setToken] = useState("");
+  const [role,setRole] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
-
   function closePopup() {
     setPopup(false); //if variable is false then popUp needs to be closed
   }
   function loginFunction() {
-    if (username=== "consumer" && password === "1") { //Pathway for if the consumer details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this consumer login
-        username:"harry",
-        role:"consumer"
-      })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "consumer"})); //Stores details so that they remain if the page is refreshed or the state changes
-      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5NTgsInN1YiI6IjEifQ.TBw2UD-s4nuWlWTcBzj95SNjuHKC0KaBmf49cW2DJrU"); //Stores the user token for further authentication
-      navigate("/discover"); //Takes the user to the discover page in consumerPages
-    } 
-    else if(username === "seller" && password === "1"){ //Pathway for if the seller details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this seller login
-        username:"harry",
-        role:"seller"
-      })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "seller"})); //Stores details so that they remain if the page is refreshed or the state changes
-      localStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDE0NzQ5MDksInN1YiI6IjIifQ.Ayy7RYQGz3dhAFC9txefYLdAe_hbvjtzHMtOTm2utU4") //Stores the user token for further authentication
-      navigate("/current-bundles"); //Directs the user to the current-bundles page in sellerPages
+
+    const data={
+      grant_type:"password",
+      username:username,
+      password:password.toString()
+    };
+    const formData = new URLSearchParams();
+    formData.append("grant_type","password");
+    formData.append("username",username);
+    formData.append("password",password);
+   
+    console.log(import.meta.env);
+
+
+    
+    axios.post(`${API_URL}/api/v1/login/access-token`, formData, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
     }
-    else if(username === "harryAdmin" && password === "lewis"){ //Pathway for if the admin details are correctly inputted
-      setUser({ //Defines username and role constant attributes for this admin login
-        username:"harry",
-        role:"admin"
+    })
+    .then(response => {
+
+    const token = response.data.access_token;
+    setToken(token);
+    if (token) {
+
+      axios.get(`${API_URL}/api/v1/users/me`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
       })
-      localStorage.setItem("user",JSON.stringify({username:"harry",role: "admin"})); //Stores details so that they remain if the page is refreshed or the state changes
-      navigate("/view-reports"); //Takes the user to the view-reports page in adminPages
+      .then(response => {
+
+        const role = response.data.role;
+        setRole(role);
+
+        if (role === "consumer") {
+          setUser({
+            username: username,
+            role: "consumer"
+          });
+
+          localStorage.setItem("token", token);
+          navigate("/discover");
+
+        } else if (role === "seller") {
+          setUser({
+            username: username,
+            role: "seller"
+          });
+
+          localStorage.setItem("token", token);
+          navigate("/current-bundles");
+
+        } else {
+          console.error("unknown role");
+        }
+
+      })
+      .catch(err => console.error(err));
     }
-    else {
-      alert("Wrong username or password"); //Error message if inputs don't correlate with any provided
-    }
+
+    })
+    .catch(err => {
+      console.error("Error fetching data", err);
+      alert("No data");
+    });
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+    
   }
 
   return (
     <div className="loginBox">
       <div className="loginItems">
-        <h3>Please Enter Your Username and Password</h3> {/* Writes a prompt to screen for username and password */}
+        <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
         {/* Creates an input box for the user to send their username and saves it */}
         <div className="rowRegister">
-          <p>Username:</p>
+          <p>Email:</p>
           <input 
             type="text"
             value={username}
@@ -68,6 +126,16 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {ErrorLogin && (
+          <div className="popupRegister open-popupRegister">
+            <h3>No Account Found</h3>
+            <br></br>
+            <br></br>
+            <p>We could not find an account associated with this email and password, please try again.</p>
+            <br></br>
+            <button onClick={() => setErrorLogin(false)}>Confirm</button>
+          </div>
+        )}
         <br></br>
         {/* Makes a button that submits entires to above input boxes when selected*/}
         <div className="rowRegister">
@@ -77,11 +145,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           </button>
         </div>
             {Popup && (
-              <div className="popupRegister open-popupRegister" id="Register">
+              <div className="popupRegister open-popupRegister">
                 <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
                 <br></br>
                 <div className="rowRegister">
-                  <p>Username: </p>
+                  <p>Email: </p>
                   <input 
                     type="text"
                     value={username}
