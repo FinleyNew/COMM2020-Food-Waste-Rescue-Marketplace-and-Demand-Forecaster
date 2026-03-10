@@ -7,9 +7,9 @@ from sqlmodel import Field, SQLModel
 class SellerBase(SQLModel):
     name: str
     location: str
-    open_hours: str
+    opening_hours: str
     # Ensures open_hours is in the right format and valid
-    @field_validator("open_hours")
+    @field_validator("opening_hours")
     @classmethod
     def validate_open_hours(cls, v):
         try:
@@ -22,7 +22,8 @@ class SellerBase(SQLModel):
             raise ValueError("Closing time must be after opening time")
         return v
 
-#No create schema as we cannot create users yet
+class SellerCreate(SellerBase):
+    pass
 
 # The public schema for seller
 class SellerPublic(SellerBase):

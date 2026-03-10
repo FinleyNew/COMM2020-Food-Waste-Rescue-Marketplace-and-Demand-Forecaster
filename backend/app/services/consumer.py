@@ -10,6 +10,7 @@ from app.schemas.consumer import ConsumerCreate
 from app.schemas.user import UserCreate
 from app.models.consumer import Consumer
 from app.core.security import get_password_hash
+from app.models.enums import Role
 
 def get_week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
@@ -64,7 +65,7 @@ def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Sessio
         # Hash password
         hashed_password = get_password_hash(password=user_in.password)
         #Create a new user
-        user = user_crud.create_user(user_in=user_in, hashed_password=hashed_password, db=db)
+        user = user_crud.create_user(user_in=user_in, hashed_password=hashed_password, role=Role.CONSUMER, db=db)
         #Get that users Id
         user_id = user.user_id
         if not user_id:
