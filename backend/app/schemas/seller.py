@@ -24,6 +24,28 @@ class SellerBase(SQLModel):
 
 #No create schema as we cannot create users yet
 
+class SellerUpdate(SQLModel):
+    name: str | None = None
+    location: str | None = None
+    open_hours: str | None = None
+    # Ensures open_hours is in the right format and valid
+    @field_validator("open_hours")
+    @classmethod
+    def validate_open_hours(cls, v):
+        if v:
+            try:
+                open_str, close_str = v.split(" - ")
+                open_time = datetime.strptime(open_str, "%H:%M")
+                close_time = datetime.strptime(close_str, "%H:%M")
+            except ValueError:
+                raise ValueError("open_hours must be in the format HH:MM - HH:MM")
+            if close_time <= open_time:
+                raise ValueError("Closing time must be after opening time")
+            return v
+        
+class SellerAdminUpdate(SellerUpdate):
+    pass
+
 # The public schema for seller
 class SellerPublic(SellerBase):
     user_id: int
