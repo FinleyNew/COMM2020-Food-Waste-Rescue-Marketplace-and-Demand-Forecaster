@@ -1,5 +1,6 @@
 from sqlmodel import Session, select
 from app.models import Consumer
+from app.schemas.consumer import ConsumerCreate
 
 # Crud function for reseting the consumers streak to 0
 def reset_consumers_streak(consumer_id: int, db: Session):
@@ -17,3 +18,10 @@ def increment_consumers_streak(consumer_id: int, db: Session):
     consumer.streak += 1
 
     db.add(consumer)
+
+def create_consumer(consumer_in: ConsumerCreate, user_id: int, db: Session) -> Consumer:
+    db_consumer = Consumer.model_validate(consumer_in, update={"user_id": user_id})
+    db.add(db_consumer)
+    db.commit()
+    db.refresh(db_consumer)
+    return db_consumer
