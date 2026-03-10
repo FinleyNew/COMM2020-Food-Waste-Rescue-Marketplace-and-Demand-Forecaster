@@ -27,3 +27,7 @@ class SellerBase(SQLModel):
 # The public schema for seller
 class SellerPublic(SellerBase):
     user_id: int
+
+# Summary of seller info that is returned with a bundle
+class SellerSummary(SQLModel):
+    name: str
