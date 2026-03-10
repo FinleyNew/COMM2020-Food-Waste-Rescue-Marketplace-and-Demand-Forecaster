@@ -5,7 +5,7 @@
 }
 .discover .row{
     display: flex;
-    text-align:  center;
+    text-align: center;
     gap: 10px; 
 }
 .discover .button {

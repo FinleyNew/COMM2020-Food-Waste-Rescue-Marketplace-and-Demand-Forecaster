@@ -75,7 +75,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
           {/* Header to display the page name to the user */}
-          <h1 className="headline">Bundles</h1>
+          <h1>Bundles</h1>
           {/* Section for the code input and submission button */}
           <form onSubmit={(e) => {
                   e.preventDefault();
@@ -95,46 +95,43 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
           {/* Columns structure for displaying bundle infomation */}
           <div className="mainBox">
             {bundles.map(bundle => ( //.map allows us to display
-              <div key={bundle.posting_id}>
-                <div className="bundleEntry">
-                  {/* Contains company image and first column data */}
-                  <div className="textBox">
+              <div key={bundle.posting_id} className="bundleEntry">
+                {/* Contains company image and first column data */}
+                <div className="textBox">
+                  <img
+                    src={Company}
+                    alt="Company"
+                    className="companyIcon"
+                  />
+                  <div className="row">
+                    <p>Price: £{bundle.price_display}</p>
+                    <p>Category: {bundle.category}</p>
+                    <p>Available: {bundle.available}</p>
+                  </div>
+                </div>
+                {/* Holds the middle column data for the bundle entry */}
+                <div className="textBox">
+                  <div className="row">
+                    <p>Allergens - {bundle.allergens} </p>
+                    <p>Date to Collect: {bundle.formatted_date}</p>
+                    <p>Time to Collect: {bundle.formatted_time_range}</p>
+                    <p>Weight: {bundle.weight}</p>
+                    <p>Reserved: {bundle.reserved}</p>
+                    {/* Button to delete bundles on click */}
+                    <button onClick={() => deleteBundle(bundle.posting_id)}>
+                        Delete Bundle
+                      </button>
+                  </div>
+                </div>
+                {/* Final row bundle image */}
+                <div className="textBox">
+                  <div className="row">
                     <img
-                      src={Company}
-                      alt="Company"
+                      src={Bundle}
+                      alt="Bundle"
                       className="companyIcon"
                     />
-                    <div className="row">
-                      <p>Price: £{bundle.price_display}</p>
-                      <p>Category: {bundle.category}</p>
-                      <p>Available: {bundle.available}</p>
-                    </div>
                   </div>
-                  {/* Holds the middle column data for the bundle entry */}
-                  <div className="textBox">
-                    <div className="row">
-                      <p>Allergens - {bundle.allergens} </p>
-                      <p>Date to Collect: {bundle.formatted_date}</p>
-                      <p>Time to Collect: {bundle.formatted_time_range}</p>
-                      <p>Weight: {bundle.weight}</p>
-                      <p>Reserved: {bundle.reserved}</p>
-                    </div>
-                  </div>
-                  {/* Final row bundle image */}
-                  <div className="textBox">
-                    <div className="row">
-                      <img
-                        src={Bundle}
-                        alt="Bundle"
-                        className="thumbnail"
-                      />
-                      {/* Button to delete bundles on click */}
-                      <button onClick={() => deleteBundle(bundle.posting_id)}>
-                          Delete Bundle
-                        </button>
-                    </div>
-                  </div>
-                  <br></br>
                 </div>
             </div>
             ))}

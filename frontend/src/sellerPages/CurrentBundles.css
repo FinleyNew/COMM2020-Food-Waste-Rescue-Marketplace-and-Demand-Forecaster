@@ -1,37 +1,8 @@
-/* Spaces out contents of section tag and adds a background colour*/
-.currentBundles section, .column{
-    background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-/* Design for the container with the bundles details in the page*/
-.currentBundles .bundleEntry{
-    display: flex;
-    align-items: flex-start;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-/* Gives format and colour inheritance to a section of a page */
-.currentBundles .sectionPage{
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
 /* Defines a row structure */
 .discover .row{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between; 
-}
-/*Formatter for a block of text with flex options*/
-.currentBundles .textBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 10px;
 }
 /* Creates a button structure with colours and spacings*/
 .currentBundles .button {
@@ -46,71 +17,22 @@
     cursor: pointer;
     border-radius: 5px;
 }
-/* Design for headlines */
-.currentBundles .headline{
-    color: black;
-    font-family: Arial;
-    font-size: 24px;
-}
-/* Formats items inside a tag */
-.currentBundles .formatter{
-    text-align: center;
-    flex-direction: column;
-    align-items: flex-end;
-    width: 325px;
-    margin: 20px;
-    flex-shrink: 0;
-}
-/* Defines a description with font sizes and formatting*/
-.currentBundles .desc{
-    font-family: Arial;
-    font-size: 20px;
-    margin-top: 10px;
-    flex: 1;
-}
-/* Specifications for thumbnail images  */
-.currentBundles .thumbnail {
-  display: block;
-  border: 4px solid black;  
-  padding: 0px;
-  width: 300px; 
-  margin-bottom: 10px;
-  margin-left: auto;
-}
-.currentBundles .centreBox{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-}
-.currentBundles .centreItems{
-    height: 720px;
-    width: 350px;;
-    border-radius: 2rem;
-    background-color: white;
-    text-align: center;
-    padding: 30px;
-    border: 4px solid green
-}
-
 .currentBundles .mainBox{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: auto;
     text-decoration: none;
     color: inherit;
-    width: 100%;
+    margin: 0 auto;
+    width: 80%;
+    gap: 20px;
     padding-bottom: 30px;
 }
 .currentBundles .bundleEntry{
     display: flex;
-    flex-direction: row;
-    height: auto;
     min-height: 40vh;
-    width: 80%;
+    width: 100%;
     border-radius: 2rem;
     background-color: var(--bg-container);
     overflow: hidden;
@@ -131,4 +53,22 @@
     height: 100%;
     width: 100%;
     border-radius: 1rem;
+}
+
+/*UNUSED*/
+.currentBundles .centreBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.currentBundles .centreItems{
+    height: 720px;
+    width: 350px;;
+    border-radius: 2rem;
+    background-color: white;
+    text-align: center;
+    padding: 30px;
+    border: 4px solid green
 }
