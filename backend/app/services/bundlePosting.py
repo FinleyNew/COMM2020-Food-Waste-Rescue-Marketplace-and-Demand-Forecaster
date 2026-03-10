@@ -1,7 +1,8 @@
+from fastapi import HTTPException
 from sqlmodel import Session
 from typing import Sequence
 from app.models.bundlePosting import BundlePosting
-from app.schemas.bundlePosting import BundlePostingCreate
+from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
 from app.crud import bundlePosting as bundlePosting_crud
 from app.services import forecast as forecast_service
 from psycopg2.extras import DateTimeRange
@@ -34,6 +35,24 @@ def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundleP
 # The service for consumers to reserve a bundle
 def reserve_bundle_posting(posting_id: int, db: Session):
     bundlePosting_crud.reserve_bundle_posting(posting_id=posting_id, db=db)
+
+def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate, db: Session) -> BundlePosting:
+    db_bundle = bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=False)
+
+    # Ensures that the pickup window is still valid
+    new_start = bundle_update.start_time if bundle_update.start_time is not None else db_bundle.pickup_window.lower
+    new_end = bundle_update.end_time if bundle_update.end_time is not None else db_bundle.pickup_window.upper
+    if new_end <= new_start:
+        raise HTTPException(status_code=400, detail="end_time must be after start_time")
+    if bundle_update.start_time and bundle_update.end_time:
+        # Creates the pickup range from the start and end time
+        pickup_range = f"[{bundle_update.start_time.isoformat()}, {bundle_update.end_time.isoformat()})"
+    else:
+        pickup_range = None
+    
+    return bundlePosting_crud.update_bundle_posting(db_bundle=db_bundle, bundle_update=bundle_update, pickup_window=pickup_range, db=db)
+
+
 
 # The service for deleting a bundle posting
 # Currently not in use

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.api.deps import SellerDep, SessionDep
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
+from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic, BundlePostingUpdate
 from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
@@ -50,6 +50,11 @@ def get_bundle(posting_id: int, db: SessionDep):
     if bundle is None:
         raise HTTPException(status_code=404, detail="Bundle not found")
     return bundle
+
+@router.patch("/{posting_id}", response_model=BundlePostingPublic)
+def update_bundle(posting_id: int, bundle_update: BundlePostingUpdate, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
+
 
 # Endpoint for deleting a specific bundle
 # Currently not in use

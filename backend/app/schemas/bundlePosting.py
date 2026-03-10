@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 from sqlalchemy import Column
@@ -43,6 +43,14 @@ class BundlePostingUpdate(SQLModel):
     # They could send a new start but not end so need to check in the service
     start_time: datetime | None = None
     end_time: datetime | None = None
+
+    @model_validator(mode="after")
+    def ensure_timezone_aware(self):
+        if self.start_time and self.start_time.tzinfo is None:
+            self.start_time = self.start_time.replace(tzinfo=timezone.utc)
+        if self.end_time and self.end_time.tzinfo is None:
+            self.end_time = self.end_time.replace(tzinfo=timezone.utc)
+        return self
 
     @model_validator(mode="after")
     def check_end_after_start(self):
