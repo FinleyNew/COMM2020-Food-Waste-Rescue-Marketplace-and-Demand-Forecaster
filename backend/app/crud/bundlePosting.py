@@ -22,7 +22,7 @@ def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
 # The crud function for getting a specific bundle posting
 def get_bundle_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
-    # lock is used when getting ensuring the buncle is available
+    # lock is used when getting ensuring the bundle is available
     # It ensures that the bundle can only be accessed one at a time
     if lock:
         statement = statement.with_for_update()
