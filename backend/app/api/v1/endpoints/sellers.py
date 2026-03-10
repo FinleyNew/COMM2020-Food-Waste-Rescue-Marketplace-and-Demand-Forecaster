@@ -6,6 +6,11 @@ from app.schemas.user import UserCreate
 
 router = APIRouter()
 
+#Endpoint for getting the current seller
+@router.get("/me", response_model=SellerPublic)
+def get_current_seller(current_seller: SellerDep):
+    return current_seller
+
 # Ednpoint for creating a new seller
 @router.post("/", response_model = SellerPublic)
 def create_seller(seller_in: SellerCreate, user_in: UserCreate, db: SessionDep):
