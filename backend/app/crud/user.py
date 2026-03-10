@@ -10,6 +10,6 @@ def get_user_by_email(email: str, db: Session) -> User | None:
 def create_user(user_in: UserCreate, hashed_password: str, db: Session) -> User:
     db_user = User.model_validate(user_in, update={"password": hashed_password})
     db.add(db_user)
-    db.commit()
+    db.flush()
     db.refresh(db_user)
     return db_user

@@ -8,9 +8,10 @@ class ConsumerBase(SQLModel):
 # The create schema for consumers
 # Currently not in use
 class ConsumerCreate(ConsumerBase):
-    user_id: int
+    pass
 
 #The public schema for consumers
 class ConsumerPublic(ConsumerBase):
+    user_id: int
     # Streak cannot be negative
     streak: int = Field(ge=0)

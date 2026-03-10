@@ -22,6 +22,6 @@ def increment_consumers_streak(consumer_id: int, db: Session):
 def create_consumer(consumer_in: ConsumerCreate, user_id: int, db: Session) -> Consumer:
     db_consumer = Consumer.model_validate(consumer_in, update={"user_id": user_id})
     db.add(db_consumer)
-    db.commit()
+    db.flush()
     db.refresh(db_consumer)
     return db_consumer
