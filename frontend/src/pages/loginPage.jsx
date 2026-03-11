@@ -18,6 +18,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [location, setLocation] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const validTime = /^\d{2}:\d{2} - \d{2}:\d{2}$/.test(openingHours);
   const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
@@ -140,8 +141,9 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       }
       console.log(data);
 
+      if(password.length>3 && companyName.length > 3 && location.length > 3 && username.length > 3 && password.length >> 3){
 
-      axios.post(`${API_URL}/api/v1/sellers/`, data, {
+        axios.post(`${API_URL}/api/v1/sellers/`, data, {
           headers: {
             "Content-Type": "application/json"
           }
@@ -152,9 +154,12 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
               closePopup()
           })
           .catch(err => {
-            console.log("Status:", err.response.status);
-            console.log("Backend error:", err.response.data);
+            console.log("status:", err.response.status);
+            console.log("backend error:", err.response.data);
           });
+      }
+      alert("All input details must be longer than 3");
+      
 
 
 
@@ -273,10 +278,18 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   </>
                    
                 )}
+                {username && username.includes("@") && (
+                  <p style={{color: "red"}}>Email must contain @</p>
+                ) }
                 {confirmPassword && password !== confirmPassword && (
                   <p style={{color: "red"}}>Passwords do not match</p>
                 )}
-               
+               {openingHours && !/^\d{2}:\d{2} - \d{2}:\d{2}$/.test(openingHours) && (
+                  <p style={{color:"red"}}>
+                      Opening hours must be in format HH:MM - HH:MM
+                  </p>
+                )}
+                
                 {/* Creates an input box for the user to send their password and saves it */}
                 <div className="rowRegister">
                   <p>Password:</p>
@@ -296,7 +309,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 </div>
                 <div className="rowRegister">
                   <button onClick={createAccount} //was close popup
-                            disabled={password!=confirmPassword}
+                            disabled={password!==confirmPassword || !validTime}
                             >Create Account</button>
                   <button onClick={closePopup}>Cancel</button>
                 </div>
