@@ -4,6 +4,8 @@ from typing import Sequence, Tuple
 from app.models import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate
 from psycopg.types.range import Range
+from app.models.enums import BundleStatus
+from sqlalchemy import func
 
 # The crud function for creating a new bundle posting
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window, db: Session) -> BundlePosting:
@@ -18,6 +20,13 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
+
+def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
+    statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status == BundleStatus.AVAILABLE)
+    return db.exec(statement).all()
+
+def set_expired(bundle_posting: BundlePosting, db: Session):
+    bundle_posting.status = BundleStatus.EXPIRED
 
 # The crud function for getting a specific bundle posting
 def get_bundle_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:
