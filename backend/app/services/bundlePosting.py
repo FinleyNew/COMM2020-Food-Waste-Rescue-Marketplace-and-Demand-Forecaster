@@ -36,8 +36,12 @@ def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundleP
 def reserve_bundle_posting(posting_id: int, db: Session):
     bundlePosting_crud.reserve_bundle_posting(posting_id=posting_id, db=db)
 
-def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | BundlePostingAdminUpdate, db: Session) -> BundlePosting:
+def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | BundlePostingAdminUpdate, db: Session, user_id: int | None = None) -> BundlePosting:
     db_bundle = bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=False)
+
+    # If a user_id is provided ensure it matches the owner
+    if user_id is not None and db_bundle.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorised to update this posting")
 
     # Ensures that the pickup window is still valid
     new_start = bundle_update.start_time if bundle_update.start_time is not None else db_bundle.pickup_window.lower
