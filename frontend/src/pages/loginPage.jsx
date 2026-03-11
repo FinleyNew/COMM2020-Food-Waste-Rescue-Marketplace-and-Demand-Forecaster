@@ -7,11 +7,17 @@ import "./loginPage.css"
 function LoginPage({setUser}) {// username is the variable, setUsername changes it and useState means it can be changed throughout the program
   const [username, setUsername] = useState(""); //setUsername is the function to change it, defining variables of username and password
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
+  const [confirmPassword, checkPassword] = useState("");
   const navigate = useNavigate();
   const [ErrorLogin, setErrorLogin] = useState(false);
   const [Popup, setPopup] = useState(false);
   const [token,setToken] = useState("");
   const [role,setRole] = useState("");
+  const [accountType, setAccountType] = useState("Consumer");
+  const[displayName, setDisplayName] = useState("");
+  const [location, setLocation] = useState("");
+  const [openingHours, setOpeningHours] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
@@ -88,20 +94,75 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       alert("No data");
     });
 
-    
-    
-    
+  }
+  function createAccount(){
+    if(accountType==="Consumer"){
+      const data = {
+        consumer_in: {
+          display_name: displayName
+        },
+        user_in: {
+          email: username,
+          password: password
+        }
+      }
+
+      axios.post(`${API_URL}/api/v1/consumers/`, data, {
+          headers: {
+            
+            "Content-Type": "application/json"
+          }
+          })
+          .then(response => {
+              console.log("profile made");
+              navigate("/login")
+              closePopup()
+          })
+          .catch(err => {
+            console.error("Request failed:", err);
+          });
 
 
 
 
+    }
+    else if(accountType==="Seller"){
+      const data = {
+        seller_in: {
+          name: companyName,
+          location: location,
+          opening_hours: openingHours
+        },
+        user_in: {
+          email: username,
+          password: password
+        }
+      }
+      console.log(data);
+
+
+      axios.post(`${API_URL}/api/v1/sellers/`, data, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+          })
+          .then(response => {
+              console.log(data);
+              navigate("/login")
+              closePopup()
+          })
+          .catch(err => {
+            console.log("Status:", err.response.status);
+            console.log("Backend error:", err.response.data);
+          });
 
 
 
 
-
-
-    
+    }
+    else{
+      //idk some error
+    }
   }
 
   return (
@@ -144,10 +205,25 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 Register
           </button>
         </div>
+
+
+
             {Popup && (
               <div className="popupRegister open-popupRegister">
-                <h3>Account Registration</h3>  {/*if the button is clicked, open the pop up to pay*/}
+                <h3>Account Registration</h3>
                 <br></br>
+                <div classname="rowRegister">
+                  <label for="user">Choose Account Type: </label>
+                  <select
+                    name="user"
+                    id="user"
+                    value={accountType}
+                    onChange={(e) => setAccountType(e.target.value)}
+                  >
+                    <option value="Consumer">Consumer</option>
+                    <option value="Seller">Seller</option>
+                  </select>
+                </div>
                 <div className="rowRegister">
                   <p>Email: </p>
                   <input 
@@ -156,6 +232,51 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
+                {accountType === "Consumer" && (
+                  <>
+                  <div classname="rowRegister">
+                  <p>Display Name: </p>
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    />
+                </div>
+                  </>
+                )}
+                {accountType==="Seller" && (
+                  <>
+                  <div classname="rowRegister">
+                  <p>Name: </p>
+                  <input
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    />
+                </div>
+                  <div classname="rowRegister">
+                  <p>Location: </p>
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    />
+                </div>
+                <div classname="rowRegister">
+                  <p>Opening Hours: </p>
+                  <input
+                    type="text"
+                    value={openingHours}
+                    onChange={(e) => setOpeningHours(e.target.value)}
+                    />
+                </div>
+                  </>
+                   
+                )}
+                {confirmPassword && password !== confirmPassword && (
+                  <p style={{color: "red"}}>Passwords do not match</p>
+                )}
+               
                 {/* Creates an input box for the user to send their password and saves it */}
                 <div className="rowRegister">
                   <p>Password:</p>
@@ -166,11 +287,25 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   />
                 </div>
                 <div className="rowRegister">
-                  <button onClick={closePopup}>Confirm</button>
+                  <p>Confirm Password:</p>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => checkPassword(e.target.value)}
+                  />
+                </div>
+                <div className="rowRegister">
+                  <button onClick={createAccount} //was close popup
+                            disabled={password!=confirmPassword}
+                            >Create Account</button>
                   <button onClick={closePopup}>Cancel</button>
                 </div>
               </div>
             )}
+
+
+
+
       </div>
     </div>
   );
