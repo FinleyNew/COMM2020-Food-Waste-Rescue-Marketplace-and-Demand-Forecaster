@@ -9,6 +9,7 @@ from app.crud.bundlePosting import get_to_be_expired_bundle_postings, set_expire
 from app.db.session import engine
 from app.models.enums import ReservationStatus
 from app.crud.reservation import set_no_show
+from app.services import record as record_service
 
 scheduler = AsyncIOScheduler()
 
@@ -30,6 +31,7 @@ async def check_expired_postings():
         expired = get_to_be_expired_bundle_postings(now=now, db=db)
         for posting in expired:
             set_expired(bundle_posting=posting, db=db)
+            record_service.create_record(bundle_posting=posting, db=db)
             reservations = posting.reservations
             for reservation in reservations:
                 if reservation.status == ReservationStatus.RESERVED:

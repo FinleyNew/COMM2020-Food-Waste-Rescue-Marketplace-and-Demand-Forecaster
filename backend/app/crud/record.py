@@ -4,8 +4,9 @@ from datetime import datetime
 from app.models.enums import Category
 from app.models import Record
 from app.models.bundlePosting import BundlePosting
-from app.services.reservation import get_no_show
 from random import randint
+
+from app.services import reservation as reservation_service
 
 def create_record(bundle_posting: BundlePosting, posting_id: int, db: Session) -> Record:
     record = Record.model_validate(
@@ -13,7 +14,7 @@ def create_record(bundle_posting: BundlePosting, posting_id: int, db: Session) -
         update={
             "raining": is_raining(),
             "observed_reservations": bundle_posting.reserved,
-            "observed_no_show": get_no_show(posting_id=posting_id, db=db),
+            "observed_no_show": reservation_service.get_no_show(posting_id=posting_id, db=db),
             "observed_expired": bundle_posting.available
         }
     )
