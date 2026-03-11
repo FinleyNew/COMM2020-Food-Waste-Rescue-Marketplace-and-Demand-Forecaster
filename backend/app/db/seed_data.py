@@ -5,8 +5,9 @@ from app.db.session import engine
 from datetime import datetime, timedelta
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
-from random import randint, uniform
+from random import randint, uniform, choices
 from faker import Faker
+import numpy as np
 
 fake = Faker('en_GB')
 Faker.seed(123)
@@ -76,26 +77,28 @@ def seed_bundle_posting(db: Session):
 
     #Add 250 bundle postings
     for _ in range(250):
+        reservations = fake.random_int(1, 25)
+
         #Create random 1 hour pickup window
-        start_time = datetime(2026, randint(1,2), randint(1, 28), randint(8, 18))
+        day = 1 + calculate_day_of_week(reservations) + (randint(0, 3) * 7)
+        start_time = datetime(2026, 3, day, calculate_start_time(reservations))
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
         #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
-            category=fake.random_element(elements=Category).value,
+            category=calculate_category(reservations),
             allergens=', '.join(fake.random_elements(elements=example_allergens, unique=True)),
-            available=randint(0, 25),
-            reserved=randint(0, 25),
-            price=Decimal(uniform(5.0, 15.0)),
+            available=randint(0, 5),
+            reserved=reservations,
+            price=Decimal(calculate_price(reservations)),
             pickup_window=pickup_window,
             status=fake.random_element(elements=BundleStatus).value,
             weight=randint(250, 2000)
         )
         db.add(posting)
     db.commit()
-
 
 def seed_reservation(db: Session):
     #Get all the consumers and posts
@@ -104,11 +107,12 @@ def seed_reservation(db: Session):
 
     #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
     for post in postings:
-        for i in range(fake.random_int(1, 25)):
+        timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
+        for i in range(post.reserved):
             reservation = Reservation(
                 posting_id=post.posting_id,
                 user_id=fake.random_element(elements=consumers).user_id,
-                timestamp=fake.date_time_between(datetime(2026, 1, 1), datetime(2026, 2, 10)),
+                timestamp=timestamp,
                 status=fake.random_element(elements=ReservationStatus).value
             )
             db.add(reservation)
@@ -132,13 +136,15 @@ def seed_record(db: Session):
         )
         no_show = db.exec(no_show_query).one()
 
+        reservations = post.available - post.reserved
+
         record = Record(
             user_id=post.user_id,
             posting_id=post.posting_id,
             pickup_window=post.pickup_window,
             category=post.category,
             price=post.price,
-            raining=fake.boolean(chance_of_getting_true=10),
+            raining=calculate_rain(reservations),
             observed_reservations=reservations,
             observed_no_show=no_show,
             observed_expired=post.available,
@@ -163,6 +169,75 @@ def seed_forecast(db: Session):
         db.add(forecast)
     db.commit()
 
+def calculate_price(reservations: int) -> float:
+    base_price = (250/reservations) ** (2/3)
+    random_noise = np.random.normal(0, 0.2)
+    price = base_price * np.exp(random_noise)
+
+    return round(price, 2)
+
+def calculate_start_time(reservations: int) -> int:
+    peak_prob = 0.4 + (0.02 * reservations)
+    is_peak = np.random.random() < peak_prob
+
+    if is_peak:
+        if np.random.random() < 0.5:
+            time = np.random.normal(12.5, 1)
+        else:
+            time = np.random.normal(17.5, 0.8**2)
+    else:
+        time = np.random.randint(8, 19)
+
+    return int(time)
+
+def calculate_day_of_week(reservations: int) -> int:
+    b = 0.02 * (reservations - 12.5)
+    w = 0.4 + b
+    d = 1 - w
+    k = d/0.6
+
+    #Monday - Sunday
+    day_probs = {
+        1: 0.1 * k, 
+        2: 0.1 * k,
+        3: 0.12 * k,
+        4: 0.12 * k,
+        5: w * 0.18 / 0.4,
+        6: w * 0.22 / 0.4,
+        7: 0.16 * k
+    }
+
+    days = list(day_probs.keys())
+    probs = list(day_probs.values())
+
+    return np.random.choice(a=days, p=probs)
+
+def calculate_category(reservations: int) -> Category:
+    b = 0.015 * (reservations - 12.5)
+    h = 0.55 + b
+    o = 1 - h
+    k = o/0.45
+
+    category_probs = {
+        Category.MEAT: 0.14 * k, 
+        Category.DAIRY: 0.11 * k,
+        Category.FRUIT: 0.09 * k,
+        Category.VEGETABLES: 0.07 * k,
+        Category.SEAFOOD: 0.04 * k,
+        Category.BAKED_GOODS: h * 0.22 / 0.55,
+        Category.SNACKS: h * 0.18 / 0.55,
+        Category.DRINKS: h * 0.15 / 0.55
+    }
+
+    categories = list(category_probs.keys())
+    probs = list(category_probs.values())
+
+    return choices(categories, weights=probs, k=1)[0]
+
+def calculate_rain(reservations: int) -> bool:
+    b = 0.01 * (reservations - 12.5)
+
+    return np.random.random() < 0.3 - b
 
 def seed_tables():
     with Session(engine) as db:
