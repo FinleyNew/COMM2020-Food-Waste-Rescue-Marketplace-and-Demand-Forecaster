@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlmodel import Session
 from typing import Sequence
 from app.models.bundlePosting import BundlePosting
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
+from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingUpdate
 from app.crud import bundlePosting as bundlePosting_crud
 from app.services import forecast as forecast_service
 from psycopg2.extras import DateTimeRange
@@ -36,7 +36,7 @@ def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundleP
 def reserve_bundle_posting(posting_id: int, db: Session):
     bundlePosting_crud.reserve_bundle_posting(posting_id=posting_id, db=db)
 
-def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate, db: Session) -> BundlePosting:
+def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | BundlePostingAdminUpdate, db: Session) -> BundlePosting:
     db_bundle = bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=False)
 
     # Ensures that the pickup window is still valid

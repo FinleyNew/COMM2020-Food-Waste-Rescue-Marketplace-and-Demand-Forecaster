@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.api.deps import SellerDep, SessionDep
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic, BundlePostingUpdate
+from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingPublic, BundlePostingUpdate
 from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
@@ -55,6 +55,9 @@ def get_bundle(posting_id: int, db: SessionDep):
 def update_bundle(posting_id: int, bundle_update: BundlePostingUpdate, db: SessionDep):
     return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
 
+@router.patch("/admin/{posting_id}", response_model=BundlePostingPublic)
+def admin_update_bundle(posting_id: int, bundle_update: BundlePostingAdminUpdate, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
 
 # Endpoint for deleting a specific bundle
 # Currently not in use
