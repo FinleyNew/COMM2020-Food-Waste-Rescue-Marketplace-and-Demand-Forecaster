@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app.models import Reservation
 from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationCreate
+from app.models.enums import ReservationStatus
 
 # Crud function for creating a reservation
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session) -> Reservation:
@@ -34,6 +35,9 @@ def get_reservations_by_consumer(consumer_id: int, db: Session) -> Sequence[Rese
 def get_reservation_by_claim_code(claim_code: str, db: Session) -> Reservation | None:
     statement = select(Reservation).where(Reservation.claim_code == claim_code)
     return db.exec(statement).first()
+
+def set_no_show(reservation: Reservation, db: Session):
+    reservation.status = ReservationStatus.NO_SHOW
 
 # Crud function for deleting a reservation
 # Currently not in use

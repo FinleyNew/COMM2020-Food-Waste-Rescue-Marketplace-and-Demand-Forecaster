@@ -22,7 +22,7 @@ def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return db.exec(statement).all()
 
 def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
-    statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status == BundleStatus.AVAILABLE)
+    statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status.in_([BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])) # type: ignore
     return db.exec(statement).all()
 
 def set_expired(bundle_posting: BundlePosting, db: Session):
