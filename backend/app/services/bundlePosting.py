@@ -44,11 +44,7 @@ def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate, d
     new_end = bundle_update.end_time if bundle_update.end_time is not None else db_bundle.pickup_window.upper
     if new_end <= new_start:
         raise HTTPException(status_code=400, detail="end_time must be after start_time")
-    if bundle_update.start_time and bundle_update.end_time:
-        # Creates the pickup range from the start and end time
-        pickup_range = f"[{bundle_update.start_time.isoformat()}, {bundle_update.end_time.isoformat()})"
-    else:
-        pickup_range = None
+    pickup_range = f"[{new_start.isoformat()}, {new_end.isoformat()})"
     
     return bundlePosting_crud.update_bundle_posting(db_bundle=db_bundle, bundle_update=bundle_update, pickup_window=pickup_range, db=db)
 
