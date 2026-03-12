@@ -11,6 +11,10 @@ class ReservationBase(SQLModel):
 class ReservationCreate(ReservationBase):
     pass
 
+class ReservationAdminUpdate(SQLModel):
+    status: ReservationStatus | None = None
+    timestamp: datetime | None = None
+
 # The public schema for reservations
 class ReservationPublic(ReservationBase):
     reservation_id: int

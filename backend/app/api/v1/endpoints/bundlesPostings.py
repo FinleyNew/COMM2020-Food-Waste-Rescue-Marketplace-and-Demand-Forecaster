@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.api.deps import SellerDep, SessionDep
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
+from app.api.deps import AdminDep, SellerDep, SessionDep
+from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingPublic, BundlePostingUpdate
 from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
@@ -22,6 +22,12 @@ def get_active_bundles(db: SessionDep):
     bundle_postings = bundle_posting_service.get_active_bundle_postings(db=db)
     return bundle_postings or []
 
+# Endpoint for getting all bundles
+@router.get("/all", response_model = list[BundlePostingPublic])
+def get_all_bundles(db: SessionDep):
+    bundle_postings = bundle_posting_service.get_all_bundle_postings(db=db)
+    return bundle_postings or []
+
 # Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
@@ -37,6 +43,14 @@ def get_bundle(posting_id: int, db: SessionDep):
     if bundle is None:
         raise HTTPException(status_code=404, detail="Bundle not found")
     return bundle
+
+@router.patch("/{posting_id}", response_model=BundlePostingPublic)
+def update_bundle(posting_id: int, bundle_update: BundlePostingUpdate, current_user: SellerDep, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db, user_id=current_user.user_id)
+
+@router.patch("/admin/{posting_id}", response_model=BundlePostingPublic)
+def admin_update_bundle(posting_id: int, bundle_update: BundlePostingAdminUpdate, current_user: AdminDep, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
 
 # Endpoint for deleting a specific bundle
 # Currently not in use
