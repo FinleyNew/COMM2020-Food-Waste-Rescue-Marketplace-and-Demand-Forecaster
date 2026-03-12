@@ -24,7 +24,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   //let invalidTime = false;
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
 
   const validPassword = passwordRegex.test(password);
 
@@ -42,6 +42,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     validTimeFormat &&
     toMinutes(closingTime) <= toMinutes(openingTime);
 
+  const timeValidForSeller = 
+    accountType==="Seller"
+    ? validTimeFormat && toMinutes(closingTime) > toMinutes(openingTime)
+    : true;
 
   
   const validTime =
@@ -80,6 +84,13 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const handleAccountCreation = () => {
     setUsername("");
     setPassword("");
+    checkPassword("");
+    setRole("");
+    setDisplayName("");
+    setLocation("");
+    setCompanyName("");
+    setOpeningTime("");
+    setClosingTime("");
     
 
     closePopup();
@@ -188,6 +199,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           .then(response => {
               console.log("profile made");
               navigate("/login")
+              handleAccountCreation();
               closePopup()
           })
           .catch(err => {
@@ -222,6 +234,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           .then(response => {
               console.log(data);
               navigate("/login")
+              handleAccountCreation();
               closePopup()
           })
           .catch(err => {
@@ -230,7 +243,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           });
       
       
-      handleAccountCreation();
+      
 
 
 
@@ -404,7 +417,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 </button>
                 <div className="rowRegister">
                   <button onClick={createAccount} //was close popup
-                            disabled={password!==confirmPassword || !validTimeFormat || invalidTime || !validPassword}
+                            disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword}
                             >Create Account</button>
                   <button onClick={handleCancel}>Cancel</button>
                 </div>
