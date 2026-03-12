@@ -5,9 +5,17 @@ from sqlmodel import Session
 from app.crud.reservation import get_reservations_by_consumer
 from app.models.reservation import Reservation
 from app.crud import consumer as consumer_crud
+from app.models.consumer import Consumer
+from app.schemas.consumer import ConsumerAdminUpdate, ConsumerUpdate
 
 def get_week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
+
+def update_consumer(current_consumer: Consumer, consumer_update: ConsumerUpdate | ConsumerAdminUpdate, db: Session) -> Consumer:
+    return consumer_crud.update_consumer(current_consumer=current_consumer, consumer_update=consumer_update, db=db)
+
+def get_consumer_by_id(user_id: int, db: Session) -> Consumer:
+    return consumer_crud.get_consumer_by_id(user_id=user_id, db=db)
 
 # Service for checking whether a consumers streak is still valid
 def check_streak(consumer_id: int, db: Session) -> bool:
