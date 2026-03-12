@@ -1,5 +1,5 @@
 from decimal import Decimal
-from sqlmodel import Session, select, func
+from sqlmodel import Session, select, func, desc
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from datetime import datetime, timedelta
@@ -43,8 +43,7 @@ def seed_consumer(db: Session):
         #Give consumer random and and streak between 1 and 10
         consumer = Consumer(
             user_id=user.user_id,
-            display_name=fake.name(),
-            streak=fake.random_int(0, 10)
+            display_name=fake.name()
         )
         db.add(consumer)
     db.commit()
@@ -251,6 +250,39 @@ def calculate_rain(reservations: int) -> bool:
 
     return np.random.random() < 0.3 - b
 
+def update_streaks(db: Session):
+    consumers = db.exec(select(Consumer)).all()
+
+    for consumer in consumers:
+        reservations = db.exec(select(Reservation).where(
+            Reservation.user_id == consumer.user_id,
+            Reservation.status == ReservationStatus.COLLECTED
+        )).all()
+
+        weeks = sorted(list(set(
+            (r.timestamp.isocalendar().year, r.timestamp.isocalendar().week) 
+            for r in reservations
+        )), reverse=True)
+
+        streak = 0
+        if weeks:
+            streak = 1
+            for i in range(1, len(weeks)):
+                curr_y, curr_w = weeks[i-1]
+                prev_y, prev_w = weeks[i]
+                
+                if (curr_y == prev_y and prev_w == curr_w - 1) or \
+                   (curr_y == prev_y + 1 and curr_w == 1 and prev_w >= 52):
+                    streak += 1
+                else:
+                    break
+                    
+        consumer.streak = streak
+        db.add(consumer)
+
+    db.commit()
+
+
 def seed_tables():
     with Session(engine) as db:
         if is_database_already_seeded(db=db):
@@ -262,6 +294,7 @@ def seed_tables():
         seed_seller(db=db)
         seed_bundle_posting(db=db)
         seed_reservation(db=db)
+        update_streaks(db=db)
         seed_record(db=db)
         seed_forecast(db=db)
     print("Seeding complete")
