@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlmodel import Session
 
-from app.schemas.seller import SellerCreate
+from app.schemas.seller import SellerAdminUpdate, SellerCreate, SellerUpdate
 from app.schemas.user import UserCreate
 from app.models.seller import Seller
 from app.crud import user as user_crud
@@ -31,3 +31,9 @@ def create_seller(seller_in: SellerCreate, user_in: UserCreate, db: Session) -> 
     except Exception:
         db.rollback
         raise
+
+def update_seller(current_seller: Seller, seller_update: SellerUpdate | SellerAdminUpdate, db: Session):
+    return seller_crud.update_seller(current_seller=current_seller, seller_update=seller_update, db=db)
+
+def get_seller_by_id(user_id: int, db: Session) -> Seller:
+    return seller_crud.get_seller_by_id(user_id=user_id, db=db)

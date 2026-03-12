@@ -28,9 +28,9 @@ class SellerCreate(SellerBase):
 class SellerUpdate(SQLModel):
     name: str | None = None
     location: str | None = None
-    open_hours: str | None = None
+    opening_hours: str | None = None
     # Ensures open_hours is in the right format and valid
-    @field_validator("open_hours")
+    @field_validator("opening_hours")
     @classmethod
     def validate_open_hours(cls, v):
         if v:
