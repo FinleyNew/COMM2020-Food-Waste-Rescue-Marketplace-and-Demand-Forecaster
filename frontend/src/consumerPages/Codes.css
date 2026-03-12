@@ -7,7 +7,7 @@
 .codes .row{
     display: flex;
     text-align:  center;
-    gap: 10px; 
+    gap: 10px;
     width: 100%;
 }
 .codes .button {

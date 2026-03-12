@@ -1,13 +1,12 @@
-.currentBundles .navRow{
+.addBundles .navRow{
     display: flex;
     text-align: center;
     gap: 10px; 
 }
 /* Creates a button structure with colours and spacings*/
-.currentBundles .button {
+.addBundles .button {
     background-color: var(--button-bg);
     font-family: Arial;
-    color: white;
     padding: 10px 30px;
     text-align: center;
     display: inline-block;
@@ -18,7 +17,7 @@
     text-decoration: none;
     color: var(--button-text);
 }
-.currentBundles .mainBox{
+.addBundles .mainBox{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -26,12 +25,14 @@
     text-decoration: none;
     color: inherit;
     margin: 0 auto;
-    width: 80%;
+    width: 55vh;
     gap: 20px;
     padding-bottom: 30px;
 }
-.currentBundles .bundleEntry{
+.addBundles .bundleEntry{
     display: flex;
+    flex-direction: column;
+    align-items: center;
     min-height: 40vh;
     width: 100%;
     border-radius: 2rem;
@@ -40,36 +41,42 @@
     border: 8px solid var(--border-colour);
     box-sizing: border-box;
     padding-bottom: 30px;
+    padding: 2%;
     color: var(--text-colour);
 }
-.currentBundles .textBox{
-    padding-inline: 5%;
+.addBundles .textBox{
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
     flex-grow: 1;
     gap: 20px;
     margin-top: 20px;
+    width: fit-content;
 }
-.currentBundles .companyIcon{
+.addBundles .companyIcon{
     height: 100%;
     width: 100%;
     border-radius: 1rem;
 }
-
-/*UNUSED*/
-.currentBundles .centreBox{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-}
-.currentBundles .centreItems{
-    height: 720px;
-    width: 350px;;
-    border-radius: 2rem;
-    background-color: white;
+/* Creates a button structure with colours and spacings*/
+.addBundles .boxButton {
+    background-color: var(--button-bg);
+    font-family: Arial;
+    padding: 10px 30px;
+    display: inline-block;
     text-align: center;
-    padding: 30px;
-    border: 4px solid green
+    font-size: 16px;
+    margin: 0px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--button-text);
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.addBundles .row{
+    display: flex;
+    text-align: center;
+    gap: 10px; 
 }

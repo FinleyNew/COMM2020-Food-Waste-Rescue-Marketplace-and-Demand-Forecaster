@@ -37,15 +37,6 @@ function Discover() {
             <Link to="/login" className="button"><b>Login Page</b></Link> {/* displays the links to the other pages */}
             <Link to="/streaks" className="button"><b>Streaks</b></Link>
             <Link to="/codes" className="button"><b>Codes</b></Link>
-            <details>
-            <summary>
-                <img className="setting" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdndCKhAJ4SlVEaNCkA4U6BN4tDXZsRtxSw&s"></img> {/* holds the images for the settings page */}
-            </summary>
-            <label>
-                <input type="checkbox" name="darkmode"/> {/* checkbox for darkmode */}
-                Enable Dark Mode DOESNT WORK YET
-            </label>
-            </details>
         </nav>
         <h1 className="headline">Bundles</h1>
 

@@ -75,7 +75,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
     <>
       <div className="currentBundles">
         {/* Initialises the navifation bar where sellers can move between pages */}
-          <nav className="row">
+          <nav className="navRow">
             <Link to="/login" className="button"><b>Login Page</b></Link>
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/analytics" className="button"><b>Analytics</b></Link>

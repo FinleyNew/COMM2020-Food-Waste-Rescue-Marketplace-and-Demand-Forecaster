@@ -3,6 +3,11 @@
     flex-direction: row;
     gap: 20px;
 }
+.discover hr{
+    border: none;
+    height: 4px;
+    background-color: var(--border-colour);
+}
 .discover .row{
     display: flex;
     text-align: center;
