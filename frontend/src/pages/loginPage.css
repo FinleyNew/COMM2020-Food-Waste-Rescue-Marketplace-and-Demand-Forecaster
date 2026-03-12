@@ -64,3 +64,11 @@
     justify-content: center;
     gap: 10px;
 }
+.loginPage .rowRegister p{
+    width: 80px;
+    text-align: left;
+}
+
+.loginPage .rowRegister input{
+    width: 180px;
+}

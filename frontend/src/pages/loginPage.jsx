@@ -85,23 +85,8 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     })
     .catch(err => {
       console.error("Error fetching data", err);
-      alert("No data");
+      setErrorLogin(true);
     });
-
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-    
   }
 
   return (
