@@ -249,9 +249,15 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
               closePopup()
           })
           .catch(err => {
-            console.log("status:", err.response.status);
-            console.log("backend error:", err.response.data);
-          });
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+             if(err.response?.status === 400 && err.response?.data?.detail){
+                setAccountError(err.response.data.detail);
+              } else {
+                setAccountError("An unexpected error occurred. Please try again.");
+                } 
+              });
       
       
       
