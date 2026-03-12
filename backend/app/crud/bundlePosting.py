@@ -60,6 +60,12 @@ def update_bundle_posting(db_bundle: BundlePosting, bundle_update: BundlePosting
     db.refresh(db_bundle)
     return db_bundle
 
+def set_bundle_deleted(bundle: BundlePosting, db: Session) -> BundlePosting:
+    bundle.status = BundleStatus.DELETED
+    db.commit()
+    db.refresh(bundle)
+    return bundle
+
 # The crud function for deleting a bundle posting
 # Currently not in use
 def delete_bundle_posting(posting_id: int, db: Session):

@@ -4,6 +4,7 @@ from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingUpdate
 from app.crud import bundlePosting as bundlePosting_crud
+from app.services import reservation as reservation_service
 from app.services import forecast as forecast_service
 from psycopg2.extras import DateTimeRange
 from psycopg.types.range import Range
@@ -52,11 +53,16 @@ def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | 
     
     return bundlePosting_crud.update_bundle_posting(db_bundle=db_bundle, bundle_update=bundle_update, pickup_window=pickup_range, db=db)
 
-
+def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
+    bundle = get_bundle_posting(posting_id=posting_id, db=db)
+    for reservation in bundle.reservations:
+        reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
+    return bundlePosting_crud.set_bundle_deleted(bundle=bundle, db=db)
 
 # The service for deleting a bundle posting
 # Currently not in use
 def delete_bundle_posting(posting_id: int, db: Session):
     bundle_posting = get_bundle_posting(posting_id=posting_id, db=db)
-
+    for reservation in bundle_posting.reservations:
+        reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
     bundlePosting_crud.delete_bundle_posting(posting_id=posting_id, db=db)
