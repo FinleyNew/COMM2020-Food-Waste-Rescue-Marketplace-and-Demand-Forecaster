@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 function Forecasts() {
   const [forecasts, setForecasts] = useState([]);
+  const [noForecasts, setNoForecasts] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -14,7 +15,14 @@ function Forecasts() {
       }
     })
       .then(response => {
-        setForecasts(response.data); // data is likely an array
+        //setForecasts(response.data); // data is likely an array
+        //setAnalytics(response.data);
+      if (response.data.length === 0) {
+          setNoForecasts(true);
+        } else {
+          setForecasts(response.data);
+          setNoForecasts(false);
+        }
       })
       .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching forecasts:", err);
@@ -48,6 +56,10 @@ function Forecasts() {
             </div>
           ))
         )}
+        {noForecasts && (
+          <p style={{color:"red"}}>
+                      No bundles
+                  </p>)}
       </section>      
     </>
   );

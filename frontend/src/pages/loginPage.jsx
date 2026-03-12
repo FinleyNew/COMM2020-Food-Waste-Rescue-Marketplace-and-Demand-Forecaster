@@ -9,12 +9,12 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [password, setPassword] = useState(""); //more secure than accessing it with getElementId
   const [confirmPassword, checkPassword] = useState("");
   const navigate = useNavigate();
-  const [ErrorLogin, setErrorLogin] = useState(false);
+  
   const [Popup, setPopup] = useState(false);
   const [token,setToken] = useState("");
   const [role,setRole] = useState("");
   const [accountType, setAccountType] = useState("Consumer");
-  const[displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [location, setLocation] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -26,6 +26,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
   const [accountError, setAccountError] = useState(""); // <-- new
+  const [loginError, setLoginError] = useState(""); // <-- new
 
   const validPassword = passwordRegex.test(password);
 
@@ -167,14 +168,25 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         }
 
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+            
+              });
     }
 
     })
-    .catch(err => {
-      console.error("Error fetching data", err);
-      alert("No data");
-    });
+     .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+             if(err.response?.status === 401 && err.response?.data?.detail){
+                setLoginError(err.response.data.detail);
+              } else {
+                setLoginError("An unexpected error occurred. Please try again.");
+                } 
+              });
 
   }
   function createAccount(){
@@ -272,6 +284,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   }
 
   return (
+    
     <div className="loginBox">
       <div className="loginItems">
         <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
@@ -293,21 +306,21 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {ErrorLogin && (
+        {loginError && (
           <div className="popupRegister open-popupRegister">
             <h3>No Account Found</h3>
             <br></br>
             <br></br>
             <p>We could not find an account associated with this email and password, please try again.</p>
             <br></br>
-            <button onClick={() => setErrorLogin(false)}>Confirm</button>
+            <button onClick={() => setLoginError("")}>Confirm</button>
           </div>
         )}
         <br></br>
         {/* Makes a button that submits entires to above input boxes when selected*/}
         <div className="rowRegister">
           <button className="loginButton" onClick={loginFunction}>Login</button>
-          <button className="loginButton" onClick={() => (openPopup())}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+          <button className="loginButton" onClick={() => (openPopup(""))}> {/* if the pay button is clicked it sends the information to the create reservation page */}
                 Register
           </button>
         </div>
