@@ -27,10 +27,7 @@ def get_active_bundles(db: SessionDep):
 # Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
-    postings = current_seller.postings
-    if not postings:
-        raise HTTPException(status_code=404, detail="No bundles found")
-    return postings
+    return current_seller.postings or []
 
 # Endpoint for getting a specific bundle posting
 @router.get("/{posting_id}", response_model = BundlePostingPublic)
