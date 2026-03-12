@@ -1,22 +1,22 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './CurrentBundles.css'
+import axios from "axios";
 
 function Forecasts() {
   const [forecasts, setForecasts] = useState([]);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    fetch("http://127.0.0.1:8000/api/v1/forecasts/me", { //Fetch data for the user
+    axios.get(`${API_URL}/api/v1/forecasts/me`, { //Fetch data for the user
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        setForecasts(data); // data is likely an array
+      .then(response => {
+        setForecasts(response.data); // data is likely an array
       })
       .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching forecasts:", err);

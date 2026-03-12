@@ -1,9 +1,11 @@
 import { Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './CurrentBundles.css'
+import axios from "axios";
 
 function AddBundles() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("");
   
   const [bundlePrice,setBundlePrice] = useState("");
@@ -52,16 +54,19 @@ function AddBundles() {
       return;
     }
     console.log(data);
-    fetch("http://127.0.0.1:8000/api/v1/bundles/", {
-      method: "POST",
+    
+    axios.post(`${API_URL}/api/v1/bundles/`, data ,{
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+      }
+    })
+      .catch(err => {
+          console.error("Request failed:", err);
+      }); 
   }
   function forecastData(){
+    const API_URL = import.meta.env.VITE_API_URL;
     //Data to be used in th forecast
     const data = {
       user_id: Number(payload.sub),
@@ -88,35 +93,23 @@ function AddBundles() {
       alert("Price must be positive and less than 100");
       return;
     }
-    //Sends forecast data to the backend as a POST request
-    fetch("http://127.0.0.1:8000/api/v1/forecasts/", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      if(!res.ok){
-        throw new Error(`Server Error: ${res.status}`);
+
+    axios.post(`${API_URL}/api/v1/forecasts/`, data, {
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
       }
-      return res.json();
     })
-    .then(data => {
-      setForecastData(data);
+    .then(response => {
+      setForecastData(response.data);
     })
-    //Alerts upon an error
     .catch(err => {
-      console.error("Error fetching bundles ",err);
-      alert("No data")
+      console.error("Request failed:", err);
     })
-    
   }
-  
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
+      {/* Initialises the navifation bar where sellers can move between pages */}
       <div className="currentBundles">
           <nav className="row">
             <Link to="/login" className="button"><b>Login Page</b></Link>
@@ -127,9 +120,7 @@ function AddBundles() {
         <div className="centreBox">
           <div className="centreItems">
               {/* Displays a header which states the name of the current page */}
-            <h1 className="headline">Add Bundles</h1>
-
-            <section>  
+            <h1 className="headline">Add Bundles</h1> 
               <div className="textBlock">
                 {/* Creates a drop down menu for the user to click a bundle category */}
                 <label htmlFor="category">Enter Bundle Category :</label>
@@ -176,60 +167,53 @@ function AddBundles() {
                 />
                 {/* Creates a space in the page between boxes */}
                 <br></br>
-
-                {/* An input box with a label to input the bundle price */}
-                <label htmlFor="price">Enter Bundle Price :</label>
-                <input
-                  id="price"
-                  type="number"
-                  value={bundlePrice}
-                  onChange={(e) => setBundlePrice(e.target.value)}
-                />
-                {/* Creates a space in the page between boxes */}
-                <br></br>
-                
-                {/* Outputs an input box with a label asking for bundle weight */}
-                <label htmlFor="weight">Enter Bundle Weight :</label>
-                <input
-                  id="weight"
-                  type="number"
-                  value={bundleWeight}
-                  onChange={(e) => setBundleWeight(e.target.value)}
-                />
-                {/* Creates a space in the page between boxes */}
-                <br></br>
-                
-              {/* Outputs a drop down menu for the user to click a bundle collection time */}
-              <label htmlFor="collectionTime">Collection Time</label>
-              <select
-                id="collectionTime"
-                onChange={(e) => { {/* Divides the start and end time before saving them seperately */}
-                  const[start,end] = e.target.value.split(" - ");
-                  setStartTime(start);
-                  setEndTime(end);
-                }}
-              >
-                {slots.map((slot,idx) =>(
-                  <option key={idx} value={slot}>
-                    {slot}
-                  </option>
-                ))}
-              </select>
-                <br></br>
-                {/* Button to add bundles when clicked and forecast the data */}
-                <button onClick={addBundle}>Add Bundle</button>
-                <br></br>
-                <button onClick={forecastData}>Forecast Data</button>
-              </div>
-            </section>
-            {/* Section with forecast data on added bundle with probabilities */}
-            <section>
-              <h4>Forecasts</h4>
-                  <p>Predicted Reservations : {data.predicted_reservations}</p>
-                  <p>No Show Probability : {data.predicted_no_show_prob}</p>
-            </section>
+            {/* An input box with a label to input the bundle price */}
+            <label htmlFor="price">Enter Bundle Price :</label>
+            <input
+              id="price"
+              type="number"
+              value={bundlePrice}
+              onChange={(e) => setBundlePrice(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+            
+            {/* Outputs an input box with a label asking for bundle weight */}
+            <label htmlFor="weight">Enter Bundle Weight :</label>
+            <input
+              id="weight"
+              type="number"
+              value={bundleWeight}
+              onChange={(e) => setBundleWeight(e.target.value)}
+            />
+            {/* Creates a space in the page between boxes */}
+            <br></br>
+            
+          {/* Outputs a drop down menu for the user to click a bundle collection time */}
+          <label htmlFor="collectionTime">Collection Time</label>
+          {/* Divides the start and end time before saving them seperately */}
+          <select
+            id="collectionTime"
+            onChange={(e) => {
+              const[start,end] = e.target.value.split(" - ");
+              setStartTime(start);
+              setEndTime(end);
+            }}
+          >
+            {slots.map((slot,idx) =>(
+              <option key={idx} value={slot}>
+                {slot}
+              </option>
+            ))}
+          </select>
+            <br></br>
+            {/* Button to add bundles when clicked and forecast the data */}
+            <button onClick={addBundle}>Add Bundle</button>
+            <br></br>
+            <button type="button" onClick={forecastData}>Forecast Data</button>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
