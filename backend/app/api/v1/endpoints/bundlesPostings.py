@@ -20,25 +20,18 @@ def create_posting(bundle_in: BundlePostingCreate, current_seller: SellerDep, db
 @router.get("/", response_model = list[BundlePostingPublic])
 def get_active_bundles(db: SessionDep):
     bundle_postings = bundle_posting_service.get_active_bundle_postings(db=db)
-    if not bundle_postings:
-        raise HTTPException(status_code=404, detail="No active bundles found")
-    return bundle_postings
+    return bundle_postings or []
 
 # Endpoint for getting all bundles
 @router.get("/all", response_model = list[BundlePostingPublic])
 def get_all_bundles(db: SessionDep):
     bundle_postings = bundle_posting_service.get_all_bundle_postings(db=db)
-    if not bundle_postings:
-        raise HTTPException(status_code=404, detail="No bundles found")
-    return bundle_postings
+    return bundle_postings or []
 
 # Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
-    postings = current_seller.postings
-    if not postings:
-        raise HTTPException(status_code=404, detail="No bundles found")
-    return postings
+    return current_seller.postings or []
 
 # Endpoint for getting a specific bundle posting
 @router.get("/{posting_id}", response_model = BundlePostingPublic)

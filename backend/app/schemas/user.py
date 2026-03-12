@@ -3,7 +3,7 @@ from sqlmodel import SQLModel
 from app.models.enums import Role
 
 class UserBase(SQLModel):
-    role: Role
+    pass
 
 class UserCreate(UserBase):
     email: str
@@ -18,3 +18,4 @@ class UserAdminUpdate(UserUpdate):
 
 class UserPublic(UserBase):
     user_id: int
+    role: Role

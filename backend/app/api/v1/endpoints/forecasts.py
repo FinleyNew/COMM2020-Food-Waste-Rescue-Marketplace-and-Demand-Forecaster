@@ -10,10 +10,7 @@ router = APIRouter()
 # Endpoint for getting the current sellers forecasts
 @router.get("/me", response_model= List[ForecastPublic])
 def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
-    forecasts = current_seller.forecasts
-    if not forecasts:
-        raise HTTPException(status_code = 404, detail = "No forecasts found")
-    return forecasts
+    return current_seller.forecasts or []
 
 # Endpoint for getting the predicted sales and no show for a given BundlepostingCreate input
 @router.post("/", response_model=ForecastPublic)

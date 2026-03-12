@@ -36,7 +36,7 @@ def collect_by_code(claim_code: str, current_seller: SellerDep, db: SessionDep):
 # Endpoint for getting the current consumers reservations
 @router.get("/me", response_model= list[ReservationPublic])
 def get_current_consumers_reservations(current_consumer: ConsumerDep, db: SessionDep):
-    return current_consumer.reservations
+    return current_consumer.reservations or []
     
 # Endpoint for deleting a reservation
 # Currently not in use
