@@ -37,6 +37,7 @@ class RecordAdminUpdate(SQLModel):
     observed_reservations: int | None = Field(default=None, ge=0)
     observed_no_show: int | None = Field(default=None, ge=0)
     observed_expired: int | None = Field(default=None, ge=0)
+    weight: int | None = Field(default=None, gt=0)
     # They could send a new start but not end so need to check in the service
     start_time: datetime | None = None
     end_time: datetime | None = None

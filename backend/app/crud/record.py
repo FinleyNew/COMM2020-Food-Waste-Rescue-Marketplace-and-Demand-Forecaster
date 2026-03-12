@@ -3,6 +3,20 @@ from typing import Sequence
 from datetime import datetime
 from app.models.enums import Category
 from app.models import Record
+from app.schemas.record import RecordAdminUpdate
+
+def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_window: str | None, db: Session) -> Record:
+    update_data = record_update.model_dump(exclude_unset=True)
+    db_record.sqlmodel_update(update_data)
+    if pickup_window:
+        db_record.pickup_window = pickup_window
+    db.commit()
+    db.refresh(db_record)
+    return db_record
+
+def get_record_by_id(record_id: int, db: Session):
+    statement = select(Record).where(Record.record_id == record_id)
+    return db.exec(statement).one()
 
 # Crud function for getting all the records from the database
 # Is used for training the model
