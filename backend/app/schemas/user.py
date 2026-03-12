@@ -3,10 +3,9 @@ from sqlmodel import SQLModel
 from app.models.enums import Role
 
 class UserBase(SQLModel):
-    pass
+    email: str
 
 class UserCreate(UserBase):
-    email: str
     password: str
 
 class UserUpdate(SQLModel):
