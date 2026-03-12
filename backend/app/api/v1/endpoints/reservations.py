@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from app.api.deps import SellerDep, ConsumerDep, SessionDep
-from app.schemas.reservation import ReservationCreate, ReservationPublic
+from app.api.deps import AdminDep, SellerDep, ConsumerDep, SessionDep
+from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate, ReservationPublic
 from app.services import reservation as reservation_service
 from app.services import consumer as consumer_service
 
@@ -18,6 +18,10 @@ def create_reservation(reservation_in: ReservationCreate, current_consumer: Cons
             posting_id=reservation_in.posting_id,
             db=db
         )
+
+@router.patch("/admin/{reservation_id}", response_model=ReservationPublic)
+def admin_update_reservation(reservation_id: int, reservation_update: ReservationAdminUpdate, current_user: AdminDep, db: SessionDep):
+    return reservation_service.update_reservation(reservation_id=reservation_id, reservation_update=reservation_update, db=db)
 
 # Endpoint for setting the reservation status to collected if the claim code matches
 @router.get("/collect/{claim_code}", response_model= ReservationPublic)
