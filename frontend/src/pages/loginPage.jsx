@@ -18,8 +18,70 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [location, setLocation] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const validTime = /^\d{2}:\d{2} - \d{2}:\d{2}$/.test(openingHours);
+  const [showPassword, setShowPassword] = useState("");
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+  //let invalidTime = false;
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const toMinutes = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const validTimeFormat =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime);
+
+  const invalidTime =
+    accountType === "Seller" &&
+    validTimeFormat &&
+    toMinutes(closingTime) <= toMinutes(openingTime);
+
+
+  
+  const validTime =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime) &&
+    toMinutes(closingTime) > toMinutes(openingTime);
   const API_URL = import.meta.env.VITE_API_URL;
+
+
+  const handleAccountTypeChange = (e) => {
+    const value = e.target.value;
+    setAccountType(value);
+
+    setUsername("");
+    setPassword("");
+    checkPassword("");
+    setRole("");
+    setDisplayName("");
+    setLocation("");
+    setCompanyName("");
+
+  }
+
+  const handleCancel = () => {
+    setUsername("");
+    setPassword("");
+    checkPassword("");
+    setRole("");
+    setDisplayName("");
+    setLocation("");
+    setCompanyName("");
+
+    closePopup();
+  }
+
+  const handleAccountCreation = () => {
+    setUsername("");
+    setPassword("");
+    
+
+    closePopup();
+  }
+
+
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -97,6 +159,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
 
   }
   function createAccount(){
+
+    //combine times
+    
+
+
     if(accountType==="Consumer"){
       const data = {
         consumer_in: {
@@ -132,7 +199,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         seller_in: {
           name: companyName,
           location: location,
-          opening_hours: openingHours
+          opening_hours: `${openingTime} - ${closingTime}`
         },
         user_in: {
           email: username,
@@ -141,7 +208,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       }
       console.log(data);
 
-      if(password.length>3 && companyName.length > 3 && location.length > 3 && username.length > 3 && password.length >> 3){
+      
 
         axios.post(`${API_URL}/api/v1/sellers/`, data, {
           headers: {
@@ -157,9 +224,9 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             console.log("status:", err.response.status);
             console.log("backend error:", err.response.data);
           });
-      }
-      alert("All input details must be longer than 3");
       
+      
+      handleAccountCreation();
 
 
 
@@ -222,8 +289,8 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   <select
                     name="user"
                     id="user"
-                    value={accountType}
-                    onChange={(e) => setAccountType(e.target.value)}
+                    value={accountType} onChange={handleAccountTypeChange}
+                    
                   >
                     <option value="Consumer">Consumer</option>
                     <option value="Seller">Seller</option>
@@ -268,25 +335,44 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     />
                 </div>
                 <div classname="rowRegister">
-                  <p>Opening Hours: </p>
+                  <p>Opening Time : </p>
                   <input
                     type="text"
-                    value={openingHours}
-                    onChange={(e) => setOpeningHours(e.target.value)}
+                    value={openingTime}
+                    onChange={(e) => setOpeningTime(e.target.value)}
+                    />
+                </div>
+                <div classname="rowRegister">
+                  <p>Closing Time : </p>
+                  <input
+                    type="text"
+                    value={closingTime}
+                    onChange={(e) => setClosingTime(e.target.value)}
                     />
                 </div>
                   </>
                    
                 )}
-                {username && username.includes("@") && (
+                {username && !emailRegex.test(username) && (
                   <p style={{color: "red"}}>Email must contain @</p>
                 ) }
+                
                 {confirmPassword && password !== confirmPassword && (
                   <p style={{color: "red"}}>Passwords do not match</p>
                 )}
-               {openingHours && !/^\d{2}:\d{2} - \d{2}:\d{2}$/.test(openingHours) && (
+               {openingTime && !timeRegex.test(openingTime) && (
                   <p style={{color:"red"}}>
-                      Opening hours must be in format HH:MM - HH:MM
+                      Times must be in format HH:MM
+                  </p>
+                )}
+                {closingTime && !timeRegex.test(closingTime) && (
+                  <p style={{color:"red"}}>
+                      Times must be in format HH:MM
+                  </p>
+                )}
+                {accountType==="Seller" && invalidTime && (
+                  <p style={{color:"red"}}>
+                      Invalid Time, Opening Time cannot be before Closing Time
                   </p>
                 )}
                 
@@ -294,7 +380,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 <div className="rowRegister">
                   <p>Password:</p>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -302,16 +388,19 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 <div className="rowRegister">
                   <p>Confirm Password:</p>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => checkPassword(e.target.value)}
                   />
                 </div>
+                <button onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? "Hide " : "Show"} Password
+                </button>
                 <div className="rowRegister">
                   <button onClick={createAccount} //was close popup
-                            disabled={password!==confirmPassword || !validTime}
+                            disabled={password!==confirmPassword || !validTimeFormat || invalidTime}
                             >Create Account</button>
-                  <button onClick={closePopup}>Cancel</button>
+                  <button onClick={handleCancel}>Cancel</button>
                 </div>
               </div>
             )}
