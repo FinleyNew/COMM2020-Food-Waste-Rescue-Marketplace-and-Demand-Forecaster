@@ -25,6 +25,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+  const [accountError, setAccountError] = useState(""); // <-- new
 
   const validPassword = passwordRegex.test(password);
 
@@ -66,6 +67,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     setDisplayName("");
     setLocation("");
     setCompanyName("");
+    setAccountError("");
 
   }
 
@@ -77,6 +79,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     setDisplayName("");
     setLocation("");
     setCompanyName("");
+    setAccountError("");
 
     closePopup();
   }
@@ -91,6 +94,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     setCompanyName("");
     setOpeningTime("");
     setClosingTime("");
+    setAccountError("");
     
 
     closePopup();
@@ -203,8 +207,15 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
               closePopup()
           })
           .catch(err => {
-            console.error("Request failed:", err);
-          });
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+             if(err.response?.status === 400 && err.response?.data?.detail){
+                setAccountError(err.response.data.detail);
+              } else {
+                setAccountError("An unexpected error occurred. Please try again.");
+                } 
+              });
 
 
 
@@ -392,6 +403,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                 {accountType==="Seller" && invalidTime && (
                   <p style={{color:"red"}}>
                       Invalid Time, Opening Time cannot be before Closing Time
+                  </p>
+                )}
+                {accountError && (
+                   <p style={{ color: "red", marginBottom: "10px" }}>
+                      {accountError}
                   </p>
                 )}
                 
