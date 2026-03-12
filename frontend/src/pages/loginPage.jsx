@@ -24,6 +24,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   //let invalidTime = false;
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   const toMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
@@ -354,9 +355,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                    
                 )}
                 {username && !emailRegex.test(username) && (
-                  <p style={{color: "red"}}>Email must contain @</p>
+                  <p style={{color: "red"}}>Email must contain @ and contain a domain name</p>
                 ) }
-                
+                {password && !passwordRegex.test(password) && (
+                  <p style={{color: "red"}}>Password must contain at least 6 characters, 1 capital letter, 1 number and 1 special character</p>
+                )}
                 {confirmPassword && password !== confirmPassword && (
                   <p style={{color: "red"}}>Passwords do not match</p>
                 )}
