@@ -27,7 +27,7 @@ def seed_users(db: Session):
 
     #Add 100 users with a random role
     for _ in range(100):
-        role = fake.random_element(elements=Role).value
+        role = fake.random_element(elements=Role)
         user = User(
             role=role
             )
@@ -85,6 +85,12 @@ def seed_bundle_posting(db: Session):
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
+        if pickup_window.upper != None:
+            if datetime.now() > pickup_window.upper:
+                status = BundleStatus.EXPIRED
+            else:
+                status = fake.random_element(elements=[BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])
+
         #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
@@ -94,7 +100,7 @@ def seed_bundle_posting(db: Session):
             reserved=reservations,
             price=Decimal(calculate_price(reservations)),
             pickup_window=pickup_window,
-            status=fake.random_element(elements=BundleStatus).value,
+            status=status,
             weight=randint(250, 2000)
         )
         db.add(posting)
@@ -107,13 +113,19 @@ def seed_reservation(db: Session):
 
     #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
     for post in postings:
-        timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
         for i in range(post.reserved):
+            timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
+
+            if post.status == BundleStatus.EXPIRED:
+                status = fake.random_element(elements=[ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
+            else:
+                status = ReservationStatus.RESERVED
+
             reservation = Reservation(
                 posting_id=post.posting_id,
                 user_id=fake.random_element(elements=consumers).user_id,
                 timestamp=timestamp,
-                status=fake.random_element(elements=ReservationStatus).value
+                status=status
             )
             db.add(reservation)
     db.commit()
