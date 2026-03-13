@@ -1,9 +1,12 @@
+from typing import Sequence
 from sqlmodel import Session
 from app.models.user import User
 from app.crud import user as user_crud
 from app.schemas.user import UserUpdate
 from app.core.security import get_password_hash
 
+def get_all_users(db: Session) -> Sequence[User]:
+    return user_crud.get_all_users(db=db)
 
 def get_user_by_email(email: str, db: Session) -> User | None:
     return user_crud.get_user_by_email(email=email, db=db)

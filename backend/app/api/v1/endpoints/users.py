@@ -7,6 +7,10 @@ from app.services import user as user_service
 
 router = APIRouter()
 
+@router.get("/", response_model=list[UserPublic])
+def get_all_users(db: SessionDep):
+    user_service.get_all_users(db=db)
+
 @router.get("/me", response_model=UserPublic)
 def get_current_user(current_user: CurrentUser):
     return current_user

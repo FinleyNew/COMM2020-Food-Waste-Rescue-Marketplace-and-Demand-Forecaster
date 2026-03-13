@@ -1,8 +1,14 @@
+from typing import Sequence
+
 from app.models.user import User
 from sqlmodel import Session, select
 
 from app.schemas.user import UserCreate, UserUpdate
 from app.models.enums import Role
+
+def get_all_users(db: Session) -> Sequence[User]:
+    statement = select(User)
+    return db.exec(statement).all()
 
 def get_user_by_email(email: str, db: Session) -> User | None:
     statement = select(User).where(User.email == email)
