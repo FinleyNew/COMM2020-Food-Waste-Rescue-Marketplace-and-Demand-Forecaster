@@ -270,7 +270,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   }
 
   return (
-    <div>
+    <div className="loginPage">
       <div className="loginBox">
         <div className="loginItems">
           <h3>Please Enter Your Email and Password</h3> {/* Writes a prompt to screen for username and password */}
@@ -329,6 +329,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       <option value="Seller">Seller</option>
                     </select>
                   </div>
+                  <br></br>
                   <div className="rowRegister">
                     <p>Email: </p>
                     <input 
@@ -339,19 +340,19 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   </div>
                   {accountType === "Consumer" && (
                     <>
-                    <div classname="rowRegister">
-                    <p>Display Name: </p>
-                    <input
-                      type="text"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      />
-                  </div>
+                    <div className="rowRegister">
+                      <p>Display Name: </p>
+                      <input
+                        type="text"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        />
+                    </div>
                     </>
                   )}
                   {accountType==="Seller" && (
                     <>
-                    <div classname="rowRegister">
+                    <div className="rowRegister">
                     <p>Name: </p>
                     <input
                       type="text"
@@ -359,7 +360,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       onChange={(e) => setCompanyName(e.target.value)}
                       />
                   </div>
-                    <div classname="rowRegister">
+                    <div className="rowRegister">
                     <p>Location: </p>
                     <input
                       type="text"
@@ -367,7 +368,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       onChange={(e) => setLocation(e.target.value)}
                       />
                   </div>
-                  <div classname="rowRegister">
+                  <div className="rowRegister">
                     <p>Opening Time : </p>
                     <input
                       type="text"
@@ -375,7 +376,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       onChange={(e) => setOpeningTime(e.target.value)}
                       />
                   </div>
-                  <div classname="rowRegister">
+                  <div className="rowRegister">
                     <p>Closing Time : </p>
                     <input
                       type="text"
@@ -433,9 +434,13 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       onChange={(e) => checkPassword(e.target.value)}
                     />
                   </div>
-                  <button onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? "Hide " : "Show"} Password
-                  </button>
+                  <input
+                    type="checkbox"
+                    id="showPassword"
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <label for="showPassword">{showPassword ? "Hide " : "Show"} Password</label>
+
                   <div className="rowRegister">
                     <button onClick={createAccount} //was close popup
                               disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword}

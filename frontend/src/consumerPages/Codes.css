@@ -128,7 +128,8 @@
     font-size: 25px; 
 }
 .codes .bundleEntry h2{
-    font-size: 32px; 
+    font-size: 32px;
+    text-align: right; 
 }
 .codes .textBox{
     padding-inline: 5%;
@@ -162,7 +163,7 @@
     padding-inline: 3%;
 }
 .codes .column p{
-    font-size: 20px;
+    font-size: 25px;
 }
 .codes .companyIcon{
     height: 95%;
@@ -172,4 +173,13 @@
 .codes .centerAlign{
     display: flex;
     justify-content: center;
+}
+.codes .statusreserved{
+    color: orange;
+}
+.codes .statuscollected{
+    color: green;
+}
+.codes .statusno_show{
+    color: red;
 }

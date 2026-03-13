@@ -5,6 +5,7 @@
   --button-text: black;
   --border-colour: green;
   --bg-container: white;
+  --badge-icon: url('./assets/NoBadge.png')
 }
 
 .dark {
@@ -14,6 +15,7 @@
   --button-text: #000000;
   --border-colour: #5d5e5f;
   --bg-container: #111827;
+  --badge-icon: url('./assets/NoBadgeDark.png')
 }
 
 body{

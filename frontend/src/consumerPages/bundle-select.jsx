@@ -1,11 +1,11 @@
-import { Link, useParams } from "react-router-dom"; //to use the buttons to change to other pages
+import { Link, useNavigate, useParams } from "react-router-dom"; //to use the buttons to change to other pages
 import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
 import './Discover.css' //links to the css page to move and size different components around
 import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png"; //here for the base images
 import axios from "axios";
 function BundleSelect() {
-
+  const navigate = useNavigate();
   const { id } = useParams(); //creates the ID variable to store the bundleID to navigate pages with it
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
@@ -132,7 +132,7 @@ function BundleSelect() {
               {Popup && (
                 <div className="popup open-popup" id="payment">
                   <h1>Payment Successful!</h1>  {/*if the button is clicked, open the pop up to pay*/}
-                  <button className="button" onClick={closePopup}>Confirm</button>
+                  <button className="button" onClick={() => (closePopup,navigate("/discover"))}>Confirm</button>
                 </div>
               )}
             </div>

@@ -56,9 +56,9 @@ function Codes() {
                     </div>
                     <div className="bundleRow">
                       <div className="column">
-                          <p>Status: {bundle.status}</p>
-                          <p>Reservation ID : {bundle.reservation_id}</p>
-                          <p>Bundle ID: {bundle.posting_id}</p>
+                        <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status}</span></p>
+                        <p>Reservation ID : {bundle.reservation_id}</p>
+                        <p>Bundle ID: {bundle.posting_id}</p>
                       </div>
                       <div className="column">
                         <img src={Company} alt="Company" className="companyIcon"/>
