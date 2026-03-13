@@ -1,11 +1,11 @@
 from decimal import Decimal
-from sqlmodel import Session, select, func, desc
+from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
-from random import randint, uniform, choices
+from random import choices
 from faker import Faker
 import numpy as np
 
@@ -67,8 +67,8 @@ def seed_seller(db: Session):
     #Add users with the seller role to the seller table
     for user in sellers:
         #Create random opening hours
-        opening_time = randint(8, 11)
-        closing_time = randint(16, 20)
+        opening_time = fake.random_int(8, 11)
+        closing_time = fake.random_int(16, 20)
         opening_hours = f"{opening_time}:00 - {closing_time}:00"
 
         #Give seller fake name and address
@@ -91,7 +91,7 @@ def seed_bundle_posting(db: Session):
         reservations = fake.random_int(1, 25)
 
         #Create random 1 hour pickup window
-        day = 1 + calculate_day_of_week(reservations) + (randint(0, 3) * 7)
+        day = 1 + calculate_day_of_week(reservations) + (fake.random_int(0, 3) * 7)
         start_time = datetime(2026, 3, day, calculate_start_time(reservations), tzinfo=timezone.utc)
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
@@ -107,12 +107,12 @@ def seed_bundle_posting(db: Session):
             user_id=fake.random_element(elements=sellers).user_id,
             category=calculate_category(reservations),
             allergens=', '.join(fake.random_elements(elements=example_allergens, unique=True)),
-            available=randint(0, 5),
+            available=fake.random_int(0, 5),
             reserved=reservations,
             price=Decimal(calculate_price(reservations)),
             pickup_window=pickup_window,
             status=status,
-            weight=randint(250, 2000)
+            weight=fake.random_int(250, 2000)
         )
         db.add(posting)
     db.commit()
@@ -126,9 +126,9 @@ def seed_reservation(db: Session):
     for post in postings:
         for _ in range(post.reserved):
             if post.pickup_window.lower < datetime.now(timezone.utc):
-                timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
+                timestamp = post.pickup_window.lower - timedelta(days=fake.random_int(0, 3), hours=fake.random_int(1, 23))
             else:
-                timestamp = datetime.now(timezone.utc) - timedelta(days=randint(0, 3), hours=randint(1, 23))
+                timestamp = datetime.now(timezone.utc) - timedelta(days=fake.random_int(0, 3), hours=fake.random_int(1, 23))
 
             if post.status == BundleStatus.EXPIRED:
                 status = fake.random_element(elements=[ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
@@ -189,8 +189,8 @@ def seed_forecast(db: Session):
         forecast = Forecast(
             user_id=post.user_id,
             posting_id=post.posting_id,
-            predicted_reservations=randint(5, 50),
-            predicted_no_show_prob=round(uniform(0, 0.25), 2)
+            predicted_reservations=fake.random_int(5, 50),
+            predicted_no_show_prob=round(fake.pyfloat(min_value=0, max_value=0.25), 2)
         )
         db.add(forecast)
     db.commit()
@@ -212,7 +212,7 @@ def calculate_start_time(reservations: int) -> int:
         else:
             time = np.random.normal(17.5, 0.8**2)
     else:
-        time = np.random.randint(8, 19)
+        time = fake.random_int(8, 18)
 
     return int(time)
 
