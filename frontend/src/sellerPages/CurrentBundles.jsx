@@ -111,17 +111,17 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             {bundles.map(bundle => ( //.map allows us to display
               <div key={bundle.posting_id} className="bundleEntry">
                 {/* Contains company image and first column data */}
-                <div className="textBox">
+                <div className="displayImage">
                   <img
                     src={Company}
                     alt="Company"
                     className="companyIcon"
                   />
-                  <div className="row">
-                    <p>Price: £{bundle.price_display}</p>
-                    <p>Category: {bundle.category}</p>
-                    <p>Available: {bundle.available}</p>
-                  </div>
+                </div>
+                <div className="textBox">
+                  <p>Price: £{bundle.price_display}</p>
+                  <p>Category: {bundle.category}</p>
+                  <p>Available: {bundle.available}</p>
                 </div>
                 {/* Holds the middle column data for the bundle entry */}
                 <div className="textBox">
@@ -138,14 +138,12 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                   </div>
                 </div>
                 {/* Final row bundle image */}
-                <div className="textBox">
-                  <div className="row">
-                    <img
-                      src={Bundle}
-                      alt="Bundle"
-                      className="companyIcon"
-                    />
-                  </div>
+                <div className="displayImage">
+                  <img
+                    src={Bundle}
+                    alt="Bundle"
+                    className="companyIcon"
+                  />
                 </div>
             </div>
             ))}

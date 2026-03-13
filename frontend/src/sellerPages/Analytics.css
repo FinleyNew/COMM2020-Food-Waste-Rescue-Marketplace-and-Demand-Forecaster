@@ -23,6 +23,7 @@
     margin: 0px;
     cursor: pointer;
     border-radius: 5px;
+    text-decoration: none;
 }
 /* Defines a description with font sizes and formatting*/
 .analytics .desc{

@@ -43,7 +43,7 @@ function Discover() {
             {bundles.map(bundle => (
               <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
                   <div className="bundleEntry">
-                      <img src={Bundle} alt="Bundle" className="rowImg"/>
+                      <img src={Bundle} alt="Bundle" className="bundleImage"/>
                       <div className="textBox">
                           <div className="bundleRow">
                               <h1>Bundle Name</h1>

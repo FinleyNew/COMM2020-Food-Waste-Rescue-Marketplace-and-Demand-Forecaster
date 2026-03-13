@@ -38,7 +38,7 @@ function Streaks() {
           </nav>
           <h1>Streaks</h1>
           <div className="mainBox">
-            <div className="bundleEntry">
+            <div className="streaksEntry">
               {bundle && (
                 <div>
                   <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}

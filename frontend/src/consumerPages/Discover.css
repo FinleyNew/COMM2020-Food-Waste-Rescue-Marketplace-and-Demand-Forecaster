@@ -127,6 +127,20 @@
     width: 70%;
     border-radius: 2rem;
     background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    color: var(--text-colour);
+}
+.discover .streaksEntry{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 40vh;
+    width: 70%;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
     overflow: visible;
     border: 8px solid var(--border-colour);
     box-sizing: border-box;
@@ -148,6 +162,13 @@
     display: block;
     width: 100%;
     height: 20vh;
+    object-fit: cover;
+}
+.discover .bundleImage{
+    display: block;
+    width: 100%;
+    height: 20vh;
+    overflow: hidden;
     object-fit: cover;
 }
 .discover .bundleRow{

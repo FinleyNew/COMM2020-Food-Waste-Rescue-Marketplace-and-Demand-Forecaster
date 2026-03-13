@@ -21,7 +21,7 @@ import Unauthorised from "./pages/unauthorised";
 //|{" "}
 
 function App() {
-
+  const [settingsPopup, settingsSetPopup] = useState(false);
   const[darkMode, setDarkMode] = useState(false); //store the variable for the current state
   useEffect(() => { //update the page if the theme is changed
     const savedTheme = localStorage.getItem("theme"); //store the theme in local storage
@@ -47,6 +47,13 @@ function App() {
   const savedUser = localStorage.getItem("user"); //reads from local storage under the key of user
   return savedUser ? JSON.parse(savedUser) : null; //if thertes something in local storage, if yes the parse converts back to a js object
   });
+  function settingsClickPopup() {
+    settingsSetPopup(!settingsPopup); //if variable is true then popUp needs to be opened 
+  }
+
+  function settingsClosePopup() {
+    settingsSetPopup(false); //if variable is false then popUp needs to be closed
+  }
     
 
   return (
@@ -79,15 +86,31 @@ function App() {
         
         
       </Routes>
-      
-      <div>
-        <button className="dark-mode-btn" onClick={toggleDarkMode} >
-          {darkMode ? "Light Mode" : "Dark Mode"} 
-        </button>
-      </div>
-      
-      
-      
+      <button className="dark-mode-btn" onClick={settingsClickPopup}>Settings</button>
+      {settingsPopup && (
+        <div className="settingsPopup settingsOpenPopup">
+          {location.pathname === "/login" ? (
+          <h1>Please login to an account to access settings</h1> ) : (
+            <>
+              <h1>Settings</h1>
+              <p>Accessibility:</p>
+              <div className="settingsRow">
+                <input
+                  type="checkbox"
+                  id="darkModeToggle"
+                  checked={darkMode}
+                  onChange={toggleDarkMode}
+                />
+                <label htmlFor="darkModeToggle">
+                  {darkMode ? "Dark Mode" : "Light Mode"}
+                </label>
+              </div>
+              <br></br>
+              <button className="settingsButton" onClick={settingsClosePopup}>Confirm</button>
+            </>
+            )}
+        </div>
+      )}
     </>
   );
 }

@@ -36,7 +36,6 @@ body{
   color: var(--button-text);
   padding: 10px 16px;
   border-radius: 10px;
-
   position: fixed;
   top: 20px;
   right: 20px;
@@ -47,4 +46,51 @@ body {
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
+.settingsPopup{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+  border-radius: 6px;
+  position: fixed;
+  top: -100%;
+  right: -180px;
+  left: auto;
+  transform: scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+  background-color: var(--bg-container);
+  border: 8px solid var(--border-colour);
+  border-radius: 2rem;
+}
+.settingsPopup h1{
+  color: var(--text-colour);
+}
+.settingsPopup p{
+  color: var(--text-colour);
+}
+.settingsOpenPopup{
+    visibility: visible;
+    top: 190px;
+    transform: translate(-50%, -50%) scale(1);
+}
+.settingsRow{
+    display: flex;
+    color: var(--text-colour);
+    font-size: 20px;
+}
+.settingsPopup .settingsButton{
+    display: inline-flex;
+    justify-content: center;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 16px;
+    width: 30%;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
