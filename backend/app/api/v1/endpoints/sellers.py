@@ -24,3 +24,11 @@ def update_seller(current_seller: SellerDep, seller_update: SellerUpdate, db: Se
 def admin_update_seller(user_id: int, seller_update: SellerAdminUpdate, current_user: AdminDep, db: SessionDep):
     current_seller = seller_service.get_seller_by_id(user_id=user_id, db=db)
     return seller_service.update_seller(current_seller=current_seller, seller_update=seller_update, db=db)
+
+@router.delete("/me")
+def delete_current_seller(current_user: SellerDep, db: SessionDep):
+    seller_service.delete_seller(user_id=current_user.user_id, db=db) # type: ignore
+
+@router.delete("/{user_id}")
+def delete_seller(user_id: int, current_user: AdminDep, db: SessionDep):
+    seller_service.delete_seller(user_id=user_id, db=db)

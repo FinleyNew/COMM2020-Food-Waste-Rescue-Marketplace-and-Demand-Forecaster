@@ -19,3 +19,10 @@ def update_seller(current_seller: Seller, seller_update: SellerUpdate | SellerAd
 def get_seller_by_id(user_id: int, db: Session):
     statement = select(Seller).where(Seller.user_id == user_id)
     return db.exec(statement).one()
+
+def delete_seller(user_id: int, db: Session):
+    statement = select(Seller).where(Seller.user_id == user_id)
+    seller = db.exec(statement).first()
+    if seller:
+        db.delete(seller)
+        db.commit()

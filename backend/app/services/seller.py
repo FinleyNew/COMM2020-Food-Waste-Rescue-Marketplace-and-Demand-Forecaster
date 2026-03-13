@@ -37,3 +37,7 @@ def update_seller(current_seller: Seller, seller_update: SellerUpdate | SellerAd
 
 def get_seller_by_id(user_id: int, db: Session) -> Seller:
     return seller_crud.get_seller_by_id(user_id=user_id, db=db)
+
+def delete_seller(user_id: int, db: Session):
+    seller_crud.delete_seller(user_id=user_id, db=db)
+    user_crud.delete_user(user_id=user_id, db=db)
