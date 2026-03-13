@@ -14,3 +14,7 @@ def admin_update_record(record_id: int, record_update: RecordAdminUpdate, curren
 @router.get("/me", response_model= List[RecordPublic])
 def get_current_sellers_records(current_seller: SellerDep, db: SessionDep):
     return current_seller.records or []
+
+@router.delete("/{record_id}")
+def delete_record(record_id: int, current_user: AdminDep, db: SessionDep):
+    record_service.delete_record(record_id=record_id, db=db)

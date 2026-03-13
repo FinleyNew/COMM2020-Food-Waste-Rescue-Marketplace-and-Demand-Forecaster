@@ -37,3 +37,10 @@ def get_same_time_records(search_start: Time, search_end: Time, day_of_week: int
         )
     )
     return db.exec(statement).all()
+
+def delete_record(record_id: int, db: Session):
+    statement = select(Record).where(Record.record_id == record_id)
+    record = db.exec(statement).first()
+    if record:
+        db.delete(record)
+        db.commit()

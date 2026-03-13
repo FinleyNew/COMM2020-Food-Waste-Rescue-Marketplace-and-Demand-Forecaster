@@ -47,3 +47,6 @@ def is_raining():
         return True
     else:
         return False
+    
+def delete_record(record_id: int, db: Session):
+    record_crud.delete_record(record_id=record_id, db=db)
