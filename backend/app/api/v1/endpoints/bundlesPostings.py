@@ -56,7 +56,15 @@ def admin_update_bundle(posting_id: int, bundle_update: BundlePostingAdminUpdate
 def set_bundle_deleted(posting_id: int, current_user: SellerDep, db: SessionDep):
     return bundle_posting_service.set_bundle_deleted(posting_id=posting_id, db=db)
 
+@router.delete("/me/{posting_id}")
+def delete_current_sellers_bundle(posting_id: int, current_user: SellerDep, db: SessionDep):
+    posting = bundle_posting_service.get_bundle_posting(posting_id=posting_id, db=db)
+    if posting in current_user.postings:
+        bundle_posting_service.delete_bundle_posting(posting_id=posting_id, db=db)
+    else:
+        raise HTTPException(status_code=403, detail="Current seller does not own this bundle")
+
 # Endpoint for deleting a specific bundle
 @router.delete("/{posting_id}")
-def delete_bundle(posting_id: int, current_user: SellerDep, db: SessionDep):
+def delete_bundle(posting_id: int, current_user: AdminDep, db: SessionDep):
     bundle_posting_service.delete_bundle_posting(posting_id=posting_id, db=db)
