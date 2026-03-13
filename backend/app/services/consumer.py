@@ -12,6 +12,9 @@ from app.models.consumer import Consumer
 from app.core.security import get_password_hash
 from app.models.enums import Role
 
+def get_all_consumers(db: Session) -> Sequence[Consumer]:
+    return consumer_crud.get_all_consumers(db=db)
+
 def get_week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
 
