@@ -29,3 +29,11 @@ def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
 @router.post("/", response_model = ConsumerPublic)
 def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: SessionDep):
     return consumer_service.create_consumer(consumer_in=consumer_in, user_in=user_in, db=db)
+
+@router.delete("/me")
+def delete_current_consumer(current_user: ConsumerDep, db: SessionDep):
+    consumer_service.delete_consumer(user_id=current_user.user_id, db=db) # type: ignore
+
+@router.delete("/{user_id}")
+def delete_consumer(user_id: int, current_user: AdminDep, db: SessionDep):
+    consumer_service.delete_consumer(user_id=user_id, db=db)

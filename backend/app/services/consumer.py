@@ -84,3 +84,6 @@ def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Sessio
     except Exception:
         db.rollback
         raise
+
+def delete_consumer(user_id: int, db:Session):
+    consumer_crud.delete_consumer(user_id=user_id, db=db)

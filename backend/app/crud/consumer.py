@@ -36,3 +36,10 @@ def create_consumer(consumer_in: ConsumerCreate, user_id: int, db: Session) -> C
     db.flush()
     db.refresh(db_consumer)
     return db_consumer
+
+def delete_consumer(user_id: int, db: Session):
+    statement = select(Consumer).where(Consumer.user_id == user_id)
+    consumer = db.exec(statement).first()
+    if consumer:
+        db.delete(consumer)
+        db.commit()
