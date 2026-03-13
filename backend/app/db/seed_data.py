@@ -25,19 +25,21 @@ def seed_users(db: Session):
     db.add(consumer_user)
     db.add(seller_user)
 
-    #Add 100 users with a random role
+    #Add 250 users with consumer role
     for _ in range(250):
         user = User(
             role=Role.CONSUMER
             )
         db.add(user)
 
+    #Add 250 users with seller role
     for _ in range(250):
         user = User(
             role=Role.SELLER
             )
         db.add(user)
 
+    #Add 10 users with admin role
     for _ in range(10):
         user = User(
             role=Role.ADMIN
@@ -96,6 +98,7 @@ def seed_bundle_posting(db: Session):
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
+        #Randomise status based on pickup window
         if pickup_window.upper != None:
             if datetime.now(timezone.utc) > pickup_window.upper:
                 status = BundleStatus.EXPIRED
@@ -125,11 +128,13 @@ def seed_reservation(db: Session):
     #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
     for post in postings:
         for _ in range(post.reserved):
+            #Randomise timestamp based on post pickup window
             if post.pickup_window.lower < datetime.now(timezone.utc):
                 timestamp = post.pickup_window.lower - timedelta(days=fake.random_int(0, 3), hours=fake.random_int(1, 23))
             else:
                 timestamp = datetime.now(timezone.utc) - timedelta(days=fake.random_int(0, 3), hours=fake.random_int(1, 23))
 
+            #Randomise status based on post status
             if post.status == BundleStatus.EXPIRED:
                 status = fake.random_element(elements=[ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
             else:
@@ -195,6 +200,7 @@ def seed_forecast(db: Session):
         db.add(forecast)
     db.commit()
 
+#Price based on number of reservations
 def calculate_price(reservations: int) -> float:
     base_price = (250/reservations) ** (2/3)
     random_noise = np.random.normal(0, 0.2)
@@ -202,6 +208,7 @@ def calculate_price(reservations: int) -> float:
 
     return round(price, 2)
 
+#Start time based on number of reservations
 def calculate_start_time(reservations: int) -> int:
     peak_prob = 0.4 + (0.02 * reservations)
     is_peak = np.random.random() < peak_prob
@@ -216,6 +223,7 @@ def calculate_start_time(reservations: int) -> int:
 
     return int(time)
 
+#Day of the week based on number of reservations
 def calculate_day_of_week(reservations: int) -> int:
     b = 0.02 * (reservations - 12.5)
     w = 0.4 + b
@@ -238,6 +246,7 @@ def calculate_day_of_week(reservations: int) -> int:
 
     return np.random.choice(a=days, p=probs)
 
+#Category based on number of reservations
 def calculate_category(reservations: int) -> Category:
     b = 0.015 * (reservations - 12.5)
     h = 0.55 + b
@@ -260,11 +269,13 @@ def calculate_category(reservations: int) -> Category:
 
     return choices(categories, weights=probs, k=1)[0]
 
+#Rain based on number of reservations
 def calculate_rain(reservations: int) -> bool:
     b = 0.01 * (reservations - 12.5)
 
     return np.random.random() < 0.3 - b
 
+#Update streaks for all users based on number of weeks they have collected a bundle
 def update_streaks(db: Session):
     consumers = db.exec(select(Consumer)).all()
 
