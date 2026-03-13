@@ -9,6 +9,9 @@ from app.crud import record as record_crud
 from app.services.reservation import get_no_show
 from random import randint
 
+def get_all_records(db: Session) -> Sequence[Record]:
+    return record_crud.get_all_records(db=db)
+
 def update_record(record_id: int, record_update: RecordAdminUpdate, db: Session) -> Record:
     db_record = record_crud.get_record_by_id(record_id=record_id, db=db)
     # Ensures that the pickup window is still valid

@@ -5,6 +5,7 @@ from app.models.enums import Category
 from app.models import Record
 from app.schemas.record import RecordAdminUpdate
 
+
 def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_window: str | None, db: Session) -> Record:
     update_data = record_update.model_dump(exclude_unset=True)
     db_record.sqlmodel_update(update_data)
