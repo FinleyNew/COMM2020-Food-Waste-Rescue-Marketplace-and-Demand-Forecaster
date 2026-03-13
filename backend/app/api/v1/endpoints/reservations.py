@@ -6,6 +6,10 @@ from app.services import consumer as consumer_service
 
 router = APIRouter()
 
+@router.get("/", response_model=list[ReservationPublic])
+def get_all_reservations(current_user: AdminDep, db: SessionDep):
+    return reservation_service.get_all_reservations(db=db)
+
 # Endpoint for creating a new reservation
 @router.post("/", response_model= ReservationPublic)
 def create_reservation(reservation_in: ReservationCreate, current_consumer: ConsumerDep, db: SessionDep):
@@ -39,7 +43,6 @@ def get_current_consumers_reservations(current_consumer: ConsumerDep, db: Sessio
     return current_consumer.reservations or []
     
 # Endpoint for deleting a reservation
-# Currently not in use
 @router.delete("/{reservation_id}")
-def delete_reservation(reservation_id: int, db: SessionDep):
+def delete_reservation(reservation_id: int, current_user: AdminDep, db: SessionDep):
     reservation_service.delete_reservation(reservation_id=reservation_id, db=db)

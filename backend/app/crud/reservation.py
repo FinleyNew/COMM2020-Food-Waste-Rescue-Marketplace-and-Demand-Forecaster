@@ -6,6 +6,10 @@ from app.models import Reservation
 from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
 
+def get_all_reservations(db: Session) -> Sequence[Reservation]:
+    statement = select(Reservation)
+    return db.exec(statement).all()
+
 # Crud function for creating a reservation
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session) -> Reservation:
     db_reservation = Reservation.model_validate(reservation_in, update={"consumer_id": consumer_id})

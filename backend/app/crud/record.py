@@ -5,6 +5,7 @@ from app.models.enums import Category
 from app.models import Record
 from app.schemas.record import RecordAdminUpdate
 
+
 def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_window: str | None, db: Session) -> Record:
     update_data = record_update.model_dump(exclude_unset=True)
     db_record.sqlmodel_update(update_data)
@@ -37,3 +38,10 @@ def get_same_time_records(search_start: Time, search_end: Time, day_of_week: int
         )
     )
     return db.exec(statement).all()
+
+def delete_record(record_id: int, db: Session):
+    statement = select(Record).where(Record.record_id == record_id)
+    record = db.exec(statement).first()
+    if record:
+        db.delete(record)
+        db.commit()

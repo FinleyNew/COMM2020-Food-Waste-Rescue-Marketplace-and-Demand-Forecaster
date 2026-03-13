@@ -12,6 +12,9 @@ from app.models.consumer import Consumer
 from app.core.security import get_password_hash
 from app.models.enums import Role
 
+def get_all_consumers(db: Session) -> Sequence[Consumer]:
+    return consumer_crud.get_all_consumers(db=db)
+
 def get_week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
 
@@ -84,3 +87,7 @@ def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Sessio
     except Exception:
         db.rollback
         raise
+
+def delete_consumer(user_id: int, db:Session):
+    consumer_crud.delete_consumer(user_id=user_id, db=db)
+    user_crud.delete_user(user_id=user_id, db=db)
