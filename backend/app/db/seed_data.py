@@ -2,7 +2,7 @@ from decimal import Decimal
 from sqlmodel import Session, select, func, desc
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
 from random import randint, uniform, choices
@@ -80,12 +80,12 @@ def seed_bundle_posting(db: Session):
 
         #Create random 1 hour pickup window
         day = 1 + calculate_day_of_week(reservations) + (randint(0, 3) * 7)
-        start_time = datetime(2026, 3, day, calculate_start_time(reservations))
+        start_time = datetime(2026, 3, day, calculate_start_time(reservations), tzinfo=timezone.utc)
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
         if pickup_window.upper != None:
-            if datetime.now() > pickup_window.upper:
+            if datetime.now(timezone.utc) > pickup_window.upper:
                 status = BundleStatus.EXPIRED
             else:
                 status = fake.random_element(elements=[BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])
@@ -113,7 +113,10 @@ def seed_reservation(db: Session):
     #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
     for post in postings:
         for i in range(post.reserved):
-            timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
+            if post.pickup_window.lower < datetime.now(timezone.utc):
+                timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
+            else:
+                timestamp = datetime.now(timezone.utc) - timedelta(days=randint(0, 3), hours=randint(1, 23))
 
             if post.status == BundleStatus.EXPIRED:
                 status = fake.random_element(elements=[ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
@@ -254,29 +257,23 @@ def update_streaks(db: Session):
     consumers = db.exec(select(Consumer)).all()
 
     for consumer in consumers:
-        reservations = db.exec(select(Reservation).where(
+        reservations = list(db.exec(select(Reservation).where(
             Reservation.user_id == consumer.user_id,
             Reservation.status == ReservationStatus.COLLECTED
-        )).all()
-
-        weeks = sorted(list(set(
-            (r.timestamp.isocalendar().year, r.timestamp.isocalendar().week) 
-            for r in reservations
-        )), reverse=True)
+        )).all())
 
         streak = 0
-        if weeks:
-            streak = 1
-            for i in range(1, len(weeks)):
-                curr_y, curr_w = weeks[i-1]
-                prev_y, prev_w = weeks[i]
-                
-                if (curr_y == prev_y and prev_w == curr_w - 1) or \
-                   (curr_y == prev_y + 1 and curr_w == 1 and prev_w >= 52):
-                    streak += 1
-                else:
-                    break
-                    
+        week_end = datetime.now(timezone.utc)
+        
+        while True:
+            week_start = week_end - timedelta(weeks=1)
+            has_collection = any(week_start <= r.timestamp < week_end for r in reservations)
+            if has_collection:
+                streak += 1
+                week_end = week_start
+            else:
+                break
+        
         consumer.streak = streak
         db.add(consumer)
 
