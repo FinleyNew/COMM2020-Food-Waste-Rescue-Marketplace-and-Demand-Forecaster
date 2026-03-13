@@ -25,3 +25,10 @@ def update_user(current_user: User, user_update: UserUpdate, db: Session) -> Use
     db.commit()
     db.refresh(current_user)
     return current_user
+
+def delete_user(user_id: int, db: Session):
+    statement = select(User).where(User.user_id == user_id)
+    user = db.exec(statement).first()
+    if user:
+        db.delete(user)
+        db.commit()
