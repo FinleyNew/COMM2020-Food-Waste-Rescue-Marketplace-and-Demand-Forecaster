@@ -39,7 +39,6 @@ def get_current_consumers_reservations(current_consumer: ConsumerDep, db: Sessio
     return current_consumer.reservations or []
     
 # Endpoint for deleting a reservation
-# Currently not in use
 @router.delete("/{reservation_id}")
-def delete_reservation(reservation_id: int, db: SessionDep):
+def delete_reservation(reservation_id: int, current_user: AdminDep, db: SessionDep):
     reservation_service.delete_reservation(reservation_id=reservation_id, db=db)
