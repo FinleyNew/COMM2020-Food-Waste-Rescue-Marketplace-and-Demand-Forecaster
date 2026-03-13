@@ -26,12 +26,24 @@ def seed_users(db: Session):
     db.add(seller_user)
 
     #Add 100 users with a random role
-    for _ in range(100):
-        role = fake.random_element(elements=Role)
+    for _ in range(250):
         user = User(
-            role=role
+            role=Role.CONSUMER
             )
         db.add(user)
+
+    for _ in range(250):
+        user = User(
+            role=Role.SELLER
+            )
+        db.add(user)
+
+    for _ in range(10):
+        user = User(
+            role=Role.ADMIN
+        )
+        db.add(user)
+
     db.commit()
 
 def seed_consumer(db: Session):
@@ -112,7 +124,7 @@ def seed_reservation(db: Session):
 
     #Create 1-25 reservations for each bundle posting and assign each one to a random consumer
     for post in postings:
-        for i in range(post.reserved):
+        for _ in range(post.reserved):
             if post.pickup_window.lower < datetime.now(timezone.utc):
                 timestamp = post.pickup_window.lower - timedelta(days=randint(0, 3), hours=randint(1, 23))
             else:
