@@ -8,6 +8,7 @@ import axios from "axios";
 function CurrentBundles() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //create state
+  const [noBundles, setNoBundles] = useState(false);
   const [code, setCode] = useState("");
 
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ function CurrentBundles() {
     })
     .then(response => {
       setBundles(response.data);
+      if (response.data.length === 0) {
+          setNoBundles(true);
+        } else {
+          setBundles(response.data);
+          setNoBundles(false);
+        }
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
@@ -143,6 +150,10 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             </div>
             ))}
           </div>
+          {noBundles && (
+          <p style={{color:"red"}}>
+                      No bundles
+                  </p>)}
         </div>
     </>
   );

@@ -6,7 +6,7 @@ import axios from "axios";
 function Codes() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //needs an empty array as it will display a list of data instead of of one object
-    
+  const [noBundles, setNoBundles] = useState(false);
     
 
 
@@ -19,8 +19,13 @@ function Codes() {
         }
       })
       .then(response => {
-        setBundles(response.data); //updates the react state so the page can rerender with the new info
-      })
+        if (response.data.length === 0) {
+          setNoBundles(true);
+        } else {
+          setBundles(response.data);
+          setNoBundles(false);
+  }
+})
       .catch(err =>{
         console.error("request failed",err);
       })
@@ -64,6 +69,10 @@ function Codes() {
                 </div>
               </div>
           ))}
+          {noBundles && (
+          <p style={{color:"red"}}>
+                      No bundles
+                  </p>)}
       </div>
       </>
     );

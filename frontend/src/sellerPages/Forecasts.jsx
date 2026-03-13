@@ -5,6 +5,7 @@ import axios from "axios";
 
 function Forecasts() {
   const [forecasts, setForecasts] = useState([]);
+  const [noForecasts, setNoForecasts] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -16,7 +17,14 @@ function Forecasts() {
       }
     })
       .then(response => {
-        setForecasts(response.data); // data is likely an array
+        //setForecasts(response.data); // data is likely an array
+        //setAnalytics(response.data);
+      if (response.data.length === 0) {
+          setNoForecasts(true);
+        } else {
+          setForecasts(response.data);
+          setNoForecasts(false);
+        }
       })
       .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching forecasts:", err);
@@ -34,25 +42,28 @@ function Forecasts() {
           <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
           <Link to="/analytics" className="button"><b>Analytics</b></Link>
         </nav>
-
-        {/* Forecast data section outputting predictions and IDs */}
-        <section>
-          {/* Display message while loading forecasts before outputting data*/}
-          {forecasts.length === 0 ? (
-            <p>Loading forecasts...</p>
-          ) : (
-            forecasts.map(forecast => (
-              <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
-                <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
-                <p>User ID : {forecast.user_id}</p>
-                <p>Posting ID {forecast.posting_id}</p>
-                <p></p>
-                <hr />
-              </div>
-            ))
-          )}
-        </section>     
-      </div> 
+      {/* Forecast data section outputting predictions and IDs */}
+      <section>
+        {/* Display message while loading forecasts before outputting data*/}
+        {forecasts.length === 0 ? (
+          <p>Loading forecasts...</p>
+        ) : (
+          forecasts.map(forecast => (
+            <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+              <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+              <p>User ID : {forecast.user_id}</p>
+              <p>Posting ID {forecast.posting_id}</p>
+              <p></p>
+              <hr />
+            </div>
+          ))
+        )}
+        {noForecasts && (
+          <p style={{color:"red"}}>
+                      No forecast
+                  </p>)}
+      </section>  
+      </div>    
     </>
   );
 }

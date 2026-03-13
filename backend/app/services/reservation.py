@@ -2,10 +2,13 @@ from sqlmodel import Session
 from fastapi import HTTPException
 from typing import Sequence
 from app.models.reservation import Reservation
-from app.schemas.reservation import ReservationCreate
+from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
 from app.crud import reservation as reservation_crud
 from app.services.bundlePosting import get_bundle_posting, reserve_bundle_posting
 from app.models.enums import ReservationStatus
+
+def get_all_reservations(db: Session) -> Sequence[Reservation]:
+    return reservation_crud.get_all_reservations(db=db)
 
 # The service for creating a reservation
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, posting_id: int, db: Session) -> Reservation:
@@ -22,6 +25,10 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, post
     db.commit()
     db.refresh(new_reservation)
     return new_reservation
+
+def update_reservation(reservation_id: int, reservation_update: ReservationAdminUpdate, db: Session) -> Reservation:
+    db_reservation = reservation_crud.get_reservation_by_id(reservation_id=reservation_id, db=db)
+    return reservation_crud.update_reservation(db_reservation=db_reservation, reservation_update=reservation_update, db=db)
     
 # The service function for collecting a reservation by code
 def collect_by_code(claim_code: str, db: Session) -> Reservation:

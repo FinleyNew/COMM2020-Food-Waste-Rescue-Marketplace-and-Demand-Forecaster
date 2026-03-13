@@ -7,6 +7,7 @@ import './Analytics.css'
 function Analytics() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [analytics, setAnalytics] = useState([])
+  const [noAnalytics, setNoAnalytics] = useState(false);
   
 
   useEffect(() => {
@@ -18,7 +19,13 @@ function Analytics() {
       }
     })
     .then(response => {
-      setAnalytics(response.data);
+      
+      if (response.data.length === 0) {
+          setNoAnalytics(true);
+        } else {
+          setAnalytics(response.data);
+          setNoAnalytics(false);
+        }
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
@@ -128,6 +135,10 @@ function Analytics() {
                   </div>
           </div>
       </div>
+      {noAnalytics && (
+          <p style={{color:"red"}}>
+                      No Analytics
+                  </p>)}
     </>
   );
 }
