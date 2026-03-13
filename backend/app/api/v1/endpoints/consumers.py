@@ -17,7 +17,7 @@ def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
     return current_consumer
 
 @router.get("/", response_model=list[ConsumerPublic])
-def get_all_consumers(db: SessionDep):
+def get_all_consumers(current_user: AdminDep, db: SessionDep):
     return consumer_service.get_all_consumers(db=db)
 
 # Ednpoint for creating a new consumer

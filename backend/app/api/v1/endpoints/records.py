@@ -7,7 +7,7 @@ from typing import List
 router = APIRouter()
 
 @router.get("/", response_model=list[RecordPublic])
-def get_all_records(db: SessionDep):
+def get_all_records(current_user: AdminDep, db: SessionDep):
     return record_service.get_all_records(db=db)
 
 @router.patch("/admin/{record_id}", response_model=RecordPublic)

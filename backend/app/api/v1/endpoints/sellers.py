@@ -7,7 +7,7 @@ from app.schemas.user import UserCreate
 router = APIRouter()
 
 @router.get("/", response_model=list[SellerPublic])
-def get_all_sellers(db: SessionDep):
+def get_all_sellers(current_user: AdminDep, db: SessionDep):
     return seller_service.get_all_sellers(db=db)
 
 #Endpoint for getting the current seller

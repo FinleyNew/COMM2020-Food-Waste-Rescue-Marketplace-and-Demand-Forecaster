@@ -13,7 +13,7 @@ def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
     return current_seller.forecasts or []
 
 @router.get("/", response_model=list[ForecastPublic])
-def get_all_forecasts(db: SessionDep):
+def get_all_forecasts(current_user: AdminDep, db: SessionDep):
     return forecast_service.get_all_forecasts(db=db)
 
 # Endpoint for getting the predicted sales and no show for a given BundlepostingCreate input

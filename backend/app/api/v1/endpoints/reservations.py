@@ -7,7 +7,7 @@ from app.services import consumer as consumer_service
 router = APIRouter()
 
 @router.get("/", response_model=list[ReservationPublic])
-def get_all_reservations(db: SessionDep):
+def get_all_reservations(current_user: AdminDep, db: SessionDep):
     return reservation_service.get_all_reservations(db=db)
 
 # Endpoint for creating a new reservation
