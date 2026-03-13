@@ -7,6 +7,9 @@ from app.crud import reservation as reservation_crud
 from app.services.bundlePosting import get_bundle_posting, reserve_bundle_posting
 from app.models.enums import ReservationStatus
 
+def get_all_reservations(db: Session) -> Sequence[Reservation]:
+    return reservation_crud.get_all_reservations(db=db)
+
 # The service for creating a reservation
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, posting_id: int, db: Session) -> Reservation:
     # this gets the corresponding bundle from the DB and locks it so no other service can access it
