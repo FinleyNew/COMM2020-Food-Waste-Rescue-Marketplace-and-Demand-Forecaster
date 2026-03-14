@@ -40,6 +40,7 @@
     overflow-x: auto;
 }
 .discover .textHeading{
+    color: var(--text-colour);
     grid-column: 2;
     font-size: 11px;
     align-self: center;
