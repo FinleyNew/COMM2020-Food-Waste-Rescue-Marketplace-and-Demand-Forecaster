@@ -1,14 +1,31 @@
 from typing import Sequence
 from fastapi import HTTPException
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta
 from sqlmodel import Session
-from datetime import datetime, timezone
 from app.crud.reservation import get_reservations_by_consumer
 from app.models.reservation import Reservation
 from app.crud import consumer as consumer_crud
+from app.crud import user as user_crud
+from app.schemas.consumer import ConsumerCreate, ConsumerAdminUpdate, ConsumerUpdate
+from app.schemas.user import UserCreate
+from app.models.consumer import Consumer
+from app.core.security import get_password_hash
+from app.models.enums import Role
+
+def get_all_consumers(db: Session) -> Sequence[Consumer]:
+    return consumer_crud.get_all_consumers(db=db)
+
+def get_week_start(d: date) -> date:
+    return d - timedelta(days=d.weekday())
+
+def update_consumer(current_consumer: Consumer, consumer_update: ConsumerUpdate | ConsumerAdminUpdate, db: Session) -> Consumer:
+    return consumer_crud.update_consumer(current_consumer=current_consumer, consumer_update=consumer_update, db=db)
+
+def get_consumer_by_id(user_id: int, db: Session) -> Consumer:
+    return consumer_crud.get_consumer_by_id(user_id=user_id, db=db)
 
 # Service for checking whether a consumers streak is still valid
-def check_streak(consumer_id: int, db: Session):
+def check_streak(consumer_id: int, db: Session) -> bool:
     # Get the latest reservation that the consumer has placed
     reservations: Sequence[Reservation] = get_reservations_by_consumer(consumer_id=consumer_id, db=db)
     if not reservations:
@@ -16,18 +33,22 @@ def check_streak(consumer_id: int, db: Session):
     # Get the timestamp from that reservation
     reservation = reservations[0]
     timestamp = reservation.timestamp
-    # Get the current time
-    now = datetime.now(timezone.utc)
-    # Compare the two if the difference is greater than 2 week then reset the streak to 0
-    time_diff = now - timestamp
-    if time_diff.days >= 14:
+    # Get the week of the last reservation
+    last_reservation_week = get_week_start(timestamp.date())
+    # Get the start of the current week
+    current_week = get_week_start(date.today())
+    # Get the previous week
+    previous_week = current_week - timedelta(weeks=1)
+    # Check if the week of the last reservation is the current or previous week
+    if  not last_reservation_week in (current_week, previous_week):
         # Reset the consumers streak
         consumer_crud.reset_consumers_streak(consumer_id=consumer_id, db=db)
+        return False
+    return True
 
 def increment_streak(consumer_id: int, streak: int, db: Session):
     #Check the consumers streak to make sure it's still valid
-    if streak > 0:
-        check_streak(consumer_id=consumer_id, db=db)
+    if streak > 0 and check_streak(consumer_id=consumer_id, db=db):
         #get the consumers latest reservation
         reservations: Sequence[Reservation] = get_reservations_by_consumer(consumer_id=consumer_id, db=db)
         if not reservations:
@@ -35,11 +56,38 @@ def increment_streak(consumer_id: int, streak: int, db: Session):
         # Get the timestamp from that reservation
         reservation = reservations[0]
         timestamp = reservation.timestamp
-        # Get the current time
-        now = datetime.now(timezone.utc)
-        #If this reservation is more than a week old increment the streak
-        time_diff = now - timestamp
-        if time_diff.days >= 7:
+        # Get the week of the last reservation
+        last_reservation_week = get_week_start(timestamp.date())
+        # Get the start of the current week
+        current_week = get_week_start(date.today())
+        # If the week of the last reservation is the current week don't increment
+        if current_week != last_reservation_week:
             consumer_crud.increment_consumers_streak(consumer_id=consumer_id, db=db)
     else:
         consumer_crud.increment_consumers_streak(consumer_id=consumer_id, db=db)
+
+def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Session) -> Consumer:
+    #Check if email already exists
+    if user_crud.get_user_by_email(email=user_in.email, db=db):
+        raise HTTPException(status_code=400, detail="This email is already registered")
+    try:
+        # Hash password
+        hashed_password = get_password_hash(password=user_in.password)
+        #Create a new user
+        user = user_crud.create_user(user_in=user_in, hashed_password=hashed_password, role=Role.CONSUMER, db=db)
+        #Get that users Id
+        user_id = user.user_id
+        if not user_id:
+            raise HTTPException(status_code=404, detail="Could not get userID")
+        #Create a new consumer with that Id
+        consumer = consumer_crud.create_consumer(consumer_in=consumer_in, user_id=user_id, db=db)
+        db.commit()
+        db.refresh(consumer)
+        return consumer
+    except Exception:
+        db.rollback
+        raise
+
+def delete_consumer(user_id: int, db:Session):
+    consumer_crud.delete_consumer(user_id=user_id, db=db)
+    user_crud.delete_user(user_id=user_id, db=db)

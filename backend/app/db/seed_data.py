@@ -2,6 +2,7 @@ from decimal import Decimal
 from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
+from app.core.security import get_password_hash
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from app.models.enums import Role, ReservationStatus, BundleStatus, Category
@@ -20,29 +21,44 @@ def is_database_already_seeded(db: Session):
 
 def seed_users(db: Session):
     #Hardcode first 2 users as consumer and seller
-    consumer_user = User(role=Role.CONSUMER)
-    seller_user = User(role=Role.SELLER)
+    consumer_user = User(
+        role=Role.CONSUMER,
+        email="consumer@gmail.com",
+        password=get_password_hash("123"))
+    seller_user = User(
+        role=Role.SELLER,
+        email="seller@gmail.com",
+        password=get_password_hash("123"))
     db.add(consumer_user)
     db.add(seller_user)
 
     #Add 250 users with consumer role
     for _ in range(250):
+        password = fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
         user = User(
-            role=Role.CONSUMER
+            role=Role.CONSUMER,
+            email=fake.email(),
+            password=get_password_hash(password)
             )
         db.add(user)
 
     #Add 250 users with seller role
     for _ in range(250):
+        password = fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
         user = User(
-            role=Role.SELLER
+            role=Role.SELLER,
+            email=fake.email(),
+            password=get_password_hash(password)
             )
         db.add(user)
 
     #Add 10 users with admin role
-    for _ in range(10):
+    for _ in range(10): 
+        password=get_password_hash(password)
         user = User(
-            role=Role.ADMIN
+            role=Role.ADMIN,
+            email=fake.email(),
+            password=get_password_hash(password)
         )
         db.add(user)
 

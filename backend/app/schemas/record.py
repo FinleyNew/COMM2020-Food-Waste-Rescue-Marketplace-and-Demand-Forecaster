@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from decimal import Decimal
 from typing import Any
-from pydantic import computed_field
+from pydantic import computed_field, model_validator
 from sqlmodel import Field, SQLModel
 
 # The base schema for Records
@@ -9,17 +9,46 @@ class RecordBase(SQLModel):
     user_id: int
     posting_id: int
     category: str
-    price: Decimal
+    # Price should have 2 decimal places and be greater than 0
+    price: Decimal = Field(ge=0, decimal_places=2)
     raining: bool
-    observed_reservations: int
-    observed_no_show: int
-    observed_expired: int
-    weight: int
+    #These cannot be negative
+    observed_reservations: int = Field(ge=0)
+    observed_no_show: int = Field(ge=0)
+    observed_expired: int = Field(ge=0)
+    # Measured in grams, has to be greater than 0
+    weight: int = Field(gt=0)
 
 # The create schema for records
 class RecordCreate(RecordBase):
     start_time: datetime
     end_time: datetime
+    # Ensures that the start_time comes afer the end_time
+    @model_validator(mode="after")
+    def check_end_after_start(self):
+        if self.end_time <= self.start_time:
+            raise ValueError("end_time must be after start_time")
+        return self
+    
+class RecordAdminUpdate(SQLModel):
+    category: str | None = None
+    price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
+    raining: bool | None = None
+    observed_reservations: int | None = Field(default=None, ge=0)
+    observed_no_show: int | None = Field(default=None, ge=0)
+    observed_expired: int | None = Field(default=None, ge=0)
+    weight: int | None = Field(default=None, gt=0)
+    # They could send a new start but not end so need to check in the service
+    start_time: datetime | None = None
+    end_time: datetime | None = None
+
+    @model_validator(mode="after")
+    def check_end_after_start(self):
+        # Only validate if both are provided
+        if self.start_time is not None and self.end_time is not None:
+            if self.end_time <= self.start_time:
+                raise ValueError("end_time must be after start_time")
+        return self
 
 # The public schema for records
 class RecordPublic(RecordBase):
