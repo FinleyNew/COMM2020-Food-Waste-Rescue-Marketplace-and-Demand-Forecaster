@@ -37,7 +37,6 @@ function Forecasts() {
       <div className="currentBundles">
       {/* Initialises the navifation bar where sellers can move between pages */}
         <nav>
-          <Link to="/login" className="button"><b>Login Page</b></Link>
           <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
           <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
           <Link to="/analytics" className="button"><b>Analytics</b></Link>

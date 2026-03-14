@@ -111,13 +111,16 @@ function AddBundles() {
     <>
       {/* Initialises the navifation bar where sellers can move between pages */}
       <div className="addBundles">
+        <div className="pageHeading">
           <nav className="navRow">
-            <Link to="/login" className="button"><b>Login Page</b></Link>
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/analytics" className="button"><b>Analytics</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
-        <h1>Add Bundles</h1> 
+          <div className="textHeading">
+            <h1>Add Bundles</h1> 
+          </div>
+        </div>
         <div className="mainBox">
           <div className="bundleEntry"> 
             {/* Displays a header which states the name of the current page */}

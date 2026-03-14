@@ -71,7 +71,6 @@ function Analytics() {
       <div className="analytics">
         {/* Initialises the navifation bar where sellers can move between pages */}
           <nav class="row">
-            <Link to="/login" className="button"><b>Login Page</b></Link>
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
