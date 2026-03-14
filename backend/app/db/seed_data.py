@@ -29,8 +29,14 @@ def seed_users(db: Session):
         role=Role.SELLER,
         email="seller@gmail.com",
         password=get_password_hash("123"))
+    admin_user = User(
+        role=Role.ADMIN,
+        email="admin@gmail.com",
+        password=get_password_hash("123"))
+    
     db.add(consumer_user)
     db.add(seller_user)
+    db.add(admin_user)
 
     #Add 250 users with consumer role
     for _ in range(250):
