@@ -33,14 +33,6 @@ function BundleSelect() {
   }, [id]) //this part means if ID changes the page reloades with the new information
 
 
-
-
-
-
-
-
- 
-
   if (!bundle) return <p>Loading bundle...</p>;
 
 
@@ -71,27 +63,16 @@ function BundleSelect() {
   return (
     <>
       <div className="discover">
-        <nav className="row">
-          <Link to="/login" className="button"><b>Login Page</b></Link> {/*This section holds all the links to the other pages and the settings page*/}
-          <Link to="/discover" className="button"><b>Discover</b></Link>
-          <Link to="/streaks" className="button"><b>Streaks</b></Link>
-          <Link to="/codes" className="button"><b>Codes</b></Link>
-          <details>
-            <summary>
-              <img
-                className="setting"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdndCKhAJ4SlVEaNCkA4U6BN4tDXZsRtxSw&s" //image for the settings page
-                alt="settings"
-              />
-            </summary>
-            <label>
-              <input type="checkbox" name="darkmode" />
-              Enable Dark Mode DOESNT WORK YET
-            </label>
-          </details>
-        </nav>
-
-        <h1 className="headline">Bundles</h1> {/* header for the bundles page */}
+        <div className="pageHeading">
+          <nav className="navBundleRow">
+            <Link to="/discover" className="button"><b>Discover</b></Link> {/*This section holds all the links to the other pages*/}
+            <Link to="/streaks" className="button"><b>Streaks</b></Link>
+            <Link to="/codes" className="button"><b>Codes</b></Link>
+          </nav>
+          <div className="textHeading">
+            <h1>Bundles</h1> {/* header for the bundles page */}
+          </div>
+      </div>
 
         <section>
           <div className="mainBox">

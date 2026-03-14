@@ -3,6 +3,7 @@ import { Routes, Route, Link } from "react-router-dom"; //needs to be imported s
 import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
 //import './App.css'
 import "./index.css"
+import SettingsIcon from "./assets/SettingsIcon.png";
 // Pages (ensure the file names match exactly)
 import Discover from "./consumerPages/Discover"; //every import allows a page to be accessed via the url from another page
 import BundleSelect from "./consumerPages/bundle-select";
@@ -86,13 +87,22 @@ function App() {
         
         
       </Routes>
-      <button className="dark-mode-btn" onClick={settingsClickPopup}>Settings</button>
+      <button className="dark-mode-btn" onClick={settingsClickPopup}>
+        <img src={SettingsIcon} className="settingsIcon" alt="Settings"></img>
+      </button>
       {settingsPopup && (
         <div className="settingsPopup settingsOpenPopup">
           {location.pathname === "/login" ? (
           <h1>Please login to an account to access settings</h1> ) : (
             <>
               <h1>Settings</h1>
+              <p>Account Details:</p>
+              <div className="settingsTextBox">
+                <p>Username:</p>
+                <p>Account Type:</p>
+              </div>
+              <Link to="/login" className="signOutButton" onClick={(settingsClosePopup)}><b>Sign Out</b></Link>
+              <br></br>
               <p>Accessibility:</p>
               <div className="settingsRow">
                 <input
@@ -106,7 +116,8 @@ function App() {
                 </label>
               </div>
               <br></br>
-              <button className="settingsButton" onClick={settingsClosePopup}>Confirm</button>
+              <br></br>
+              <button className="settingsButton" onClick={settingsClosePopup}>Back</button>
             </>
             )}
         </div>

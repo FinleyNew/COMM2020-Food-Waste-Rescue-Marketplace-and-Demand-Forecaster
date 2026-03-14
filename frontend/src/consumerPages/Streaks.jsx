@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import './Discover.css'
+import './Streaks.css'
 import noBadge from "../assets/NoBadge.png";
 import axios from "axios";
 function Streaks() {
@@ -25,18 +25,18 @@ function Streaks() {
     });
   },[]) //allows the page to rerender if anything changes
 
-
-
-
   return (
       <>
-        <div className="discover">
-          <nav className="row">
-            <Link to="/login" className="button"><b>Login Page</b></Link>
-            <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
-            <Link to="/codes" className="button"><b>Codes</b></Link>
-          </nav>
-          <h1>Streaks</h1>
+        <div className="streaks">
+          <div className="pageHeading">
+            <nav className="navRow">
+              <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
+              <Link to="/codes" className="button"><b>Codes</b></Link>
+            </nav>
+            <div className="textHeading">
+              <h1>Streaks</h1>
+            </div>
+          </div>
           <div className="mainBox">
             <div className="streaksEntry">
               {bundle && (

@@ -1,9 +1,10 @@
 :root {
   --bg-color: white; /*default theme*/
   --text-colour: black;
-  --button-bg: green;      /* dark button in light mode */
+  --button-bg: rgb(49, 163, 49);      /* dark button in light mode */
+  --settings-button-bg: white;
   --button-text: black;
-  --border-colour: green;
+  --border-colour: rgb(49, 163, 49);
   --bg-container: white;
   --badge-icon: url('./assets/NoBadge.png')
 }
@@ -12,6 +13,7 @@
   --bg-color: #121212; /*when html tag is changed this becomes into effetc*/
   --text-colour: #ffffff;  /*overrides variables when run*/
   --button-bg: #a5a5a5;      /* light button in dark mode */
+  --settings-button-bg:  #a5a5a5;
   --button-text: #000000;
   --border-colour: #5d5e5f;
   --bg-container: #111827;
@@ -32,7 +34,8 @@ body{
 }
 
 .dark-mode-btn {
-  background-color: var(--button-bg);
+  display: flex;
+  background-color: var(--settings-button-bg);
   color: var(--button-text);
   padding: 10px 16px;
   border-radius: 10px;
@@ -40,11 +43,14 @@ body{
   top: 20px;
   right: 20px;
 }
-
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+.settingsIcon{
+  width: 60px;
+  height: 60px;
 }
 .settingsPopup{
   display: flex;
@@ -73,13 +79,20 @@ body {
 }
 .settingsOpenPopup{
     visibility: visible;
-    top: 190px;
-    transform: translate(-50%, -50%) scale(1);
+    top: 12%;
+    transform: translateX(-50%) scale(1);
 }
 .settingsRow{
     display: flex;
     color: var(--text-colour);
     font-size: 20px;
+}
+.settingsTextBox{
+    display: block;
+    text-align: left;
+}
+.signOutButton{
+  color: rgb(224, 17, 17);
 }
 .settingsPopup .settingsButton{
     display: inline-flex;
@@ -93,4 +106,5 @@ body {
     cursor: pointer;
     border-radius: 5px;
     text-decoration: none;
+    font-weight: bold;
 }

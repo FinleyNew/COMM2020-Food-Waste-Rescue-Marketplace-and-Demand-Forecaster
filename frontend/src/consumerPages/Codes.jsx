@@ -39,40 +39,43 @@ function Codes() {
   return (
       <>
       <div className="codes">
-        <nav className="row">
-          <Link to="/login" className="button"><b>Login Page</b></Link> {/* defines the links to the other other pages */}
-          <Link to="/discover" className="button"><b>Discover</b></Link>
-          <Link to="/streaks" className="button"><b>Streaks</b></Link>
-        </nav>
-        <h1>Codes</h1>
-          {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
-            <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
-              <div className="mainBox">
-                <div className="bundleEntry">
-                  <div className="textBox">
-                    <div className="bundleRow">
-                      <h1>Bundle Name</h1>
-                      <h2>Claim Code: {bundle.claim_code}</h2> {/* displaying all the information by accessing the specific object */}
-                    </div>
-                    <div className="bundleRow">
-                      <div className="column">
-                        <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status}</span></p>
-                        <p>Reservation ID : {bundle.reservation_id}</p>
-                        <p>Bundle ID: {bundle.posting_id}</p>
-                      </div>
-                      <div className="column">
-                        <img src={Company} alt="Company" className="companyIcon"/>
-                      </div>
-                    </div>
+        <div className="pageHeading">
+          <nav className="navRow">
+            <Link to="/discover" className="button"><b>Discover</b></Link> {/* defines the links to the other other pages */}
+            <Link to="/streaks" className="button"><b>Streaks</b></Link>
+          </nav>
+          <nav class="textHeading">
+              <h1>Codes</h1>
+          </nav>
+        </div>
+        {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
+          <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
+            <div className="mainBox">
+              <div className="bundleEntry">
+                <div className="textBox">
+                  <div className="bundleRow">
+                    <h1>Bundle Name</h1>
+                    <h2>Claim Code: {bundle.claim_code}</h2> {/* displaying all the information by accessing the specific object */}
                   </div>
+                  <div className="bundleRow">
+                    <div className="column">
+                      <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status}</span></p>
+                      <p>Reservation ID : {bundle.reservation_id}</p>
+                      <p>Bundle ID: {bundle.posting_id}</p>
+                    </div>
+                    <div className="column">
+                      <img src={Company} alt="Company" className="companyIcon"/>
+                    </div>
                   </div>
                 </div>
+                </div>
               </div>
-          ))}
-          {noBundles && (
-          <p style={{color:"red"}}>
-                      No bundles
-                  </p>)}
+            </div>
+        ))}
+        {noBundles && (
+        <p style={{color:"red"}}>
+                    No bundles
+                </p>)}
       </div>
       </>
     );

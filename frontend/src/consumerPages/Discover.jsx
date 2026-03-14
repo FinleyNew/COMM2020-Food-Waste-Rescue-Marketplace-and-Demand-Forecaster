@@ -33,13 +33,15 @@ function Discover() {
   return (
     <>
       <div className="discover">
-        <nav class="row">
-            <Link to="/login" className="button"><b>Login Page</b></Link> {/* displays the links to the other pages */}
-            <Link to="/streaks" className="button"><b>Streaks</b></Link>
-            <Link to="/codes" className="button"><b>Codes</b></Link>
-        </nav>
-        <h1 className="headline">Bundles</h1>
-
+        <div className="pageHeading">
+          <nav class="navRow">
+              <Link to="/streaks" className="button"><b>Streaks</b></Link> {/* displays the links to the other pages */}
+              <Link to="/codes" className="button"><b>Codes</b></Link>
+          </nav>
+          <nav class="textHeading">
+              <h1>Bundles</h1>
+          </nav>
+        </div>
             {bundles.map(bundle => (
               <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
                   <div className="bundleEntry">
