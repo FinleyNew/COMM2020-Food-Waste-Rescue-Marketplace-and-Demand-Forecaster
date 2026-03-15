@@ -113,6 +113,7 @@ def seed_bundle_posting(db: Session):
     #Add 250 bundle postings
     for _ in range(250):
         reservations = fake.random_int(1, 25)
+        available = fake.random_int(0, 5)
 
         #Create random 1 hour pickup window
         day = 1 + calculate_day_of_week(reservations) + (fake.random_int(0, 3) * 7)
@@ -124,15 +125,17 @@ def seed_bundle_posting(db: Session):
         if pickup_window.upper != None:
             if datetime.now(timezone.utc) > pickup_window.upper:
                 status = BundleStatus.EXPIRED
-            else:
-                status = fake.random_element(elements=[BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])
+            elif available == 0:
+                status = BundleStatus.SOLD_OUT
+            else:    
+                status = BundleStatus.AVAILABLE
 
         #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
             category=calculate_category(reservations),
             allergens=', '.join(fake.random_elements(elements=example_allergens, unique=True)),
-            available=fake.random_int(0, 5),
+            available=available,
             reserved=reservations,
             price=Decimal(calculate_price(reservations)),
             pickup_window=pickup_window,
@@ -189,8 +192,6 @@ def seed_record(db: Session):
         )
         no_show = db.exec(no_show_query).one()
 
-        reservations = post.available - post.reserved
-
         record = Record(
             user_id=post.user_id,
             posting_id=post.posting_id,
@@ -198,7 +199,7 @@ def seed_record(db: Session):
             category=post.category,
             price=post.price,
             raining=calculate_rain(reservations),
-            observed_reservations=reservations,
+            observed_reservations=post.reserved,
             observed_no_show=no_show,
             observed_expired=post.available,
             weight=post.weight
