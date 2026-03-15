@@ -21,6 +21,9 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Ses
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_active_bundle_postings(db=db)
 
+def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
+    return bundlePosting_crud.get_queried_bundle_postings(query=query, db=db)
+
 # The service for getting all bundles
 def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_all_bundle_postings(db=db)
