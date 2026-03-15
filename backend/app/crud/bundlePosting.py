@@ -25,8 +25,10 @@ def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
 
 def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
     search = f"%{query}%"  # % is SQL wildcard
-    matching_categories = [c for c in Category if query.lower() in c.value.lower()]
-    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category.in_(matching_categories), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE)
+    matching_categories = [
+    c for c in Category 
+    if query.lower() in c.value.lower() or c.value.lower() in query.lower()]
+    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category.in_(matching_categories), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
 # The crud function for getting all bundles
