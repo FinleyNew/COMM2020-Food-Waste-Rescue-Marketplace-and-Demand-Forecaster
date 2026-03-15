@@ -108,12 +108,28 @@ def seed_seller(db: Session):
 def seed_bundle_posting(db: Session):
     #Get all the sellers
     sellers = db.exec(select(Seller)).all()
-    example_allergens = ['Milk', 'Eggs', 'Nuts', 'Shellfish', 'Gluten', 'Soy', 'Wheat', 'Fish', 'Sesame', 'Celery']
+
+    example_allergens = {
+        Category.BAKED_GOODS: ['Milk', 'Eggs', 'Wheat', 'Gluten', 'Soy'],
+        Category.FRUIT: [],
+        Category.VEGETABLES: ['Celery'],
+        Category.MEAT: [],
+        Category.SEAFOOD: ['Shellfish', 'Fish'],
+        Category.SNACKS: ['Milk', 'Eggs', 'Nuts', 'Sesame'],
+        Category.DAIRY: ['Milk', 'Soy'],
+        Category.DRINKS: ['Milk']
+    }
 
     #Add 250 bundle postings
     for _ in range(250):
         reservations = fake.random_int(1, 25)
         available = fake.random_int(0, 5)
+
+        category = calculate_category(reservations)
+        try:
+            allergens = ', '.join(fake.random_elements(elements=example_allergens[category], unique=True))
+        except:
+            allergens = None
 
         #Create random 1 hour pickup window
         day = 1 + calculate_day_of_week(reservations) + (fake.random_int(0, 3) * 7)
@@ -133,8 +149,8 @@ def seed_bundle_posting(db: Session):
         #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
-            category=calculate_category(reservations),
-            allergens=', '.join(fake.random_elements(elements=example_allergens, unique=True)),
+            category=category,
+            allergens=allergens,
             available=available,
             reserved=reservations,
             price=Decimal(calculate_price(reservations)),
