@@ -3,12 +3,14 @@ from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from app.core.security import get_password_hash
+from app.models.enums import Role, ReservationStatus, BundleStatus, Category
+from app.services.forecast import get_forecast
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
-from app.models.enums import Role, ReservationStatus, BundleStatus, Category
 from random import choices
 from faker import Faker
 import numpy as np
+from app.schemas.bundlePosting import BundlePostingCreate
 
 fake = Faker('en_GB')
 Faker.seed(123)
@@ -224,19 +226,29 @@ def seed_record(db: Session):
     db.commit()
 
 def seed_forecast(db: Session):
-    postings = db.exec(select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)).all()
+    postings = db.exec(select(BundlePosting)).all()
 
-    #Create 3 forecasts with random values
-    for i in range(3):
-        post = postings[i]
-
+    #Create forecasts for all postings
+    for post in postings:
+        bundle_in = BundlePostingCreate(
+            user_id=post.user_id or 0,
+            category=post.category,
+            allergens=post.allergens or "",
+            available=max(1, post.available),
+            price=post.price,
+            weight=post.weight,
+            start_time=post.pickup_window.lower,
+            end_time=post.pickup_window.upper
+        )
+        forecast_data = get_forecast(bundle_in, db)
         forecast = Forecast(
-            user_id=post.user_id,
+            user_id=forecast_data.user_id,
             posting_id=post.posting_id,
-            predicted_reservations=fake.random_int(5, 50),
-            predicted_no_show_prob=round(fake.pyfloat(min_value=0, max_value=0.25), 2)
+            predicted_reservations=forecast_data.predicted_reservations,
+            predicted_no_show_prob=forecast_data.predicted_no_show_prob
         )
         db.add(forecast)
+    
     db.commit()
 
 #Price based on number of reservations
