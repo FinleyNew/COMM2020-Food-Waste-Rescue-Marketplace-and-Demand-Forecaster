@@ -224,6 +224,25 @@
 .discover .column p{
     font-size: 20px;
 }
+.discover .searchRow{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 346px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    color: var(--text-colour);
+    padding: 8px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+.discover #searchBundle{
+    display: inline-block;
+    align-items: center;
+    height: 35px;
+    padding: 5px;
+}
 .discover .companyIcon{
     height: 15%;
     width: 15%;

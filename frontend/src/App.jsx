@@ -93,7 +93,18 @@ function App() {
       {settingsPopup && (
         <div className="settingsPopup settingsOpenPopup">
           {location.pathname === "/login" ? (
-          <h1>Please login to an account to access settings</h1> ) : (
+          <div>
+            <h1>Please login to an account to access settings</h1>
+            <input
+              type="checkbox"
+              id="darkModeToggle"
+              checked={darkMode}
+              onChange={toggleDarkMode}
+            />
+            <label htmlFor="darkModeToggle">
+              {darkMode ? "Dark Mode" : "Light Mode"}
+            </label> 
+            </div>) : (
             <>
               <h1>Settings</h1>
               <p>Account Details:</p>

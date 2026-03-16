@@ -42,6 +42,17 @@ function Discover() {
               <h1>Bundles</h1>
           </nav>
         </div>
+        <div className="searchRow">
+          <p>Search for a Bundle: </p>
+          <form>
+              <input
+                id="searchBundle"
+                type="text"
+                placeholder="Search"
+              />
+          </form>
+          <br></br>
+        </div>
             {bundles.map(bundle => (
               <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
                   <div className="bundleEntry">

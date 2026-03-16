@@ -93,21 +93,39 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             <h1>Bundles</h1>
           </div>
         </div>
-        <div className="codeRow">
-          <form onSubmit={(e) => {
-              e.preventDefault();
-              enterCode(code);
-            }}>
-              <input
-                id="enterCode"
-                type="text"
-                placeholder="Enter Code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <button className="codeButton" type="submit">Collect</button>
+        <div className="rowBox">
+          <div className="codeRow">
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                enterCode(code);
+              }}>
+                <input
+                  id="enterCode"
+                  type="text"
+                  placeholder="Enter Code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
+                <button className="codeButton" type="submit">Collect</button>
+              </form>
+              <br></br>
+          </div>
+          <div className="searchRow">
+            <p>Search for a Bundle: </p>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                enterCode(code);
+              }}>
+                <input
+                  id="enterCode"
+                  type="text"
+                  placeholder="Search"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
             </form>
             <br></br>
+          </div>
         </div>
           {/* Columns structure for displaying bundle infomation */}
           <div className="mainBox">
