@@ -149,14 +149,14 @@ function AddBundles() {
             >
             {/* List of options fo the user to choose from the menu */}
             <option value="">Select Category</option>
-            <option value="baked_goods">Baked Goods</option>
-            <option value="fruit">Fruit</option>
-            <option value="vegetables">Vegetables</option>
-            <option value="meat">Meat</option>
-            <option value="seafood">Seafood</option>
-            <option value="SNACKS">Snacks</option>
-            <option value="dairy">Dairy</option>
-            <option value="drinks">Drinks</option>
+            <option value="Baked Goods">Baked Goods</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Meat">Meat</option>
+            <option value="Seafood">Seafood</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Drinks">Drinks</option>
             </select>
 
             {/* Creates a space in the page */}         
