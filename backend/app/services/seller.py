@@ -1,6 +1,7 @@
 from typing import Sequence
 from fastapi import HTTPException
 from sqlmodel import Session
+import httpx
 
 from app.schemas.seller import SellerAdminUpdate, SellerCreate, SellerUpdate
 from app.schemas.user import UserCreate
@@ -26,14 +27,29 @@ def create_seller(seller_in: SellerCreate, user_in: UserCreate, db: Session) -> 
         user_id = user.user_id
         if not user_id:
             raise HTTPException(status_code=404, detail="Could not get userID")
-        #Create a new consumer with that Id
-        seller = seller_crud.create_seller(seller_in=seller_in, user_id=user_id, db=db)
+        # Get the seller's coordinates
+        coords = get_coordinates(seller_in.location)
+        latitude, longitude = coords if coords else (None, None)
+        # Create a new consumer with that Id
+        seller = seller_crud.create_seller(seller_in=seller_in, user_id=user_id, longitude=longitude, latitude=latitude, db=db)
         db.commit()
         db.refresh(seller)
         return seller
     except Exception:
         db.rollback
         raise
+
+def get_coordinates(address: str) -> tuple[float, float] | None:
+    parts = address.split()
+    postcode = f"{parts[-2]} {parts[-1]}"
+    with httpx.Client() as client:
+        response = client.get(
+            f"https://api.postcodes.io/postcodes/{postcode}"
+        )
+        data = response.json()
+        if data["status"] != 200:
+            return None
+        return data["result"]["latitude"], data["result"]["longitude"]
 
 def update_seller(current_seller: Seller, seller_update: SellerUpdate | SellerAdminUpdate, db: Session):
     return seller_crud.update_seller(current_seller=current_seller, seller_update=seller_update, db=db)
