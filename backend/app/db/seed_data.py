@@ -11,6 +11,7 @@ from random import choices
 from faker import Faker
 import numpy as np
 from app.schemas.bundlePosting import BundlePostingCreate
+from app.services.seller import get_coordinates
 
 fake = Faker('en_GB')
 Faker.seed(123)
@@ -96,12 +97,16 @@ def seed_seller(db: Session):
         opening_time = fake.random_int(8, 11)
         closing_time = fake.random_int(16, 20)
         opening_hours = f"{opening_time}:00 - {closing_time}:00"
+        latitude: float = 50.725545
+        longitude: float = -3.526961
 
         #Give seller fake name and address
         seller = Seller(
             user_id=user.user_id,
             name=fake.company(),
             location=fake.address(),
+            latitude=latitude,
+            longitude=longitude,
             opening_hours=opening_hours
         )
         db.add(seller)
