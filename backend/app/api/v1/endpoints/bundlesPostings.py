@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.api.deps import SellerDep, SessionDep
-from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingPublic
+from app.api.deps import AdminDep, SellerDep, SessionDep
+from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingPublic, BundlePostingUpdate
 from app.services import bundlePosting as bundle_posting_service
 
 router = APIRouter()
@@ -20,17 +20,23 @@ def create_posting(bundle_in: BundlePostingCreate, current_seller: SellerDep, db
 @router.get("/", response_model = list[BundlePostingPublic])
 def get_active_bundles(db: SessionDep):
     bundle_postings = bundle_posting_service.get_active_bundle_postings(db=db)
-    if not bundle_postings:
-        raise HTTPException(status_code=404, detail="No bundles found")
-    return bundle_postings
+    return bundle_postings or []
+
+@router.get("/search/{query}", response_model=list[BundlePostingPublic])
+def get_queried_bundles(query: str, db: SessionDep):
+    bundle_postings = bundle_posting_service.get_queried_bundle_postings(query=query, db=db)
+    return bundle_postings or []
+
+# Endpoint for getting all bundles
+@router.get("/all", response_model = list[BundlePostingPublic])
+def get_all_bundles(current_user: AdminDep, db: SessionDep):
+    bundle_postings = bundle_posting_service.get_all_bundle_postings(db=db)
+    return bundle_postings or []
 
 # Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
-    postings = current_seller.postings
-    if not postings:
-        raise HTTPException(status_code=404, detail="No bundles found")
-    return postings
+    return current_seller.postings or []
 
 # Endpoint for getting a specific bundle posting
 @router.get("/{posting_id}", response_model = BundlePostingPublic)
@@ -43,8 +49,27 @@ def get_bundle(posting_id: int, db: SessionDep):
         raise HTTPException(status_code=404, detail="Bundle not found")
     return bundle
 
+@router.patch("/{posting_id}", response_model=BundlePostingPublic)
+def update_bundle(posting_id: int, bundle_update: BundlePostingUpdate, current_user: SellerDep, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db, user_id=current_user.user_id)
+
+@router.patch("/admin/{posting_id}", response_model=BundlePostingPublic)
+def admin_update_bundle(posting_id: int, bundle_update: BundlePostingAdminUpdate, current_user: AdminDep, db: SessionDep):
+    return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
+
+@router.patch("/delete/{posting_id}", response_model=BundlePostingPublic)
+def set_bundle_deleted(posting_id: int, current_user: SellerDep, db: SessionDep):
+    return bundle_posting_service.set_bundle_deleted(posting_id=posting_id, db=db)
+
+@router.delete("/me/{posting_id}")
+def delete_current_sellers_bundle(posting_id: int, current_user: SellerDep, db: SessionDep):
+    posting = bundle_posting_service.get_bundle_posting(posting_id=posting_id, db=db)
+    if posting in current_user.postings:
+        bundle_posting_service.delete_bundle_posting(posting_id=posting_id, db=db)
+    else:
+        raise HTTPException(status_code=403, detail="Current seller does not own this bundle")
+
 # Endpoint for deleting a specific bundle
-# Currently not in use
 @router.delete("/{posting_id}")
-def delete_bundle(posting_id: int, db: SessionDep):
+def delete_bundle(posting_id: int, current_user: AdminDep, db: SessionDep):
     bundle_posting_service.delete_bundle_posting(posting_id=posting_id, db=db)

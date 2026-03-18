@@ -6,6 +6,11 @@ from app.models import Reservation
 from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationCreate
 from app.models.enums import ReservationStatus
+from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
+
+def get_all_reservations(db: Session) -> Sequence[Reservation]:
+    statement = select(Reservation)
+    return db.exec(statement).all()
 
 # Crud function for creating a reservation
 def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: Session) -> Reservation:
@@ -20,6 +25,17 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, db: 
         except IntegrityError:
             db_reservation.claim_code = generate_claim_code()
     raise Exception("could not generate unique claim code")
+
+def update_reservation(db_reservation: Reservation, reservation_update: ReservationAdminUpdate, db: Session) -> Reservation:
+    update_data = reservation_update.model_dump(exclude_unset=True)
+    db_reservation.sqlmodel_update(update_data)
+    db.commit()
+    db.refresh(db_reservation)
+    return db_reservation
+
+def get_reservation_by_id(reservation_id: int, db: Session) -> Reservation:
+    statement = select(Reservation).where(Reservation.reservation_id == reservation_id)
+    return db.exec(statement).one()
 
 # Crud function for getting reservations linked to a specific posting
 def get_reservations_by_posting(posting_id: int, db: Session) -> Sequence[Reservation]:
