@@ -1,12 +1,22 @@
 from fastapi import FastAPI
+from fastapi.concurrency import asynccontextmanager
 from app.api.v1.api import api_router
 from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.scheduler import start_scheduler, stop_scheduler
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_scheduler()
+    yield
+    stop_scheduler()
+
 app = FastAPI(
     title="Prototype API",
-    # This keeps your token saved even if you refresh the browser!
-    swagger_ui_parameters={"persistAuthorization": True}
+    # This keeps the token saved even if you refresh the browser
+    swagger_ui_parameters={"persistAuthorization": True},
+    lifespan=lifespan
 )
 
 

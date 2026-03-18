@@ -9,6 +9,34 @@ from app.models.bundlePosting import BundlePosting
 from app.core.config import settings
 from app.models.reservation import Reservation
 from app.crud import reservation as reservation_crud
+from random import randint
+
+from app.services import reservation as reservation_service
+
+def create_record(bundle_posting: BundlePosting, posting_id: int, db: Session) -> Record:
+    record = Record.model_validate(
+        bundle_posting,
+        update={
+            "raining": is_raining(),
+            "observed_reservations": bundle_posting.reserved,
+            "observed_no_show": reservation_service.get_no_show(posting_id=posting_id, db=db),
+            "observed_expired": bundle_posting.available
+        }
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    return record
+
+# Will just have a 1 in 10 chance of rain for any record
+def is_raining():
+    rnd = randint(0,9)
+    if rnd == 0:
+        return True
+    else:
+        return False
+
+
 
 def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_window: str | None, db: Session) -> Record:
     update_data = record_update.model_dump(exclude_unset=True)
