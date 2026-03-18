@@ -8,6 +8,7 @@ from app.services.forecast import get_forecast
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from random import choices
+from app.models.badge import Badge
 from faker import Faker
 import numpy as np
 from app.schemas.bundlePosting import BundlePostingCreate
@@ -256,6 +257,35 @@ def seed_forecast(db: Session):
     
     db.commit()
 
+def seed_badges(db: Session):
+    good_start = Badge(name="Good Start", detail="Make your first reservation")
+    first_rescue = Badge(name="First Rescue", detail="Collect your first bundle")
+    on_a_roll = Badge(name="On a Roll", detail="Collect a bundle for 3 days in a row")
+    locked_in = Badge(name="Locked In", detail="Collect a bundle for 7 days in a row")
+    relentless = Badge(name="Relentless", detail="Collect a bundle for 30 days in a row")
+    waste_warrior = Badge(name="Waste Warrior", detail="Save 1kg of food")
+    eco_advocate = Badge(name="Eco Advocate", detail="Save 10kg of food")
+    green_guardian = Badge(name="Green Guardian", detail="Save 25kg of food")
+    punctual = Badge(name="Punctual", detail="Complete 10 collections in a row with no no-shows")
+    time_keeper = Badge(name="TimeKeeper", detail="Complete 25 collections in a row with no no-shows")
+    unshakeable = Badge(name="Unshakeable", detail="Complete 50 collections in a row with no no-shows")
+    final_call = Badge(name="Final Call", detail="Collect a bundle within the last 5 minutes of a pickup window")
+    weatherproof = Badge(name="Weatherproof", detail="Collect 5 bundles in rainy weather")
+    triple_threat = Badge(name="Triple Threat", detail="Collect 3 bundles in 1 day")
+    familiar_face = Badge(name="Familiar Face", detail="Collect 3 bundles from the same seller")
+    well_rounded = Badge(name="Well Rounded", detail="Collect a bundle from every food category")
+
+    badges = [
+        good_start, first_rescue, on_a_roll, locked_in, relentless,
+        waste_warrior, eco_advocate, green_guardian, punctual, time_keeper,
+        unshakeable, final_call, weatherproof, triple_threat, familiar_face,
+        well_rounded
+    ]
+    for badge in badges:
+        db.add(badge)
+
+    db.commit()
+
 #Price based on number of reservations
 def calculate_price(reservations: int) -> float:
     base_price = (250/reservations) ** (2/3)
@@ -373,6 +403,7 @@ def seed_tables():
         update_streaks(db=db)
         seed_record(db=db)
         seed_forecast(db=db)
+        seed_badges(db=db)
     print("Seeding complete")
 
 if __name__ == "__main__":
