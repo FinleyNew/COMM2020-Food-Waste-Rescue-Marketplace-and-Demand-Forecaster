@@ -1,4 +1,5 @@
 from app.services import reservation as reservation_service
+from app.crud import record as record_crud
 import pytest
 from unittest.mock import MagicMock
 from  app.models.enums import ReservationStatus
@@ -96,7 +97,7 @@ def test_no_show_count(mock_db):
     
     
     reservation_crud.get_reservations_by_posting = MagicMock(return_value=reservations)
-    no_show_count = reservation_service.get_no_show(posting_id=201, db=mock_db)
+    no_show_count = record_crud.get_no_show(posting_id=201, db=mock_db)
 
     
     assert no_show_count == 2

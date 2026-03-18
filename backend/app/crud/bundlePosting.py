@@ -6,6 +6,8 @@ from app.models import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
 from app.models.enums import BundleStatus, Category
 from psycopg.types.range import Range
+from app.models.enums import BundleStatus
+from sqlalchemy import func
 
 from app.models.seller import Seller
 
@@ -35,6 +37,13 @@ def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosti
 def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
+
+def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
+    statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status.in_([BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])) # type: ignore
+    return db.exec(statement).all()
+
+def set_expired(bundle_posting: BundlePosting, db: Session):
+    bundle_posting.status = BundleStatus.EXPIRED
 
 # The crud function for getting a specific bundle posting
 def get_bundle_posting(posting_id: int, db: Session, lock: bool) -> BundlePosting:

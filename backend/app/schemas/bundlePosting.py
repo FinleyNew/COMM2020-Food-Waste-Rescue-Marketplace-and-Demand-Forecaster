@@ -12,7 +12,7 @@ from app.schemas.seller import SellerSummary
 class BundlePostingBase(SQLModel):
     user_id: int
     category: Category
-    allergens: str
+    allergens: str | None
     # Can't have a negative ammount of bundles
     available: int = Field(ge=0) 
     # Price should only have 2 decimal places
