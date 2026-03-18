@@ -6,6 +6,7 @@ from app.models.record import Record
 from app.models.bundlePosting import BundlePosting
 from app.schemas.record import RecordAdminUpdate, RecordCreate
 from app.crud import record as record_crud
+from random import randint
 
 def get_all_records(db: Session) -> Sequence[Record]:
     return record_crud.get_all_records(db=db)
@@ -24,7 +25,11 @@ def update_record(record_id: int, record_update: RecordAdminUpdate, db: Session)
 # The service function for creating a record
 # Not currently in use
 def create_record(bundle_posting: BundlePosting, db: Session) -> Record:
-    posting_id = BundlePosting.posting_id
-    if not posting_id:
-        raise Exception("Posting does not exist")
-    return record_crud.create_record(bundle_posting=bundle_posting, posting_id=posting_id, db=db)
+    latitude = bundle_posting.seller.latitude
+    longitude = bundle_posting.seller.longitude
+    return record_crud.create_record(bundle_posting=bundle_posting, latitude=latitude, longitude=longitude, db=db)
+
+
+    
+def delete_record(record_id: int, db: Session):
+    record_crud.delete_record(record_id=record_id, db=db)

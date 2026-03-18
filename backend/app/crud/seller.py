@@ -7,8 +7,8 @@ def get_all_sellers(db: Session) -> Sequence[Seller]:
     statement = select(Seller)
     return db.exec(statement).all()
     
-def create_seller(seller_in: SellerCreate, user_id: int, db: Session) -> Seller:
-    db_seller = Seller.model_validate(seller_in, update={"user_id": user_id})
+def create_seller(seller_in: SellerCreate, longitude: float | None, latitude: float | None, user_id: int, db: Session) -> Seller:
+    db_seller = Seller.model_validate(seller_in, update={"user_id": user_id, "longitude": longitude, "latitude": latitude})
     db.add(db_seller)
     db.flush()
     db.refresh(db_seller)
