@@ -68,7 +68,7 @@ function CurrentBundles() {
     const API_URL = import.meta.env.VITE_API_URL;
     if (!window.confirm("Delete this bundle?")) return;
     
-    axios.delete(`${API_URL}/api/v1/bundles/${postingID}`, {
+    axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
       headers:{
         Authorization: `Bearer ${token}`,
       }
@@ -82,7 +82,7 @@ function CurrentBundles() {
          console.error("Backend error detail:", err.response?.data);  // <-- add this
         console.error("Status:", err.response?.status);
     });
-    //window.location.reload();
+    window.location.reload();
     
     
 };
