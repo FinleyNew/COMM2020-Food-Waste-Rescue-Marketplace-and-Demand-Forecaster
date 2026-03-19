@@ -2,7 +2,7 @@ import httpx
 from sqlmodel import Session, select, col, func, extract, Time
 from typing import Sequence
 from datetime import datetime
-from app.models.enums import Category
+from app.models.enums import Category, ReservationStatus
 from app.models import Record
 from app.schemas.record import RecordAdminUpdate
 from app.models.bundlePosting import BundlePosting
@@ -27,6 +27,10 @@ def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_wi
 def get_record_by_id(record_id: int, db: Session):
     statement = select(Record).where(Record.record_id == record_id)
     return db.exec(statement).one()
+
+def get_records_by_consumer(consumer_id: int, db: Session) -> Sequence[Record]:
+    statement = select(Record).where(Record.user_id == consumer_id)
+    return db.exec(statement).all()
 
 def create_record(bundle_posting: BundlePosting, latitude: float | None, longitude: float | None, db: Session) -> Record:
     posting_id = BundlePosting.posting_id
