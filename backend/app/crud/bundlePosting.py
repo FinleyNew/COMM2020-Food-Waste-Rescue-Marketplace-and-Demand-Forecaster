@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import HTTPException
 from sqlmodel import Session, or_, select
 from typing import Sequence, Tuple
@@ -40,6 +40,10 @@ def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
 
 def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status.in_([BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])) # type: ignore
+    return db.exec(statement).all()
+
+def get_to_be_emailed_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
+    statement = select(BundlePosting).where(func.lower(BundlePosting.pickup_window) - timedelta(minutes=30) <= now).where(func.lower(BundlePosting.pickup_window) - timedelta(minutes=29) > now)
     return db.exec(statement).all()
 
 def set_expired(bundle_posting: BundlePosting, db: Session):
