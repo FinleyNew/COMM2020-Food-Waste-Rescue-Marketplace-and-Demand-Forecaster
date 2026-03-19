@@ -70,7 +70,7 @@ function Analytics() {
     <>
       <div className="analytics">
         {/* Initialises the navifation bar where sellers can move between pages */}
-          <nav class="row">
+          <nav class="navRow">
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
@@ -98,46 +98,52 @@ function Analytics() {
               ))
             }
           </section>
-          {/* Makes a grid structure with top row containing the company image and circle object with waste prevention stats */}
-          <div className="gridRow">
-            <img className="companyImage" src={Company}></img>
-            <div className="gridColumn">
-              <p className="bubbleText">Total Waste Prevented</p>
-              <div className="circleObject">
-                <img className="circleBubble" 
-                  src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
-                <p className="weight">{totalWeight}</p>
+          <div className="mainBox">
+            <div className="analyticsContent">
+              {/* Makes a grid structure with top row containing the company image and circle object with waste prevention stats */}
+              <div className="gridRow">
+                <img className="companyImage" src={Company}></img>
+                <div className="gridColumn">
+                  <p className="bubbleText">Total Waste Prevented</p>
+                  <div className="circleObject">
+                    <img className="circleBubble" 
+                      src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
+                    <p className="weight">{totalWeight}kg</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
-            <div className="gridRow">
-              {/*idx = index */}
-              <div className="barChart">
-                {chartData.map((item, idx) => (  
-                  <div key={idx} className="barContainer">
-                  <div className="barLabel">{item.label}</div>
-                  <div
-                    className="bar"
-                    style={{
-                      height: `${(item.value / maxValue) * 350}px`, // scale bar height
-                      backgroundColor: item.color
-                    }}
-                  >
-                <span className="barValue">{item.value}</span>
-              </div>
-              </div>
-                ))}
-              </div>
+              {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
+                <div className="gridRow">
+                  <div className="gridColumn">
+                    {/*idx = index */}
+                    <div className="barChart">
+                      {chartData.map((item, idx) => (  
+                        <div key={idx} className="barContainer">
+                        <div className="barLabel">{item.label}</div>
+                        <div
+                          className="bar"
+                          style={{
+                            height: `${(item.value / maxValue) * 350}px`, // scale bar height
+                            backgroundColor: item.color
+                          }}
+                        >
+                      <span className="barValue">{item.value}</span>
+                    </div>
+                    </div>
+                      ))}
+                    </div>
+                  </div>
                   <div className="gridColumn">
                     <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
                   </div>
+              </div>
+            </div>
           </div>
-      </div>
-      {noAnalytics && (
-          <p style={{color:"red"}}>
-                      No Analytics
-                  </p>)}
+        </div>
+        {noAnalytics && (
+            <p style={{color:"red"}}>
+                        No Analytics
+                    </p>)}
     </>
   );
 }
