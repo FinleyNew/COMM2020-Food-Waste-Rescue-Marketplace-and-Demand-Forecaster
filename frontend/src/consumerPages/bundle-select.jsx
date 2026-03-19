@@ -1,11 +1,11 @@
-import { Link, useParams } from "react-router-dom"; //to use the buttons to change to other pages
+import { Link, useNavigate, useParams } from "react-router-dom"; //to use the buttons to change to other pages
 import { useState, useEffect } from "react"; //to use the fetch, to make sure it only fetches once
 import './Discover.css' //links to the css page to move and size different components around
 import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png"; //here for the base images
 import axios from "axios";
 function BundleSelect() {
-
+  const navigate = useNavigate();
   const { id } = useParams(); //creates the ID variable to store the bundleID to navigate pages with it
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
@@ -32,14 +32,6 @@ function BundleSelect() {
     .catch(err => console.error(err)); //catches and displays any errors
   }, [id]) //this part means if ID changes the page reloades with the new information
 
-
-
-
-
-
-
-
- 
 
   if (!bundle) return <p>Loading bundle...</p>;
 
@@ -70,74 +62,64 @@ function BundleSelect() {
 
   return (
     <>
-      <nav className="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link> {/*This section holds all the links to the other pages and the settings page*/}
-        <Link to="/discover" className="button"><b>Discover</b></Link>
-        <Link to="/streaks" className="button"><b>Streaks</b></Link>
-        <Link to="/codes" className="button"><b>Codes</b></Link>
-
-        <details>
-          <summary>
-            <img
-              className="setting"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdndCKhAJ4SlVEaNCkA4U6BN4tDXZsRtxSw&s" //image for the settings page
-              alt="settings"
-            />
-          </summary>
-          <label>
-            <input type="checkbox" name="darkmode" />
-            Enable Dark Mode DOESNT WORK YET
-          </label>
-        </details>
-      </nav>
-
-      <h1 className="headline">Bundles</h1> {/* header for the bundles page */}
-
-      <section>
-        <div className="bundleEntry"> {/* the start for each bundle and inside this div holds all the info for the bundle */}
-          <div className="textBlock">
-            <img
-              src={Company}
-              alt="Company"
-              className="leftImg" 
-            />{/* holds the base company image */}
-            <div className="desc">
-              <p className="desc">Category - {bundle.category}</p> {/* displays the category, allergens and prices */}
-              <p className="desc">Allergens - {bundle.allergens}</p>
-              <p classname="desc">Price - £{bundle.price}</p>
-            </div>
+      <div className="discover">
+        <div className="pageHeading">
+          <nav className="navBundleRow">
+            <Link to="/discover" className="button"><b>Discover</b></Link> {/*This section holds all the links to the other pages*/}
+            <Link to="/streaks" className="button"><b>Streaks</b></Link>
+            <Link to="/codes" className="button"><b>Codes</b></Link>
+          </nav>
+          <div className="textHeading">
+            <h1>Bundles</h1> {/* header for the bundles page */}
           </div>
+      </div>
 
-          <div className="textBlock"> {/* each textbox defines a new rox for the bundle rectangle display  */}
-            <div className="desc">
-              <p className="desc">Date to Collect - {bundle.formatted_date}</p> {/* displays the formatted date and the time range */}
-              <p className="desc">Time to Collect - {bundle.formatted_time_range}</p>
-            </div>
-          </div>
-
-          <div className="formatter">
-            <img
-              src={Bundle}
-              alt="Bundle"
-              className="thumbnail" //holds the specific bundle image
-            />
-            <br></br>
-            <div className="formatter">
-            <button className="button" onClick={() => (openPopup(),createReservation(bundle.posting_id))}> {/* if the pay button is clicked it sends the information to the create reservation page */}
-              Pay
-            </button>
-
-            {Popup && (
-              <div className="popup open-popup" id="payment">
-                <h1>Payment Successful!</h1>  {/*if the button is clicked, open the pop up to pay*/}
-                <button className="button" onClick={closePopup}>Confirm</button>
+        <section>
+          <div className="mainBox">
+            <div className="bundleEntry"> {/* the start for each bundle and inside this div holds all the info for the bundle */}
+              <img
+                src={Bundle}
+                alt="Bundle"
+                className="rowImg"
+              />{/* holds the base company image */}
+              <div className="textBox">
+                <div className="bundleRow">
+                  <h1>Bundle Name</h1>
+                  <img
+                      src={Company}
+                      alt="Company"
+                      className="companyIcon" //holds the specific bundle image
+                    />
+                </div>
+                <div className="bundleRow">
+                  <div className="column">
+                    <p>Category: {bundle.category}</p> {/* displays the category, allergens and prices */}
+                    <p>Allergens: {bundle.allergens}</p>
+                    <p>Price: £{bundle.price}</p>
+                  </div>
+                  <div className="column">
+                    <p>Date to Collect: {bundle.formatted_date}</p> {/* displays the formatted date and the time range */}
+                    <p>Time to Collect: {bundle.formatted_time_range}</p>
+                  </div>
+                </div>
+                <br></br>
               </div>
-            )}
+              <div className="centerAlign">
+                <button className="payButton" onClick={() => (openPopup(),createReservation(bundle.posting_id))}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+                  Pay
+                </button>
+                <Link to="/discover" className="payButton">Back</Link>
+              </div>
+              {Popup && (
+                <div className="popup open-popup" id="payment">
+                  <h1>Payment Successful!</h1>  {/*if the button is clicked, open the pop up to pay*/}
+                  <button className="button" onClick={() => (closePopup,navigate("/discover"))}>Confirm</button>
+                </div>
+              )}
+            </div>
           </div>
-           
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </>
   );
 }

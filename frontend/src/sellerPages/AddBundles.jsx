@@ -1,7 +1,9 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import './AddBundles.css'
 import axios from "axios";
+
 function AddBundles() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("");
@@ -60,9 +62,9 @@ function AddBundles() {
       }
     })
       .catch(err => {
-          console.error("Request failed:", err);
-      });
-    
+          console.error("Backend error detail:", JSON.stringify(err.response?.data)); // <-- add this console.error("Status:", err.response?.status);
+      console.error("Status:", err.response?.status);
+      }); 
   }
   function forecastData(){
     const API_URL = import.meta.env.VITE_API_URL;
@@ -92,151 +94,141 @@ function AddBundles() {
       alert("Price must be positive and less than 100");
       return;
     }
-   
 
-      
     axios.post(`${API_URL}/api/v1/forecasts/`, data, {
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
-    }
+      }
     })
     .then(response => {
       setForecastData(response.data);
     })
     .catch(err => {
-      console.error("Request failed:", err);
-    });
-      
-      
-
-
-
+      console.error("Backend error detail:", err.response?.data); // <-- add this console.error("Status:", err.response?.status);
+      console.error("Status:", err.response?.status);
+    })
   }
-
-
-
-
-  
-  
-
-  
-
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav className="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
-        <Link to="/analytics" className="button"><b>Analytics</b></Link>
-        <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
-      </nav>
-    <div className="centreBox">
-      <div className="centreItems">
-          {/* Displays a header which states the name of the current page */}
-        <h1 className="headline">Add Bundles</h1>
-
-        <section>  
-          <div className="textBlock">
-            {/* Creates a drop down menu for the user to click a bundle category */}
-            <label htmlFor="category">Enter Bundle Category :</label>
-
-            <select
-              name="category"
-              id="category"
-              value={bundleCategory}
-              onChange={(e) => setBundleCategory(e.target.value)}
-            >
-            {/* List of options fo the user to choose from the menu */}
-            <option value="">Select Category</option>
-            <option value="Baked Goods">Baked Goods</option>
-            <option value="Fruit">Fruit</option>
-            <option value="Vegetables">Vegetables</option>
-            <option value="Meat">Meat</option>
-            <option value="Seafood">Seafood</option>
-            <option value="Snacks">Snacks</option>
-            <option value="Dairy">Dairy</option>
-            <option value="Drinks">Drinks</option>
-            </select>
-
-            {/* Creates a space in the page */}         
-            <br></br>
-
-            {/* Outputs an input box with a label asking for bundle allergen inputs */}
-            <label htmlFor="allergens">Enter Bundle Allergens :</label>
-            <input
-              id="allergens"
-              type="text"
-              value={bundleAllergens}
-              onChange={(e) => setBundleAllergens(e.target.value)}
-            />
-            {/* Creates a space in the page between boxes */}
-            <br></br>
-
-            {/* Makes an input box with a label to input the number of bundles to sell */}
-            <label htmlFor="numAvailable">Enter Number Available :</label>
-            <input
-              id="numAvailable"
-              type="number"
-              value={numberAvailable}
-              onChange={(e) => setNumberAvailable(e.target.value)}
-            />
-            {/* Creates a space in the page between boxes */}
-            <br></br>
-
-            {/* An input box with a label to input the bundle price */}
-            <label htmlFor="price">Enter Bundle Price :</label>
-            <input
-              id="price"
-              type="number"
-              value={bundlePrice}
-              onChange={(e) => setBundlePrice(e.target.value)}
-            />
-            {/* Creates a space in the page between boxes */}
-            <br></br>
-            
-            {/* Outputs an input box with a label asking for bundle weight */}
-            <label htmlFor="weight">Enter Bundle Weight :</label>
-            <input
-              id="weight"
-              type="number"
-              value={bundleWeight}
-              onChange={(e) => setBundleWeight(e.target.value)}
-            />
-            {/* Creates a space in the page between boxes */}
-            <br></br>
-            
-          {/* Outputs a drop down menu for the user to click a bundle collection time */}
-          <label htmlFor="collectionTime">Collection Time</label>
-          <select
-            id="collectionTime"
-            onChange={(e) => { {/* Divides the start and end time before saving them seperately */}
-              const[start,end] = e.target.value.split(" - ");
-              setStartTime(start);
-              setEndTime(end);
-            }}
-          >
-            {slots.map((slot,idx) =>(
-              <option key={idx} value={slot}>
-                {slot}
-              </option>
-            ))}
-          </select>
-            <br></br>
-            {/* Button to add bundles when clicked and forecast the data */}
-            <button onClick={addBundle}>Add Bundle</button>
-            <br></br>
-            <button type="button" onClick={forecastData}>Forecast Data</button>
+      {/* Initialises the navifation bar where sellers can move between pages */}
+      <div className="addBundles">
+        <div className="pageHeading">
+          <nav className="navRow">
+            <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
+            <Link to="/analytics" className="button"><b>Analytics</b></Link>
+            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
+          </nav>
+          <div className="textHeading">
+            <h1>Add Bundles</h1> 
           </div>
-        </section>
-        {/* Section with forecast data on added bundle with probabilities */}
-        <section>
-          <h4>Forecasts</h4>
-              <p>Predicted Reservations : {data.predicted_reservations}</p>
-              <p>No Show Probability : {data.predicted_no_show_prob}</p>
-        </section>
+        </div>
+        <div className="mainBox">
+          <div className="bundleEntry"> 
+            {/* Displays a header which states the name of the current page */}
+            <h1>Add Bundles</h1>
+              <div className="textBox">
+                <div className="row">
+                  {/* Creates a drop down menu for the user to click a bundle category */}
+                  <label htmlFor="category">Enter Bundle Category : </label>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {/* List of options fo the user to choose from the menu */}
+                  <option value="">Select Category</option>
+                  <option value="Baked Goods">Baked Goods</option>
+                  <option value="Fruit">Fruit</option>
+                  <option value="Vegetables">Vegetables</option>
+                  <option value="Meat">Meat</option>
+                  <option value="Seafood">Seafood</option>
+                  <option value="Snacks">Snacks</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Drinks">Drinks</option>
+                  </select>
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                  <label htmlFor="allergens">Enter Bundle Allergens : </label>
+                  <input
+                    id="allergens"
+                    type="text"
+                    value={bundleAllergens}
+                    onChange={(e) => setBundleAllergens(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Makes an input box with a label to input the number of bundles to sell */}
+                  <label htmlFor="numAvailable">Enter Number Available : </label>
+                  <input
+                    id="numAvailable"
+                    type="number"
+                    value={numberAvailable}
+                    onChange={(e) => setNumberAvailable(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* An input box with a label to input the bundle price */}
+                  <label htmlFor="price">Enter Bundle Price : </label>
+                  <input
+                    id="price"
+                    type="number"
+                    value={bundlePrice}
+                    onChange={(e) => setBundlePrice(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Outputs an input box with a label asking for bundle weight */}
+                  <label htmlFor="weight">Enter Bundle Weight : </label>
+                  <input
+                    id="weight"
+                    type="number"
+                    value={bundleWeight}
+                    onChange={(e) => setBundleWeight(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Outputs a drop down menu for the user to click a bundle collection time */}
+                  <label htmlFor="collectionTime">Collection Time: </label>
+                  {/* Divides the start and end time before saving them seperately */}
+                  <select
+                    id="collectionTime"
+                    onChange={(e) => {
+                      const[start,end] = e.target.value.split(" - ");
+                      setStartTime(start);
+                      setEndTime(end);
+                    }}
+                  >
+                    {slots.map((slot,idx) =>(
+                      <option key={idx} value={slot}>
+                        {slot}
+                      </option>
+                    ))}
+                  </select>
+                    {/* Button to add bundles when clicked and forecast the data */}
+                </div>
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  <button className="boxButton" onClick={addBundle}>Add Bundle</button>
+                  <button className="boxButton" onClick={forecastData}>Forecast Data</button>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
-    </div>
     </>
   );
 }

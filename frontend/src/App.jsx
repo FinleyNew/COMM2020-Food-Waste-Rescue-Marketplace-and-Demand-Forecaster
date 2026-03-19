@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"; //importing state so we can use it to change the state of the react page when anything changes
-import { Routes, Route, Link } from "react-router-dom"; //needs to be imported so we can add routes between pages
+import { Routes, Route, Link, Navigate } from "react-router-dom"; //needs to be imported so we can add routes between pages
 import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
 //import './App.css'
 import "./index.css"
+import SettingsIcon from "./assets/SettingsIcon.png";
 // Pages (ensure the file names match exactly)
 import Discover from "./consumerPages/Discover"; //every import allows a page to be accessed via the url from another page
 import BundleSelect from "./consumerPages/bundle-select";
@@ -18,11 +19,57 @@ import Testing from "./adminPages/testing";
 import ViewReports from "./adminPages/ViewReports";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
+import axios from "axios";
+
 //|{" "}
 
 function App() {
-
+  const [settingsPopup, settingsSetPopup] = useState(false);
   const[darkMode, setDarkMode] = useState(false); //store the variable for the current state
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
+  const [LSLocation,setLSLocation] = useState(localStorage.getItem('location'));
+  const LScompanyName = localStorage.getItem('companyName');
+  const LSopeningHours = localStorage.getItem('openingHours');
+  const [updateDetails, setUpdateDetails] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [location, setLocation] = useState("");
+  let  correctRole = "";
+  const [companyName, setCompanyName] = useState("");
+
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+  const [sellerData, setSellerData] = useState(null);
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+  
+  const toMinutes = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const validTimeFormat =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime);
+
+  const timeValidForSeller = 
+  
+    validTimeFormat && toMinutes(closingTime) > toMinutes(openingTime)
+    
+
+  
+  const validTime =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime) &&
+    toMinutes(closingTime) > toMinutes(openingTime);
+  
+    const invalidTime =
+    validTimeFormat &&
+    toMinutes(closingTime) <= toMinutes(openingTime);
+
+
+
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => { //update the page if the theme is changed
     const savedTheme = localStorage.getItem("theme"); //store the theme in local storage
 
@@ -47,7 +94,93 @@ function App() {
   const savedUser = localStorage.getItem("user"); //reads from local storage under the key of user
   return savedUser ? JSON.parse(savedUser) : null; //if thertes something in local storage, if yes the parse converts back to a js object
   });
+  function settingsClickPopup() {
+    settingsSetPopup(!settingsPopup); //if variable is true then popUp needs to be opened 
+  }
+
+  function settingsClosePopup() {
+    settingsSetPopup(false); //if variable is false then popUp needs to be closed
+  }
+  function deleteAccount(){
+      if(role=="seller"){
+        correctRole = "sellers";
+      }
+      else if(role=="consumer"){
+        correctRole="consumers"
+      }
+      const token = localStorage.getItem('token');
+      if (!window.confirm("Delete account?")) return;
+      console.log(role);
+    axios.delete(`${API_URL}/api/v1/${correctRole}/me`, {
+      headers : {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log("Deleted:", response.data);
+      alert("Bundle deleted");
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        alert("No data ");
+    });
     
+  }
+
+  
+    //to show in the settings menu
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+    axios.get(`${API_URL}/api/v1/sellers/me`, {
+      headers : {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(response => {
+       setSellerData(response.data);
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        alert("No data ");
+    });
+    },[role])
+  
+
+
+  function handleUpdateDetails() {
+    //open a pop up then chance email or username, and password?
+    setUpdateDetails(true);
+  }
+
+  function completeUpdatedDetails() {
+    const token = localStorage.getItem('token');
+
+  axios.patch(`${API_URL}/api/v1/sellers/me`, 
+    {
+      name: companyName,
+      location: location,
+      opening_hours: `${openingTime} - ${closingTime}`
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  .then(res => {
+    console.log("Updated:", res.data);
+    alert("Details updated successfully");
+    localStorage.setItem("location",location);
+    setLSLocation(location);
+    setUpdateDetails(false); // close form
+  })
+  .catch(err => {
+    console.error("Update failed:", err.response?.data || err.message);
+    alert("Failed to update details");
+  });
+  }
+    
+  
 
   return (
     <>
@@ -79,15 +212,108 @@ function App() {
         
         
       </Routes>
-      
-      <div>
-        <button className="dark-mode-btn" onClick={toggleDarkMode} >
-          {darkMode ? "Light Mode" : "Dark Mode"} 
-        </button>
-      </div>
-      
-      
-      
+      <button className="dark-mode-btn" onClick={settingsClickPopup}>
+        <img src={SettingsIcon} className="settingsIcon" alt="Settings"></img>
+      </button>
+      {settingsPopup && (
+        <div className="settingsPopup settingsOpenPopup">
+          {location.pathname === "/login" ? (
+          <div>
+            <h1>Please login to an account to access settings</h1>
+            <input
+              type="checkbox"
+              id="darkModeToggle"
+              checked={darkMode}
+              onChange={toggleDarkMode}
+            />
+            <label htmlFor="darkModeToggle">
+              {darkMode ? "Dark Mode" : "Light Mode"}
+            </label> 
+            </div>) : (
+            <>
+              <h1>Settings</h1>
+              <p>Account Details:</p>
+              <div className="settingsTextBox">
+                <p>Email: {username}</p>
+                <p>Account Type: {role}</p>
+                {role === "seller" && (
+                  <>
+                  <p>Company Name: {sellerData?.name}</p>
+                  <p>Location: {sellerData?.location}</p>
+                  <p>Opening Hours: {sellerData?.opening_hours}</p>
+                  </>
+                )}
+              </div>
+              <Link to="/login" className="signOutButton" onClick={(settingsClosePopup)}><b>Sign Out</b></Link>
+              <br></br>
+              <button onClick={deleteAccount}>Delete Account</button>
+              {role==="seller" && (
+                <button onClick={handleUpdateDetails}>Update Details</button>
+              )}
+              {updateDetails===true && (
+                <>
+                    <div className="rowRegister">
+                    <p>Name: </p>
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      />
+                  </div>
+                    <div className="rowRegister">
+                    <p>Location: </p>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      />
+                      <h3>Times must be in the format HH:MM</h3>
+                  </div>
+                  <div className="rowRegister">
+                    <p>Opening Time : </p>
+                    <input
+                      type="text"
+                      value={openingTime}
+                      onChange={(e) => setOpeningTime(e.target.value)}
+                      />
+                  </div>
+                  <div className="rowRegister">
+                    <p>Closing Time : </p>
+                    <input
+                      type="text"
+                      value={closingTime}
+                      onChange={(e) => setClosingTime(e.target.value)}
+                      />
+                  </div>
+
+                  <button onClick={completeUpdatedDetails} //was close popup
+                              disabled={!timeValidForSeller || !location || !companyName}
+                              >Update Details</button>
+                    </>
+              )}
+              
+              
+              
+              <br></br>
+              <p>Accessibility:</p>
+              <div className="settingsRow">
+                <input
+                  type="checkbox"
+                  id="darkModeToggle"
+                  checked={darkMode}
+                  onChange={toggleDarkMode}
+                />
+                <label htmlFor="darkModeToggle">
+                  {darkMode ? "Dark Mode" : "Light Mode"}
+                </label>
+              </div>
+              <br></br>
+              <br></br>
+              <button className="settingsButton" onClick={settingsClosePopup}>Back</button>
+            </>
+            )}
+        </div>
+      )}
     </>
   );
 }

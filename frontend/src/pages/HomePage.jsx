@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import "../HomePage.css" //Imports the css file that defines class structures
 function Home() {
   return (
-    <div>
+    <div className="homePage">
       <nav>
         
         <Link to="/login">LoginPage</Link> {/*Creates a link that directs to the login page when clicked reading LoginPage*/}

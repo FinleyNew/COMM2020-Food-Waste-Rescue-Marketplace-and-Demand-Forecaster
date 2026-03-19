@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import './Discover.css'
+import './Streaks.css'
+import noBadge from "../assets/NoBadge.png";
 import axios from "axios";
 function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -24,34 +25,136 @@ function Streaks() {
     });
   },[]) //allows the page to rerender if anything changes
 
-
-
-
   return (
       <>
-        <nav class="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
-        <Link to="/codes" className="button"><b>Codes</b></Link>
-      </nav>
-      <h1 className="headline">Streaks</h1>
-      {bundle && (
-        <div>
-          <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
+        <div className="streaks">
+          <div className="pageHeading">
+            <nav className="navRow">
+              <Link to="/discover" className="button"><b>Discover</b></Link> {/* displays the links to the other pages */}
+              <Link to="/codes" className="button"><b>Codes</b></Link>
+            </nav>
+            <div className="textHeading">
+              <h1>Streaks</h1>
+            </div>
+          </div>
+          <div className="mainBox">
+            <div className="streaksEntry">
+              {bundle && (
+                <div>
+                  <p className="textCentre">{bundle.display_name} has rescued for {bundle.streak} week(s) in a row!</p><hr></hr> {/* message to display the streak */}
+                </div>
+              )}
+              <div className="textBox">
+                <p>Summary PIS</p> {/* summary statement */}
+              </div>
+              <p className="textCentre">Badges</p>
+              <div className="rowIcons">
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+              </div>
+              <div className="rowIcons">
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+              </div>
+              <div className="rowIcons">
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+              </div>
+              <div className="rowIcons">
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+                <div className="badges">
+                  <div className="icon" src={noBadge}></div>
+                  <div className="hoverDesc">
+                    Badge is Locked
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-      <div className="rowIcons">
-        <p className="headline">Badges:</p>
-        <img className="icon" src="https://thumbs.dreamstime.com/b/modern-bronze-circle-metal-badges-labels-design-elements-vector-illustration-84952346.jpg" alt="Bronze Badge"/>   
-        <img className="icon" src="https://img.favpng.com/11/16/23/gold-medal-silver-medal-illustration-png-favpng-vJK1hRCuK1bUdtG0Hb4dJ7VkU.jpg" alt="Silver Badge"/>   
-        <img className="icon" src="https://www.onlygfx.com/wp-content/uploads/2022/04/blank-gold-badge-label-2.png" alt="Gold Badge"/>   {/* badge images */}
-      </div>
-      <hr></hr>
-      <p>Summary PIS</p> {/* summary statement */}
-
-      
-
-
       </>
     );
 }

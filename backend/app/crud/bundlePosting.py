@@ -1,15 +1,13 @@
 from datetime import datetime, timedelta
 from fastapi import HTTPException
-from sqlmodel import Session, or_, select
+from sqlmodel import Session, select
 from typing import Sequence, Tuple
 from app.models import BundlePosting
 from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
-from app.models.enums import BundleStatus, Category
+from app.models.enums import BundleStatus
 from psycopg.types.range import Range
 from app.models.enums import BundleStatus
 from sqlalchemy import func
-
-from app.models.seller import Seller
 
 # The crud function for creating a new bundle posting
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window: str, db: Session) -> BundlePosting:
@@ -23,14 +21,6 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_
 # The crud function for getting all available bundle postings
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)
-    return db.exec(statement).all()
-
-def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
-    search = f"%{query}%"  # % is SQL wildcard
-    matching_categories = [
-    c for c in Category 
-    if query.lower() in c.value.lower() or c.value.lower() in query.lower()]
-    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category.in_(matching_categories), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
 # The crud function for getting all bundles
