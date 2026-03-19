@@ -13,6 +13,8 @@ class Seller(SQLModel, table=True):
     name: str
     location: str
     opening_hours: str
+    latitude: float | None = None
+    longitude: float | None = None
 
     # These are automatic relationships to other tables
     user: "User" = Relationship(back_populates="seller")
