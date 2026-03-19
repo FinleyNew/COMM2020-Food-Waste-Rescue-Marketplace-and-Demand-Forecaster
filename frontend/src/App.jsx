@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"; //importing state so we can use it to change the state of the react page when anything changes
-import { Routes, Route, Link } from "react-router-dom"; //needs to be imported so we can add routes between pages
+import { Routes, Route, Link, Navigate } from "react-router-dom"; //needs to be imported so we can add routes between pages
 import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
 //import './App.css'
 import "./index.css"
@@ -19,11 +19,57 @@ import Testing from "./adminPages/testing";
 import ViewReports from "./adminPages/ViewReports";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
+import axios from "axios";
+
 //|{" "}
 
 function App() {
   const [settingsPopup, settingsSetPopup] = useState(false);
   const[darkMode, setDarkMode] = useState(false); //store the variable for the current state
+  const username = localStorage.getItem('username');
+  const role = localStorage.getItem('role');
+  const [LSLocation,setLSLocation] = useState(localStorage.getItem('location'));
+  const LScompanyName = localStorage.getItem('companyName');
+  const LSopeningHours = localStorage.getItem('openingHours');
+  const [updateDetails, setUpdateDetails] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [location, setLocation] = useState("");
+
+  const [companyName, setCompanyName] = useState("");
+
+  const [openingTime, setOpeningTime] = useState("");
+  const [closingTime, setClosingTime] = useState("");
+  const [sellerData, setSellerData] = useState(null);
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+  
+  const toMinutes = (time) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const validTimeFormat =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime);
+
+  const timeValidForSeller = 
+  
+    validTimeFormat && toMinutes(closingTime) > toMinutes(openingTime)
+    
+
+  
+  const validTime =
+    timeRegex.test(openingTime) &&
+    timeRegex.test(closingTime) &&
+    toMinutes(closingTime) > toMinutes(openingTime);
+  
+    const invalidTime =
+    validTimeFormat &&
+    toMinutes(closingTime) <= toMinutes(openingTime);
+
+
+
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => { //update the page if the theme is changed
     const savedTheme = localStorage.getItem("theme"); //store the theme in local storage
 
@@ -55,7 +101,80 @@ function App() {
   function settingsClosePopup() {
     settingsSetPopup(false); //if variable is false then popUp needs to be closed
   }
+  function deleteAccount(){
+      const token = localStorage.getItem('token');
+      if (!window.confirm("Delete account?")) return;
+
+    axios.delete(`${API_URL}/api/v1/consumers/me`, {
+      headers : {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log("Deleted:", response.data);
+      alert("Bundle deleted");
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        alert("No data ");
+    });
     
+  }
+
+  
+    //to show in the settings menu
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+    axios.get(`${API_URL}/api/v1/sellers/me`, {
+      headers : {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+    .then(response => {
+       setSellerData(response.data);
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        alert("No data ");
+    });
+    },[role])
+  
+
+
+  function handleUpdateDetails() {
+    //open a pop up then chance email or username, and password?
+    setUpdateDetails(true);
+  }
+
+  function completeUpdatedDetails() {
+    const token = localStorage.getItem('token');
+
+  axios.patch(`${API_URL}/api/v1/sellers/me`, 
+    {
+      name: companyName,
+      location: location,
+      opening_hours: `${openingTime} - ${closingTime}`
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  .then(res => {
+    console.log("Updated:", res.data);
+    alert("Details updated successfully");
+    localStorage.setItem("location",location);
+    setLSLocation(location);
+    setUpdateDetails(false); // close form
+  })
+  .catch(err => {
+    console.error("Update failed:", err.response?.data || err.message);
+    alert("Failed to update details");
+  });
+  }
+    
+  
 
   return (
     <>
@@ -109,10 +228,65 @@ function App() {
               <h1>Settings</h1>
               <p>Account Details:</p>
               <div className="settingsTextBox">
-                <p>Username:</p>
-                <p>Account Type:</p>
+                <p>Email: {username}</p>
+                <p>Account Type: {role}</p>
+                {role === "seller" && (
+                  <>
+                  <p>Company Name: {sellerData?.name}</p>
+                  <p>Location: {sellerData?.location}</p>
+                  <p>Opening Hours: {sellerData?.opening_hours}</p>
+                  </>
+                )}
               </div>
               <Link to="/login" className="signOutButton" onClick={(settingsClosePopup)}><b>Sign Out</b></Link>
+              <button onClick={deleteAccount}>Delete Account</button>
+              {role==="seller" && (
+                <button onClick={handleUpdateDetails}>Update Details</button>
+              )}
+              {updateDetails===true && (
+                <>
+                    <div className="rowRegister">
+                    <p>Name: </p>
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      />
+                  </div>
+                    <div className="rowRegister">
+                    <p>Location: </p>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      />
+                      <h3>Times must be in the format HH:MM</h3>
+                  </div>
+                  <div className="rowRegister">
+                    <p>Opening Time : </p>
+                    <input
+                      type="text"
+                      value={openingTime}
+                      onChange={(e) => setOpeningTime(e.target.value)}
+                      />
+                  </div>
+                  <div className="rowRegister">
+                    <p>Closing Time : </p>
+                    <input
+                      type="text"
+                      value={closingTime}
+                      onChange={(e) => setClosingTime(e.target.value)}
+                      />
+                  </div>
+
+                  <button onClick={completeUpdatedDetails} //was close popup
+                              disabled={!timeValidForSeller || !location || !companyName}
+                              >Update Details</button>
+                    </>
+              )}
+              
+              
+              
               <br></br>
               <p>Accessibility:</p>
               <div className="settingsRow">
