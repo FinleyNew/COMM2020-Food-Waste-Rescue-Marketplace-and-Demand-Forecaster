@@ -1,11 +1,11 @@
 from app.models.bundlePosting import BundlePosting
-from sqlmodel import Session, select, col
+from sqlmodel import Session, func, select, col
 from typing import Sequence
 from sqlalchemy.exc import IntegrityError
 from app.models import Reservation
 from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationCreate
-from app.models.enums import ReservationStatus
+from app.models.enums import Category, ReservationStatus
 from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
 
 def get_all_reservations(db: Session) -> Sequence[Reservation]:
@@ -52,8 +52,36 @@ def get_reservation_by_claim_code(claim_code: str, db: Session) -> Reservation |
     statement = select(Reservation).where(Reservation.claim_code == claim_code)
     return db.exec(statement).first()
 
+def get_consumers_collected_reservations(consumer_id: int, db: Session) -> Sequence[Reservation]:
+    statement = select(Reservation).where(Reservation.user_id == consumer_id).where(Reservation.status == ReservationStatus.COLLECTED).order_by(Reservation.timestamp.desc())
+    return db.exec(statement).all()
+
+def check_familiar_face(consumer_id: int, db: Session) -> bool:
+    result = db.exec(
+        select(BundlePosting.user_id)
+        .join(Reservation, Reservation.posting_id == BundlePosting.posting_id)
+        .where(Reservation.user_id == consumer_id)
+        .where(Reservation.status == ReservationStatus.COLLECTED)
+        .group_by(BundlePosting.user_id)
+        .having(func.count(BundlePosting.user_id) >= 3)
+    ).first()
+
+    return result is not None
+
+def check_well_rounded(consumer_id: int, db: Session) -> bool:
+    result = db.exec(
+        select(BundlePosting.category)
+        .join(Reservation, Reservation.posting_id == BundlePosting.posting_id)
+        .where(Reservation.user_id == consumer_id)
+        .where(Reservation.status == ReservationStatus.COLLECTED)
+        .distinct()
+    ).all()
+
+    return len(result) >= len(Category)
+
 def set_no_show(reservation: Reservation, db: Session):
     reservation.status = ReservationStatus.NO_SHOW
+
 
 # Crud function for deleting a reservation
 # Currently not in use
