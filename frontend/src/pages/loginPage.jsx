@@ -27,6 +27,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
   const [accountError, setAccountError] = useState(""); // <-- new
   const [loginError, setLoginError] = useState(""); // <-- new
+  
 
   const validPassword = passwordRegex.test(password);
   const [agree, setAgree] = useState(false);
@@ -152,8 +153,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             username: username,
             role: "consumer"
           });
-
+          localStorage.setItem("username",username);
+          localStorage.setItem("role","consumer")
           localStorage.setItem("token", token);
+          
           navigate("/discover");
 
         } else if (role === "seller") {
@@ -161,8 +164,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             username: username,
             role: "seller"
           });
-
+          localStorage.setItem("username",username);
+          localStorage.setItem("role","seller")
           localStorage.setItem("token", token);
+          
+          console.log(openingHours);
           navigate("/current-bundles");
 
         } else {
