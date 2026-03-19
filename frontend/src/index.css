@@ -71,6 +71,8 @@ body {
   background-color: var(--bg-container);
   border: 8px solid var(--border-colour);
   border-radius: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 .settingsPopup h1{
   color: var(--text-colour);
