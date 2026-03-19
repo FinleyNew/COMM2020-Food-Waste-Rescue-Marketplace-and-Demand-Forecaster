@@ -1,7 +1,6 @@
 /* Spaces out contents of section tag and adds a background colour*/
 .analytics section{
     display: flex;
-    justify-content: row;
     gap: 200px;
     background-color: rgb(81, 155, 81);
 }
@@ -9,7 +8,7 @@
 .analytics .navRow{
     grid-column: 1;
     gap: 10px;
-    width: 500px;
+    width: 515px;
     background-color: var(--bg-container);
     border: 4px solid var(--border-colour);
     padding: 8px;
@@ -52,7 +51,7 @@
     text-align: center;
     display: inline-block;
     font-size: 16px;
-    margin: 0px;
+    margin: 5px;
     cursor: pointer;
     border-radius: 5px;
     text-decoration: none;
@@ -69,9 +68,9 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   padding: 20px;
-  gap: 20px;
+  gap: 300px;
 }
 /* Formatting for an image */
 .analytics .companyImage{
@@ -87,7 +86,6 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
-  flex: 1;
   min-width: 200px;
 }
 /* Aligns text inside the bubble object*/
@@ -129,7 +127,9 @@
 .analytics .barChart {
   display: flex;
   gap: 40px;
+  justify-content: center;
   align-items: flex-end;
+  width: auto;
   margin-top: 20px;
 }
 /* Container for the analytics bar chart giving spacings*/

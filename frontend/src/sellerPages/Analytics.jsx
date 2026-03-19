@@ -113,29 +113,29 @@ function Analytics() {
                 </div>
               </div>
               {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
-                <div className="gridRow">
-                  <div className="gridColumn">
-                    {/*idx = index */}
-                    <div className="barChart">
-                      {chartData.map((item, idx) => (  
-                        <div key={idx} className="barContainer">
-                        <div className="barLabel">{item.label}</div>
-                        <div
-                          className="bar"
-                          style={{
-                            height: `${(item.value / maxValue) * 350}px`, // scale bar height
-                            backgroundColor: item.color
-                          }}
-                        >
-                      <span className="barValue">{item.value}</span>
-                    </div>
-                    </div>
-                      ))}
-                    </div>
+              <div className="gridRow">
+                <div className="gridColumn">
+                  {/*idx = index */}
+                  <div className="barChart">
+                    {chartData.map((item, idx) => (  
+                      <div key={idx} className="barContainer">
+                      <div className="barLabel">{item.label}</div>
+                      <div
+                        className="bar"
+                        style={{
+                          height: `${(item.value / maxValue) * 350}px`, // scale bar height
+                          backgroundColor: item.color
+                        }}
+                      >
+                    <span className="barValue">{item.value}</span>
                   </div>
-                  <div className="gridColumn">
-                    <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
                   </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="gridColumn">
+                  <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+                </div>
               </div>
             </div>
           </div>
