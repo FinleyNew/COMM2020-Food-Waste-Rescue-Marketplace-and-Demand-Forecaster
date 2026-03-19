@@ -11,6 +11,7 @@ from app.models.enums import ReservationStatus
 from app.crud.reservation import set_no_show
 from app.services import record as record_service
 from app.services import email as email_service
+from app.core.config import settings
 
 scheduler = AsyncIOScheduler()
 
@@ -19,10 +20,11 @@ def start_scheduler():
         check_expired_postings,
         IntervalTrigger(minutes=1),
     )
-    scheduler.add_job(
-        email_notifications,
-        IntervalTrigger(minutes=1)
-    )
+    if settings.SENDGRID_API_KEY != "":
+        scheduler.add_job(
+            email_notifications,
+            IntervalTrigger(minutes=1)
+        )
     scheduler.start()
 
 def stop_scheduler():
