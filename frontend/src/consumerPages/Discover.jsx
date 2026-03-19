@@ -1,5 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import './Discover.css'
 import axios from "axios";
 import Company from "../assets/Company.png";
@@ -7,31 +7,58 @@ import Bundle from "../assets/BundleImage.png";
 function Discover() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //defines the state and variable that allows the react page to be rerendered when called
+  const [query, setQuery] = useState("");
+  const searchTimeout = useRef(null);
+  const fetchAllBundles = () => {
+    axios.get(`${API_URL}/api/v1/bundles/`, {
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => setBundles(res.data))
+    .catch(err => console.error("Error fetching bundles:", err));
+  };
 
- 
+  useEffect(() => {
+    fetchAllBundles();
+  },[])
 
+    
 
-
-    useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
+    const searchBundles = (searchTerm) => {
       
-      axios.get(`${API_URL}/api/v1/bundles/`,{
+      
+     axios.get(`${API_URL}/api/v1/bundles/?query=${encodeURIComponent(searchTerm)}`,{
         headers:{
           "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
         }
       })
       .then(response => {
         setBundles(response.data); //updates the react state so the page can rerender with the new info
+        
       })
       .catch(err => {
           console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
-          alert("No data ");
+          setBundles([]);
         });
-    }, [])
-
-
+    };
+    
+    const handleSearchChange = (e) => {
+      const value = e.target.value;
+      setQuery(value);
+      clearTimeout(searchTimeout.current);
+      searchTimeout.current = setTimeout(() => {
+        if(value.trim().length > 0){
+        searchBundles(value);
+      }
+      else{
+        fetchAllBundles();
+      }
+      }, 300);
+      
+    }
 
   return (
     <>
+    
       <div className="discover">
         <div className="pageHeading">
           <nav class="navRow">
@@ -49,10 +76,15 @@ function Discover() {
                 id="searchBundle"
                 type="text"
                 placeholder="Search"
+                value={query}
+                onChange={handleSearchChange}
               />
           </form>
+          
           <br></br>
-        </div>
+        
+          <div>
+
             {bundles.map(bundle => (
               <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
                   <div className="bundleEntry">
@@ -73,6 +105,11 @@ function Discover() {
                   </div>
                 </Link>
             ))}
+          </div>
+
+        
+        </div>
+            
         </div>
     </>
 );
