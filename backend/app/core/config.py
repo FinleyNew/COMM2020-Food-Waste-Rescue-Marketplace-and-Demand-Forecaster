@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     #Taken from .env
     SECRET_KEY: str = ""
 
+    OPENWEATHER_API_KEY: str = ""
+
+    SENDGRID_API_KEY: str = ""
+    SENDGRID_FROM_EMAIL: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

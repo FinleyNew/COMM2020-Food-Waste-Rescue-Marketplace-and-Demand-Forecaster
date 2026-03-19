@@ -6,6 +6,7 @@ from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
 from app.crud import reservation as reservation_crud
 from app.services.bundlePosting import get_bundle_posting, reserve_bundle_posting
 from app.models.enums import ReservationStatus
+from app.services.badge import check_at_reservation, check_at_collection
 
 def get_all_reservations(db: Session) -> Sequence[Reservation]:
     return reservation_crud.get_all_reservations(db=db)
@@ -22,8 +23,12 @@ def create_reservation(reservation_in: ReservationCreate, consumer_id: int, post
     
     reserve_bundle_posting(posting_id=posting_id, db=db)
 
+
     db.commit()
     db.refresh(new_reservation)
+
+    check_at_reservation(consumer_id=consumer_id, db=db)
+
     return new_reservation
 
 def update_reservation(reservation_id: int, reservation_update: ReservationAdminUpdate, db: Session) -> Reservation:
@@ -39,19 +44,12 @@ def collect_by_code(claim_code: str, db: Session) -> Reservation:
     db.add(reservation)
     db.commit()
     db.refresh(reservation)
+
+    check_at_collection(consumer_id=reservation.user_id, db=db)
+
     return reservation
 
 # The service function for deleting a reservation
 # Currently not in use
 def delete_reservation(reservation_id: int, db: Session):
     reservation_crud.delete_reservation(reservation_id=reservation_id, db=db)
-
-# The service function for getting the number of no shows for a specific posting
-# Used when creating a record
-def get_no_show(posting_id: int, db: Session) -> int:
-    no_show_count = 0
-    reservations: Sequence[Reservation] = reservation_crud.get_reservations_by_posting(posting_id=posting_id, db=db)
-    for reservation in reservations:
-        if reservation.status == "":
-            no_show_count += 1
-    return no_show_count
