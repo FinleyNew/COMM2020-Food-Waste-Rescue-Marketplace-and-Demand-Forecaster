@@ -33,9 +33,7 @@ function Discover() {
       })
       .then(response => {
         setBundles(response.data); //updates the react state so the page can rerender with the new info
-        console.log("Status:", response.status);
-        console.log("Data:", response.data);
-        console.log("Count:", response.data.length);
+        
       })
       .catch(err => {
           console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
