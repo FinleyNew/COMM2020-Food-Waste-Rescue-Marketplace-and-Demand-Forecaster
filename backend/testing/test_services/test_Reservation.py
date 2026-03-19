@@ -11,8 +11,8 @@ class SimplePosting:
         self.owner_id = owner_id
 
 class SimpleReservation:
-    def __init__(self, id, status, claim_code, posting):
-        self.id = id
+    def __init__(self, user_id, status, claim_code, posting):
+        self.id = user_id
         self.status = status
         self.claim_code = claim_code
         self.posting = posting
@@ -21,7 +21,7 @@ class SimpleReservation:
 def test_collection_with_valid_code_success(mock_db):
     post = SimplePosting(id=201, owner_id=2)
     res = SimpleReservation(
-        id=101, 
+        user_id=101, 
         status="PENDING", 
         claim_code="ABC123",
         posting=post
@@ -58,7 +58,7 @@ def test_collection_with_valid_code_success(mock_db):
 def test_collection_with_invalid_code(mock_db):
     post = SimplePosting(id=201, owner_id=2)
     res = SimpleReservation(
-        id=101, 
+        user_id=101, 
         status="PENDING", 
         claim_code="ABC123",
         posting=post
