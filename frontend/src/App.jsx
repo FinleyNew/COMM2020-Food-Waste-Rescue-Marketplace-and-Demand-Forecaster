@@ -239,6 +239,7 @@ function App() {
                 )}
               </div>
               <Link to="/login" className="signOutButton" onClick={(settingsClosePopup)}><b>Sign Out</b></Link>
+              <br></br>
               <button onClick={deleteAccount}>Delete Account</button>
               {role==="seller" && (
                 <button onClick={handleUpdateDetails}>Update Details</button>
