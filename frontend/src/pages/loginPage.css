@@ -99,3 +99,17 @@
 .loginPage .rowRegister input{
     width: 180px;
 }
+
+.loginPage .terms{
+    text-decoration: underline;
+    color: blue;
+}
+
+.loginPage .scrollBox{
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    height: 350px;
+    display: block;
+    text-align: left;
+}
