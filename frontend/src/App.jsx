@@ -34,7 +34,7 @@ function App() {
   const [updateDetails, setUpdateDetails] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [location, setLocation] = useState("");
-
+  let  correctRole = "";
   const [companyName, setCompanyName] = useState("");
 
   const [openingTime, setOpeningTime] = useState("");
@@ -102,10 +102,16 @@ function App() {
     settingsSetPopup(false); //if variable is false then popUp needs to be closed
   }
   function deleteAccount(){
+      if(role=="seller"){
+        correctRole = "sellers";
+      }
+      else if(role=="consumer"){
+        correctRole="consumers"
+      }
       const token = localStorage.getItem('token');
       if (!window.confirm("Delete account?")) return;
-
-    axios.delete(`${API_URL}/api/v1/consumers/me`, {
+      console.log(role);
+    axios.delete(`${API_URL}/api/v1/${correctRole}/me`, {
       headers : {
         "Authorization": `Bearer ${token}`
       }
