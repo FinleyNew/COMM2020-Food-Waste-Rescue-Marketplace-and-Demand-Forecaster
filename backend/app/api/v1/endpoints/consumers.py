@@ -4,6 +4,7 @@ from app.schemas.consumer import ConsumerAdminUpdate, ConsumerPublic, ConsumerUp
 from app.services import user as user_service
 from app.services import consumer as consumer_service
 from app.schemas.user import UserCreate
+from app.schemas.badge import BadgePublic
 
 router = APIRouter()
 
@@ -19,6 +20,10 @@ def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
 @router.get("/", response_model=list[ConsumerPublic])
 def get_all_consumers(current_user: AdminDep, db: SessionDep):
     return consumer_service.get_all_consumers(db=db)
+
+@router.get("/me/badges", response_model=list[BadgePublic])
+def get_current_consumers_badges(current_consumer: ConsumerDep, db: SessionDep):
+    return current_consumer.badges
 
 # Ednpoint for creating a new consumer
 @router.post("/", response_model = ConsumerPublic)

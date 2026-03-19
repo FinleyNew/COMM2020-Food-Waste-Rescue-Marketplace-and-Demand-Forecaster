@@ -40,6 +40,9 @@ class Settings(BaseSettings):
 
     OPENWEATHER_API_KEY: str = ""
 
+    SENDGRID_API_KEY: str = ""
+    SENDGRID_FROM_EMAIL: str = ""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
