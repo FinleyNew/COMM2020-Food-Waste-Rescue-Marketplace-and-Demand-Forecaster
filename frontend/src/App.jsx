@@ -15,7 +15,7 @@ import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
 import Forecasts from "./sellerPages/Forecasts";
 import DeploymentHistory from "./adminPages/DeploymentHistory";
-import Testing from "./adminPages/testing";
+import View_information from "./adminPages/view-informatiom";
 import ViewReports from "./adminPages/ViewReports";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
@@ -202,7 +202,7 @@ function App() {
 
 
         <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />
-        <Route path="/testing" element={<ProtectedRoute user={user} requireRole="admin"><Testing /></ProtectedRoute>} />
+        <Route path="/view-information" element={<ProtectedRoute user={user} requireRole="admin"><View_information /></ProtectedRoute>} />
         <Route path="/view-reports" element={<ProtectedRoute user={user} requireRole="admin"><ViewReports /></ProtectedRoute>} />
 
 

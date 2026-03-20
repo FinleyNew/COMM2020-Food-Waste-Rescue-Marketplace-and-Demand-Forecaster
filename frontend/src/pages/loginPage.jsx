@@ -172,7 +172,12 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           navigate("/current-bundles");
 
         } else {
-          console.error("unknown role");
+          setUser({
+            username: username,
+            role: "admin"
+          });
+          localStorage.setItem("token", token);
+          navigate("/view-information");
         }
 
       })

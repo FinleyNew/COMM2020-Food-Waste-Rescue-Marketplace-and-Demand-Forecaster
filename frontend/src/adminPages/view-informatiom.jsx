@@ -1,5 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
-function Testing() {
+function View_information() {
   return (
     <>
     {/* Initialises the navifation bar where sellers can move between pages */}
@@ -12,4 +12,4 @@ function Testing() {
   );
 }
 //exports the component so it can be imported in other files
-export default Testing
+export default View_information

@@ -5,7 +5,7 @@ function ViewReports() {
     {/* Initialises the navifation bar where sellers can move between pages */}
       <nav>
         <Link to="/login">Login Page</Link> |{" "}
-        <Link to="/testing">Testing</Link> |{" "}
+        <Link to="/view-information">View Information</Link> | {" "}
         <Link to="/deployment-history">Deployment History</Link>
       </nav>
     </>

@@ -6,7 +6,7 @@ function DeploymentHistory() {
       <nav>
         <Link to="/login">Login Page</Link> |{" "}
         <Link to="/view-reports">View Reports</Link> |{" "}
-        <Link to="/testing">Testing</Link>
+        <Link to="/view-information">View Information</Link>
       </nav>
     </>
   );
