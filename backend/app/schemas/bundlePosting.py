@@ -7,11 +7,13 @@ from pydantic import computed_field, model_validator
 
 from app.models.enums import BundleStatus
 from app.schemas.seller import SellerSummary
+from app.schemas.category import CategoryPublic
+from app.models.bundlePosting import Category
 
 # The base schema for bundle postings
 class BundlePostingBase(SQLModel):
     user_id: int
-    category_id: int
+    category: CategoryPublic
     allergens: str | None
     # Can't have a negative ammount of bundles
     available: int = Field(ge=0) 
@@ -34,8 +36,10 @@ class BundlePostingCreate(BundlePostingBase):
             raise ValueError("end_time must be after start_time")
         return self
     
+    model_config = {"from_attributes": True}
+    
 class BundlePostingUpdate(SQLModel):
-    category_id: int | None = None
+    category: CategoryPublic | None = None
     allergens: str | None = None
     available: int | None = Field(default=None, ge=0)
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
@@ -90,5 +94,6 @@ class BundlePostingPublic(BundlePostingBase):
         start: datetime = self.pickup_window.lower
         end: datetime = self.pickup_window.upper
         return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
+    
     
     model_config = {"from_attributes": True}

@@ -12,6 +12,3 @@ def create_category(category_in: CategoryCreate, db: Session) -> Category:
 
 def get_all_categories(db: Session) -> Sequence[Category]:
     return category_crud.get_all_categories(db=db)
-
-def delete_category(category_id: int, db: Session):
-    category_crud.delete_category(category_id=category_id, db=db)

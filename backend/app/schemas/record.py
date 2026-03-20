@@ -4,11 +4,13 @@ from typing import Any
 from pydantic import computed_field, model_validator
 from sqlmodel import Field, SQLModel
 
+from app.schemas.category import CategoryPublic
+
 # The base schema for Records
 class RecordBase(SQLModel):
     user_id: int
     posting_id: int
-    category: str
+    category: CategoryPublic
     # Price should have 2 decimal places and be greater than 0
     price: Decimal = Field(ge=0, decimal_places=2)
     raining: bool
@@ -31,7 +33,7 @@ class RecordCreate(RecordBase):
         return self
     
 class RecordAdminUpdate(SQLModel):
-    category: str | None = None
+    category_id: CategoryPublic | None = None
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
     raining: bool | None = None
     observed_reservations: int | None = Field(default=None, ge=0)

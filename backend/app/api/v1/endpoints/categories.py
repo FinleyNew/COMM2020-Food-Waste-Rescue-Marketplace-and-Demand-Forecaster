@@ -15,7 +15,3 @@ def create_category(category_in: CategoryCreate, current_user: AdminDep, db: Ses
 @router.get("/", response_model=list[CategoryPublic])
 def get_all_categories(db: SessionDep):
     return category_service.get_all_categories(db=db)
-
-@router.delete("/{category_id}")
-def delete_category(category_id: int, current_user: AdminDep, db: SessionDep):
-    category_service.delete_category(category_id=category_id, db=db)
