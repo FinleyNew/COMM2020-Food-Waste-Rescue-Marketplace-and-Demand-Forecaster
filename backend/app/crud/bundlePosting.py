@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 from fastapi import HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, select, or_
 from typing import Sequence, Tuple
-from app.models import BundlePosting
+from app.models import BundlePosting, Seller
 from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
-from app.models.enums import BundleStatus
+from app.models.enums import BundleStatus, Category
 from psycopg.types.range import Range
 from app.models.enums import BundleStatus
 from sqlalchemy import func
@@ -30,6 +30,14 @@ def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
 
 def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status.in_([BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])) # type: ignore
+    return db.exec(statement).all()
+
+def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
+    search = f"%{query}%"  # % is SQL wildcard
+    matching_categories = [
+    c for c in Category 
+    if query.lower() in c.value.lower() or c.value.lower() in query.lower()]
+    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category.in_(matching_categories), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
 def get_to_be_emailed_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
