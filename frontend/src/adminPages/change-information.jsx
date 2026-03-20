@@ -225,7 +225,6 @@ function AdminActionForm() {
     <>
     <div className="change">
       <nav className="navRow">
-        <Link to="/login" className="button">Login Page</Link>
         <Link to="/view-information" className="button">View Information</Link>
         <Link to="/deployment-history" className="button">Deployment History</Link>
       </nav>
@@ -272,8 +271,6 @@ function AdminActionForm() {
                 onChange={(e) => setUserID(e.target.value)}
               />
             </div>
-            <br></br>
-            <div className="row">
               <label htmlFor="numAvailable3">Enter Name: </label>
               <input
                 id="numAvailable3"
@@ -281,8 +278,6 @@ function AdminActionForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-            </div>
-            <br></br>
             <div className="row">
               <label htmlFor="numAvailable3">Enter Streak: </label>
               <input
@@ -307,7 +302,6 @@ function AdminActionForm() {
                 onChange={(e) => setUserID(e.target.value)}
               />
             </div>
-            <br></br>
             <div className="row">
               <label htmlFor="numAvailable3">Enter Name: </label>
               <input
@@ -317,7 +311,6 @@ function AdminActionForm() {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <br></br>
             <div className="row">
               <label htmlFor="numAvailable3">Location: </label>
               <input
@@ -327,22 +320,23 @@ function AdminActionForm() {
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
-            <div className="row">
-                      <p>Opening Time : </p>
-                      <input
-                        type="text"
-                        value={openingTime}
-                        onChange={(e) => setOpeningTime(e.target.value)}
-                        />
-              </div>
-              <div className="row">
-                      <p>Closing Time : </p>
-                      <input
-                        type="text"
-                        value={closingTime}
-                        onChange={(e) => setClosingTime(e.target.value)}
-                        />
-              </div>
+            <div className="setRow">
+              <p>Opening Time : </p>
+              <input
+                type="text"
+                value={openingTime}
+                onChange={(e) => setOpeningTime(e.target.value)}
+                />
+            </div>
+            <div className="setRow">
+              <p>Closing Time : </p>
+              <input
+                type="text"
+                value={closingTime}
+                onChange={(e) => setClosingTime(e.target.value)}
+                />
+            </div>
+            <br></br>
             <button className="boxButton" onClick={completeAction}>Submit</button>
             </>
           )}
@@ -358,28 +352,27 @@ function AdminActionForm() {
                 onChange={(e) => setUserID(e.target.value)}
               />
             </div>
-            <br></br>
             <div className="row">
-                      {/* drop down for allergens */}
-                      <label htmlFor="category">Enter Bundle Category : </label>
-                      <select
-                        name="category"
-                        id="category"
-                        value={bundleCategory}
-                        onChange={(e) => setBundleCategory(e.target.value)}
-                      >
-                      {/* List of options fo the user to choose from the menu */}
-                      <option value="">Select Category</option>
-                      <option value="Baked Goods">Baked Goods</option>
-                      <option value="Fruit">Fruit</option>
-                      <option value="Vegetables">Vegetables</option>
-                      <option value="Meat">Meat</option>
-                      <option value="Seafood">Seafood</option>
-                      <option value="Snacks">Snacks</option>
-                      <option value="Dairy">Dairy</option>
-                      <option value="Drinks">Drinks</option>
-                      </select>
-                    </div>
+              {/* drop down for allergens */}
+              <label htmlFor="category">Enter Bundle Category : </label>
+              <select
+                name="category"
+                id="category"
+                value={bundleCategory}
+                onChange={(e) => setBundleCategory(e.target.value)}
+              >
+              {/* List of options fo the user to choose from the menu */}
+              <option value="">Select Category</option>
+              <option value="Baked Goods">Baked Goods</option>
+              <option value="Fruit">Fruit</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Meat">Meat</option>
+              <option value="Seafood">Seafood</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Drinks">Drinks</option>
+              </select>
+            </div>
 
 
                     <div>
@@ -607,24 +600,23 @@ function AdminActionForm() {
                 onChange={(e) => setBundleWeight(e.target.value)}
               />
             </div>
-            <div className="row">
-                      <p>Start Time : </p>
-                      <input
-                        type="datetime-local"
-                        value={startTimestamp}
-                        onChange={(e) => setStartTimeStamp(e.target.value)}
-                        />
-              </div>
-              <div className="row">
-                      <p>End Time : </p>
-                      <input
-                        type="datetime-local"
-                        value={endTimestamp}
-                        onChange={(e) => setEndTimeStamp(e.target.value)}
-                        />
-              </div>
-              <button className="boxButton" onClick={completeAction}>Submit</button>
-            
+            <div className="setRow">
+              <p>Start Time : </p>
+              <input
+                type="datetime-local"
+                value={startTimestamp}
+                onChange={(e) => setStartTimeStamp(e.target.value)}
+                />
+            </div>
+            <div className="setRow">
+              <p>End Time : </p>
+              <input
+                type="datetime-local"
+                value={endTimestamp}
+                onChange={(e) => setEndTimeStamp(e.target.value)}
+                />
+            </div>
+            <button className="boxButton" onClick={completeAction}>Submit</button>
             </>
           )}
           {/* Update User */}

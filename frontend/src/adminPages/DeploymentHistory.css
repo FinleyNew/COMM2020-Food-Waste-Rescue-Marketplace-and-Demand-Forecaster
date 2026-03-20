@@ -1,7 +1,7 @@
 .deployment .navRow{
     grid-column: 1;
     gap: 10px;
-    width: 565px;
+    width: 425px;
     background-color: var(--bg-container);
     border: 4px solid var(--border-colour);
     padding: 8px;
@@ -11,9 +11,10 @@
 }
 
 .deployment .button {
-    background-color: green;
+    background-color: var(--button-bg);
     font-family: Arial;
-    color: white;
+    color: var(--button-text);
+    font-weight: bold;
     padding: 10px 30px;
     text-align: center;
     display: inline-block;

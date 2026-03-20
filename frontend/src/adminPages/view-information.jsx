@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import './view-information.css'
 function View_information() {
 
   const [data,setData] = useState([]);
@@ -61,49 +62,53 @@ function View_information() {
   const buttonValues = ["Get All Consumers", "Get All Sellers", "Get All Bundles", "Get All Reservations", "Get All Records", "Get All Forecasts", "Get All Users"];
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav>
-        <Link to="/login">Login Page</Link> |{" "}
-        <Link to="/change-information">Change Information</Link> |{" "}
-        <Link to="/deployment-history">Deployment History</Link>
-      </nav>
-      <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1>All Information</h1>
-      <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
-        {buttonValues.map((value, index) => (
-          <button
-            key={index}
-            onClick={() => handleButtonClick(value)}
-            style={{
-              padding: "10px 20px",
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-          >
-            {value}
-          </button>
-        ))}
+    <div className="view">
+      {/* Initialises the navifation bar where sellers can move between pages */}
+        <nav className="navRow">
+          <Link to="/change-information" className="button">Change Information</Link>
+          <Link to="/deployment-history" className="button">Deployment History</Link>
+        </nav>
+        <div className="container">
+          <div className="box" style={{ padding: "20px", textAlign: "center" }}>
+          <h1 className="header">All Information</h1>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+            {buttonValues.map((value, index) => (
+              <button className="button"
+                key={index}
+                onClick={() => handleButtonClick(value)}
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                }}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+      <br></br>
 
 
-    <div>
-      <div>
-        <h2>Output:</h2>
-        {data ? (
-          // If data is an array, display as list; otherwise stringify it
-          Array.isArray(data) ? (
-            <ul>
-              {data.map((item, idx) => (
-                <li key={idx}>{JSON.stringify(item)}</li>
-              ))}
-            </ul>
+      <div className="container">
+        <div className="outputBox">
+          <h2>Output:</h2>
+          {data ? (
+            // If data is an array, display as list; otherwise stringify it
+            Array.isArray(data) ? (
+              <ul>
+                {data.map((item, idx) => (
+                  <li key={idx}>{JSON.stringify(item)}</li>
+                ))}
+              </ul>
+            ) : (
+              <pre>{JSON.stringify(data, null, 2)}</pre>
+            )
           ) : (
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          )
-        ) : (
-          <p>No data fetched yet.</p>
-        )}
+            <p>No data fetched yet.</p>
+          )}
+        </div>
       </div>
     </div>
     </>

@@ -6,7 +6,6 @@ function DeploymentHistory() {
     {/* Initialises the navifation bar where sellers can move between pages */}
     <div className="deployment">  
       <nav className="navRow">
-        <Link to="/login" className="button">Login Page</Link>
         <Link to="/change-information" className="button">Change Information</Link>
         <Link to="/view-information" className="button">View Information</Link>
       </nav>
