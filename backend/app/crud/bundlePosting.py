@@ -4,10 +4,11 @@ from sqlmodel import Session, select, or_
 from typing import Sequence, Tuple
 from app.models import BundlePosting, Seller
 from app.schemas.bundlePosting import BundlePostingCreate, BundlePostingUpdate
-from app.models.enums import BundleStatus, Category
+from app.models.enums import BundleStatus
 from psycopg.types.range import Range
 from app.models.enums import BundleStatus
 from sqlalchemy import func
+from app.crud import category as category_crud
 
 # The crud function for creating a new bundle posting
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window: str, db: Session) -> BundlePosting:
@@ -34,9 +35,10 @@ def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[Bu
 
 def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
     search = f"%{query}%"  # % is SQL wildcard
+    categories = category_crud.get_all_categories(db=db)
     matching_categories = [
-    c for c in Category 
-    if query.lower() in c.value.lower() or c.value.lower() in query.lower()]
+    c for c in categories 
+    if query.lower() in c.name.lower() or c.name.lower() in query.lower()]
     statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category.in_(matching_categories), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
