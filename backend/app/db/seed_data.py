@@ -291,6 +291,7 @@ def seed_issue_reports(db: Session):
 
     reports_to_seed = 150
     
+    #Seed 150 reports for a random consumers reservation
     for _ in range(reports_to_seed):
         reservation = fake.random_element(elements=reservations)
         
@@ -309,7 +310,7 @@ def seed_issue_reports(db: Session):
     
     db.commit()
 
-
+#Get a random description and depending on the status, a matching response
 def get_report_desc_and_response(status: ReportStatus):
     descriptions = [
         "Category on the post does not match items recieved.",
