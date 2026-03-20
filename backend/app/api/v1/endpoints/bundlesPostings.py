@@ -28,6 +28,11 @@ def get_all_bundles(current_user: AdminDep, db: SessionDep):
     bundle_postings = bundle_posting_service.get_all_bundle_postings(db=db)
     return bundle_postings or []
 
+@router.get("/search/{query}", response_model=list[BundlePostingPublic])
+def get_queried_bundles(query: str, db: SessionDep):
+    bundle_postings = bundle_posting_service.get_queried_bundle_postings(query=query, db=db)
+    return bundle_postings or []
+
 # Endpoint for getting the current sellers bundles
 @router.get("/me", response_model = list[BundlePostingPublic])
 def get_current_sellers_bundles(current_seller: SellerDep, db: SessionDep):
