@@ -5,8 +5,8 @@ function DeploymentHistory() {
     {/* Initialises the navifation bar where sellers can move between pages */}
       <nav>
         <Link to="/login">Login Page</Link> |{" "}
-        <Link to="/view-reports">View Reports</Link> |{" "}
-        <Link to="/testing">Testing</Link>
+        <Link to="/change-information">Change Information</Link> |{" "}
+        <Link to="/view-information">View Information</Link>
       </nav>
     </>
   );

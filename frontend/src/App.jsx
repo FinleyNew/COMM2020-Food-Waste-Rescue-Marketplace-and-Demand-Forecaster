@@ -15,8 +15,8 @@ import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
 import Forecasts from "./sellerPages/Forecasts";
 import DeploymentHistory from "./adminPages/DeploymentHistory";
-import Testing from "./adminPages/testing";
-import ViewReports from "./adminPages/ViewReports";
+import View_information from "./adminPages/view-information";
+import Change_information from "./adminPages/change-information";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
 import axios from "axios";
@@ -154,13 +154,12 @@ function App() {
 
   function completeUpdatedDetails() {
     const token = localStorage.getItem('token');
-
-  axios.patch(`${API_URL}/api/v1/sellers/me`, 
-    {
-      name: companyName,
-      location: location,
-      opening_hours: `${openingTime} - ${closingTime}`
-    },
+    const data={};
+    if(companyName) data.name = companyName;
+    if(location) data.location = location;
+    if(openingTime && closingTime) data.opening_hours = `${openingTime} - ${closingTime}`
+    console.log(data);
+  axios.patch(`${API_URL}/api/v1/sellers/me`,data, 
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -178,6 +177,7 @@ function App() {
     console.error("Update failed:", err.response?.data || err.message);
     alert("Failed to update details");
   });
+  window.location.reload();
   }
     
   
@@ -202,8 +202,8 @@ function App() {
 
 
         <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />
-        <Route path="/testing" element={<ProtectedRoute user={user} requireRole="admin"><Testing /></ProtectedRoute>} />
-        <Route path="/view-reports" element={<ProtectedRoute user={user} requireRole="admin"><ViewReports /></ProtectedRoute>} />
+        <Route path="/view-information" element={<ProtectedRoute user={user} requireRole="admin"><View_information /></ProtectedRoute>} />
+        <Route path="/change-information" element={<ProtectedRoute user={user} requireRole="admin"><Change_information /></ProtectedRoute>} />
 
 
         <Route path="/" element={<HomePage />} /> {/* these pages are accessible by everybody */}
@@ -253,7 +253,7 @@ function App() {
               {updateDetails===true && (
                 <>
                     <div className="rowRegister">
-                    <p>Name: </p>
+                    <p>Company Name: </p>
                     <input
                       type="text"
                       value={companyName}
@@ -287,7 +287,7 @@ function App() {
                   </div>
 
                   <button onClick={completeUpdatedDetails} //was close popup
-                              disabled={!timeValidForSeller || !location || !companyName}
+                              
                               >Update Details</button>
                     </>
               )}
