@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
 from random import choices
 from app.models.badge import Badge
+from app.models.bundlePosting import Category
 from faker import Faker
 import numpy as np
 from app.schemas.bundlePosting import BundlePostingCreate
@@ -284,6 +285,22 @@ def seed_badges(db: Session):
     for badge in badges:
         db.add(badge)
 
+    db.commit()
+
+def seed_categories(db: Session):
+    BAKED_GOODS = Category(name="Baked Goods")
+    FRUIT = Category(name="Fruit")
+    VEGETABLES = Category(name="Vegetables")
+    MEAT = Category(name="Meat")
+    SEAFOOD = Category(name="Seafood")
+    SNACKS = Category(name="Snacks")
+    DAIRY = Category(name="Dairy")
+    DRINKS = Category(name="Drinks")
+    categories = [
+        BAKED_GOODS, FRUIT, VEGETABLES, MEAT, SEAFOOD, SNACKS, DAIRY, DRINKS
+    ]
+    for category in categories:
+        db.add(category)
     db.commit()
 
 #Price based on number of reservations

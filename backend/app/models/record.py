@@ -3,7 +3,6 @@ from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column, Index
 from sqlalchemy.dialects import postgresql
-from .enums import Category
 
 if TYPE_CHECKING:
     from .seller import Seller
