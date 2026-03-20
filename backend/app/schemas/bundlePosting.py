@@ -5,13 +5,13 @@ from sqlalchemy import Column
 from sqlmodel import Field, SQLModel
 from pydantic import computed_field, model_validator
 
-from app.models.enums import BundleStatus
+from app.models.enums import Category, BundleStatus
 from app.schemas.seller import SellerSummary
 
 # The base schema for bundle postings
 class BundlePostingBase(SQLModel):
     user_id: int
-    category: str
+    category: Category
     allergens: str | None
     # Can't have a negative ammount of bundles
     available: int = Field(ge=0) 
@@ -35,7 +35,7 @@ class BundlePostingCreate(BundlePostingBase):
         return self
     
 class BundlePostingUpdate(SQLModel):
-    category: str | None = None
+    category: Category | None = None
     allergens: str | None = None
     available: int | None = Field(default=None, ge=0)
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
