@@ -5,7 +5,7 @@ from sqlmodel import Session
 from app.crud import badge as badge_crud
 from app.crud import reservation as reservation_crud
 from app.crud import record as record_crud
-from app.models.enums import ReservationStatus
+from app.models.enums import Category, ReservationStatus
 
 def check_at_reservation(consumer_id: int, db: Session):
     check_good_start(consumer_id=consumer_id, db=db)
