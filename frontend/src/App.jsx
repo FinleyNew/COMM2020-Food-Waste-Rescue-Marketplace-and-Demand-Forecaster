@@ -15,8 +15,8 @@ import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
 import Forecasts from "./sellerPages/Forecasts";
 import DeploymentHistory from "./adminPages/DeploymentHistory";
-import View_information from "./adminPages/view-informatiom";
-import ViewReports from "./adminPages/ViewReports";
+import View_information from "./adminPages/view-information";
+import Change_information from "./adminPages/change-information";
 import HomePage from "./pages/HomePage";
 import Unauthorised from "./pages/unauthorised";
 import axios from "axios";
@@ -203,7 +203,7 @@ function App() {
 
         <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />
         <Route path="/view-information" element={<ProtectedRoute user={user} requireRole="admin"><View_information /></ProtectedRoute>} />
-        <Route path="/view-reports" element={<ProtectedRoute user={user} requireRole="admin"><ViewReports /></ProtectedRoute>} />
+        <Route path="/change-information" element={<ProtectedRoute user={user} requireRole="admin"><Change_information /></ProtectedRoute>} />
 
 
         <Route path="/" element={<HomePage />} /> {/* these pages are accessible by everybody */}

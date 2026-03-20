@@ -35,6 +35,8 @@ function View_information() {
     }
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
+    console.log(token);
+    console.log(`${API_URL}/api/v1/${suffix}`);
     axios.get(`${API_URL}/api/v1/${suffix}`, { //Fetch data for the user
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -62,7 +64,7 @@ function View_information() {
     {/* Initialises the navifation bar where sellers can move between pages */}
       <nav>
         <Link to="/login">Login Page</Link> |{" "}
-        <Link to="/view-reports">View Reports</Link> |{" "}
+        <Link to="/change-information">Change Information</Link> |{" "}
         <Link to="/deployment-history">Deployment History</Link>
       </nav>
       <div style={{ padding: "20px", textAlign: "center" }}>
