@@ -154,13 +154,12 @@ function App() {
 
   function completeUpdatedDetails() {
     const token = localStorage.getItem('token');
-
-  axios.patch(`${API_URL}/api/v1/sellers/me`, 
-    {
-      name: companyName,
-      location: location,
-      opening_hours: `${openingTime} - ${closingTime}`
-    },
+    const data={};
+    if(companyName) data.name = companyName;
+    if(location) data.location = location;
+    if(openingTime && closingTime) data.opening_hours = `${openingTime} - ${closingTime}`
+    console.log(data);
+  axios.patch(`${API_URL}/api/v1/sellers/me`,data, 
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -178,6 +177,7 @@ function App() {
     console.error("Update failed:", err.response?.data || err.message);
     alert("Failed to update details");
   });
+  window.location.reload();
   }
     
   
@@ -253,7 +253,7 @@ function App() {
               {updateDetails===true && (
                 <>
                     <div className="rowRegister">
-                    <p>Name: </p>
+                    <p>Company Name: </p>
                     <input
                       type="text"
                       value={companyName}
@@ -287,7 +287,7 @@ function App() {
                   </div>
 
                   <button onClick={completeUpdatedDetails} //was close popup
-                              disabled={!timeValidForSeller || !location || !companyName}
+                              
                               >Update Details</button>
                     </>
               )}
