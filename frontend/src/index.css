@@ -1,31 +1,113 @@
 :root {
   --bg-color: white; /*default theme*/
-  --text-color: black;
-  --button-bg: #111827;      /* dark button in light mode */
-  --button-text: white;
+  --text-colour: black;
+  --button-bg: rgb(49, 163, 49);      /* dark button in light mode */
+  --settings-button-bg: white;
+  --button-text: black;
+  --border-colour: rgb(49, 163, 49);
+  --bg-container: white;
+  --badge-icon: url('./assets/NoBadge.png')
 }
 
 .dark {
   --bg-color: #121212; /*when html tag is changed this becomes into effetc*/
-  --text-color: #ffffff;  /*overrides variables when run*/
-  --button-bg: #f3f4f6;      /* light button in dark mode */
-  --button-text: #111827;
+  --text-colour: #ffffff;  /*overrides variables when run*/
+  --button-bg: #a5a5a5;      /* light button in dark mode */
+  --settings-button-bg:  #a5a5a5;
+  --button-text: #000000;
+  --border-colour: #5d5e5f;
+  --bg-container: #111827;
+  --badge-icon: url('./assets/NoBadgeDark.png')
+}
+
+body{
+    background-image: url('./assets/Background.png');
+    background-repeat: repeat;
+    background-size: 400px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.dark body{
+    background-image: url('./assets/DarkBackground.png');
+    background-repeat: repeat;
+    background-size: 400px;
 }
 
 .dark-mode-btn {
-  background-color: var(--button-bg);
+  display: flex;
+  background-color: var(--settings-button-bg);
+  border: 2px solid var(--border-colour);
   color: var(--button-text);
   padding: 10px 16px;
   border-radius: 10px;
-
   position: fixed;
   top: 20px;
   right: 20px;
 }
-
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
+.settingsIcon{
+  width: 50px;
+  height: 50px;
+}
+.settingsPopup{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+  border-radius: 6px;
+  position: fixed;
+  top: -100%;
+  right: -180px;
+  left: auto;
+  transform: scale(0.1);
+  text-align: center;
+  padding: 0 30px 30px;
+  visibility: hidden;
+  transition: transform 0.4s, top 0.4s;
+  background-color: var(--bg-container);
+  border: 8px solid var(--border-colour);
+  border-radius: 2rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.settingsPopup h1{
+  color: var(--text-colour);
+}
+.settingsPopup p{
+  color: var(--text-colour);
+}
+.settingsOpenPopup{
+    visibility: visible;
+    top: 12%;
+    transform: translateX(-50%) scale(1);
+}
+.settingsRow{
+    display: flex;
+    color: var(--text-colour);
+    font-size: 20px;
+}
+.settingsTextBox{
+    display: block;
+    text-align: left;
+}
+.signOutButton{
+  color: rgb(224, 17, 17);
+}
+.settingsPopup .settingsButton{
+    display: inline-flex;
+    justify-content: center;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 16px;
+    width: 30%;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}

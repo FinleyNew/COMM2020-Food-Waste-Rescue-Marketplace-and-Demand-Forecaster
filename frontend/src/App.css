@@ -4,7 +4,17 @@
   padding: 2rem;
   text-align: center;
 }
+body{
+    background-image: url('./assets/Background.png');
+    background-repeat: repeat;
+    background-size: 400px;
+}
 
+.dark body{
+    background-image: url('./assets/DarkBackground.png');
+    background-repeat: repeat;
+    background-size: 400px;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -40,6 +50,4 @@
 .read-the-docs {
   color: #888;
 }
-
-
 

@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from sqlmodel import Session
 from app.schemas.bundlePosting import BundlePostingCreate
 from app.crud import record as record_crud
@@ -10,7 +12,10 @@ from datetime import datetime
 from app.schemas.forecast import ForecastPublic, ForecastCreate
 import pandas as pd
 import numpy as np
+from app.models.forecast import Forecast
 
+def get_all_forecasts(db: Session) -> Sequence[Forecast]:
+    return forecast_crud.get_all_forecasts(db=db)
 
 def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: Session):
     #This function creates and stores a forecast object in the database for a given bundle posting
@@ -25,6 +30,9 @@ def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: 
     #Object is stored in the database
     forecast_crud.create_forecast(forecast=create_forecast, db=db)
     return
+
+def delete_forecast(forecast_id: int, db: Session):
+    forecast_crud.delete_forecast(forecast_id=forecast_id, db=db)
 
 def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     search_start = bundle_in.start_time.time()

@@ -1,80 +1,115 @@
 import { Routes, Route, Link } from "react-router-dom";
-import {useState, useEffect} from "react";
-import './Discover.css'
+import { useState, useEffect, useRef } from "react";
+import './Discover.css';
+import axios from "axios";
+import Company from "../assets/Company.png";
+import Bundle from "../assets/BundleImage.png";
 
-import Company from "../Assets/Company.png";
-import Bundle from "../Assets/Bundleimage.png";
 function Discover() {
-  
-  const [bundles, setBundles] = useState([]); //defines the state and variable that allows the react page to be rerendered when called
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [bundles, setBundles] = useState([]); // All bundles
+  const [query, setQuery] = useState("");     // Search query
+  const searchTimeout = useRef(null);         // For debouncing input
 
-  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
-      const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
-      fetch("http://127.0.0.1:8000/api/v1/bundles/",{ //the backend server url to get the information for 
-        headers:{
-          "Content-Type": "application/json" //defines that we are getting a JSON object/piece of data
-        }
-      }) //fetch here , useeffect means it only fetches once
-        .then(res => res.json()) //converts the data into an object JSON
-        .then(data => {
-          console.log("API DATA:", data); 
-          setBundles(data); //updates the react state so the page can rerender with the new info
-        })
-        .catch(err => {
-          console.error("Error fetching bundles:", err); //catches any errors and displays an erorr messages 
-          alert("No data ");
-        });
-    }, []);
+  // Fetch all bundles from the backend
+  const fetchAllBundles = () => {
+    axios.get(`${API_URL}/api/v1/bundles/`, {
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => setBundles(res.data))
+    .catch(err => console.error("Error fetching bundles:", err));
+  };
+
+  // On first load, fetch all bundles
+  useEffect(() => {
+    fetchAllBundles();
+  }, []);
+
+  // Search bundles using the API
+  const searchBundles = (searchTerm) => {
+    if (!searchTerm) {
+      fetchAllBundles();
+      return;
+    }
+
+    axios.get(`${API_URL}/api/v1/bundles/search/${encodeURIComponent(searchTerm)}`, {
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(response => {
+      setBundles(response.data); // Update state with search results
+    })
+    .catch(err => {
+      console.error("Error searching bundles:", err);
+      setBundles([]); // Clear bundles if search fails
+    });
+  };
+
+  // Handle search input change with debounce
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    // Clear previous timeout
+    clearTimeout(searchTimeout.current);
+
+    // Wait 300ms after typing stops to send request
+    searchTimeout.current = setTimeout(() => {
+      if (value.trim()) {
+        searchBundles(value);
+      } else {
+        fetchAllBundles(); // If empty, reset to all bundles
+      }
+    }, 300);
+  };
+
   return (
-    <>
-      <nav class="row">
-        <Link to="/login" className="button"><b>Login Page</b></Link> {/* displays the links to the other pages */}
-        <Link to="/streaks" className="button"><b>Streaks</b></Link>
-        <Link to="/codes" className="button"><b>Codes</b></Link>
-        <details>
-          <summary>
-            <img className="setting" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdndCKhAJ4SlVEaNCkA4U6BN4tDXZsRtxSw&s"></img> {/* holds the images for the settings page */}
-          </summary>
-          <label>
-            <input type="checkbox" name="darkmode"/> {/* checkbox for darkmode */}
-              Enable Dark Mode DOESNT WORK YET
-          </label>
-        </details>
-      </nav>
-      <h1 className="headline">Bundles</h1>
-      
-      <section className="column">
-            {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
-              <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
-                <Link to={`/bundle/${bundle.posting_id}`} className="sectionPage">
+    <div className="discover">
+      <div className="pageHeading">
+        <nav className="navRow">
+          <Link to="/streaks" className="button"><b>Streaks</b></Link>
+          <Link to="/codes" className="button"><b>Codes</b></Link>
+        </nav>
+        <div className="textHeading">
+          <h1>Bundles</h1>
+        </div>
+      </div>
 
-                  <section className="bundleEntry">
-                    <div className="textBlock">
-                      <img src={Company} alt="Company" className="leftImg"/>
-                      <div className="desc">
-                        <p className="desc">Category - {bundle.category}</p>
-                        <p className="desc">Allergens - {bundle.allergens}</p>
-                      </div>
-                    </div>
-                    <div className="textBlock">
-                      <div className="desc">
-                      <p className="desc">Available - {bundle.available}</p>
-                      <p className="desc">Price - £{bundle.price_display}</p> {/* displaying all the information by accessing the specific object */}
-                      <p className="desc">Date to Collect - {bundle.formatted_date}</p>
-                      <p className="desc">Time to Collect - {bundle.formatted_time_range}</p>
-                       </div>
-                    </div>
-                    <div className="formatter">
-                      <img src={Bundle} alt="Food" className="thumbnail"/>
-                      {/*<p className="desc">{companyName}</p>*/}
-                    </div>
-                  </section>
-                </Link>
+      <div className="searchRow">
+        <p>Search for a Bundle: </p>
+        <input
+          id="searchBundle"
+          type="text"
+          placeholder="Search"
+          value={query}
+          onChange={handleSearchChange}
+        />
+      </div>
+
+      <div className="bundleList">
+        {bundles.map(bundle => (
+          <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}>
+            <div className="bundleEntry">
+              <img src={Bundle} alt="Bundle" className="bundleImage" />
+              <div className="textBox">
+                <div className="bundleRow">
+                  <h1>{bundle.category || "Bundle Name"}</h1>
+                  <h1>{bundle.available} Available</h1>
+                </div>
+                <div className="bundleRow">
+                  <div className="column">
+                    <p>Collection Time: {bundle.formatted_time_range}</p>
+                    <p>Price: £{bundle.price_display}</p>
+                  </div>
+                  <img src={Company} alt="Company" className="companyIcon" />
+                </div>
               </div>
-            ))}
-      </section>
-    </>
+            </div>
+          </Link>
+        ))}
+        {bundles.length === 0 && <p style={{ color: "red" }}>No bundles found</p>}
+      </div>
+    </div>
   );
 }
 
-export default Discover; //exports the component so it can be imported in other files
+export default Discover;

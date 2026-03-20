@@ -1,0 +1,196 @@
+.forecast .navRow{
+    grid-column: 1;
+    gap: 10px;
+    width: 500px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    padding: 8px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+.forecast .pageHeading{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    text-align:  center;
+    justify-content: left;
+    gap: 10px;
+}
+.forecast .textHeading{
+    color: var(--text-colour);
+    grid-column: 2;
+    font-size: 11px;
+    align-self: center;
+    margin: 0 auto 10px auto;
+    width: 240px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.forecast .codeRow{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 297px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    padding: 8px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    margin-right: 15px;
+    overflow-x: auto;
+}
+.forecast .searchRow{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 346px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    color: var(--text-colour);
+    padding: 8px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+.forecast #enterCode{
+    display: inline-block;
+    align-items: center;
+    height: 30px;
+    padding: 5px;
+}
+.forecast .bundleImage{
+    display: block;
+    width: 100%;
+    height: 20vh;
+    overflow: hidden;
+    object-fit: cover;
+}
+.forecast .codeButton {
+    background-color: var(--button-bg);
+    font-family: Arial;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 3px;
+    text-decoration: none;
+    color: var(--button-text);
+}
+/* Creates a button structure with colours and spacings*/
+.forecast .button {
+    background-color: var(--button-bg);
+    font-family: Arial;
+    color: white;
+    padding: 10px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 3px;
+    text-decoration: none;
+    color: var(--button-text);
+}
+.forecast .deleteButton {
+    background-color: var(--button-bg);
+    font-family: Arial;
+    color: white;
+    width: 145px;
+    padding: 10px 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--button-text);
+}
+.forecast .mainBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    margin: 0 auto;
+    width: 40%;
+    min-width: 450px;
+    gap: 20px;
+    padding-bottom: 30px;
+}
+.forecast .bundleEntry{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 40vh;
+    width: 100%;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    color: var(--text-colour);
+    padding-inline: 10px;
+}
+.forecast .textBox{
+    padding-inline: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    flex-grow: 1;
+    gap: 20px;
+    margin-top: 20px;
+}
+.forecast .rowBox{
+    display: flex;
+    flex-direction: row;
+}
+.forecast .rowBox h1{
+    padding: 12px;
+}
+.forecast .columnBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+.forecast .displayImage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4%;
+}
+.forecast .companyIcon{
+    height: 100%;
+    width: 100%;
+    border-radius: 1rem;
+}
+
+/*UNUSED*/
+.forecast .centreBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.forecast .centreItems{
+    height: 720px;
+    width: 350px;;
+    border-radius: 2rem;
+    background-color: white;
+    text-align: center;
+    padding: 30px;
+    border: 4px solid green
+}

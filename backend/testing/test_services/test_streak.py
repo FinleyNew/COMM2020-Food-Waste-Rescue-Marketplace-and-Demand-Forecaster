@@ -1,5 +1,5 @@
 import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from unittest.mock import MagicMock
 from app.services import consumer as consumer_service
 
@@ -12,14 +12,16 @@ class SimpleUser:
 
 #Tests the check_streak function to ensure that it correctly resets the streak after 7 days of inactivity.
 #TODO When strak is fully implemted check within weeks instead of days.
-def test_streak_reset_after_14_days(mock_db):
+def test_streak_reset_after_2_weeks(mock_db):
     # Create a simpleUser with a streak of 5
     user = SimpleUser(user_id=1, streak=5)
     
-    # Simulate a reservation from 10 days ago
-    ten_days_ago = datetime.now(timezone.utc) - timedelta(days=15)
+    # Get the start of the current week
+    current_day = datetime.now()
+    # Get 2 weeks ago
+    two_weeks_ago = current_day - timedelta(weeks=2) 
     old_res = MagicMock()
-    old_res.timestamp = ten_days_ago
+    old_res.timestamp = two_weeks_ago
     old_res.status = "COLLECTED"
 
     #Ensure the .get returns the user when the service tries to retrieve it

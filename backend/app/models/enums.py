@@ -18,14 +18,14 @@ class BundleStatus(str, Enum):
     DELETED = "deleted"
 
 class Category(str, Enum):
-    BAKED_GOODS = "baked_goods"
-    FRUIT = "fruit"
-    VEGETABLES = "vegetables"
-    MEAT = "meat"
-    SEAFOOD = "seafood"
-    SNACKS = "SNACKS"
-    DAIRY = "dairy"
-    DRINKS = "drinks"
+    BAKED_GOODS = "Baked Goods"
+    FRUIT = "Fruit"
+    VEGETABLES = "Vegetables"
+    MEAT = "Meat"
+    SEAFOOD = "Seafood"
+    SNACKS = "Snacks"
+    DAIRY = "Dairy"
+    DRINKS = "Drinks"
 
 class ReportType(str, Enum):
     SELLER_ISSUE = "seller issue"

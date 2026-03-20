@@ -1,6 +1,8 @@
 from typing import Optional, TYPE_CHECKING, List
 from sqlmodel import Field, SQLModel, Relationship
 
+from app.models.badge import Badge, ConsumerBadge
+
 if TYPE_CHECKING:
     from .user import User
     from .reservation import Reservation
@@ -15,4 +17,5 @@ class Consumer(SQLModel, table=True):
     # These are automatic relationships to other tables
     user: "User" = Relationship(back_populates="consumer")
     reservations: List["Reservation"] = Relationship(back_populates="consumer")
+    badges: list[Badge] = Relationship(link_model=ConsumerBadge)
     report: List["IssueReport"] = Relationship(back_populates="consumer")

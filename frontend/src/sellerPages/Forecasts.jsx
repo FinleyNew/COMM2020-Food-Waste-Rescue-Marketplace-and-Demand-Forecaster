@@ -1,21 +1,30 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import './Forecast.css'
+import axios from "axios";
 
 function Forecasts() {
   const [forecasts, setForecasts] = useState([]);
-
+  const [noForecasts, setNoForecasts] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    fetch("http://127.0.0.1:8000/api/v1/forecasts/me", { //Fetch data for the user
+    axios.get(`${API_URL}/api/v1/forecasts/me`, { //Fetch data for the user
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     })
-      .then(res => res.json())
-      .then(data => {
-        setForecasts(data); // data is likely an array
+      .then(response => {
+        //setForecasts(response.data); // data is likely an array
+        //setAnalytics(response.data);
+      if (response.data.length === 0) {
+          setNoForecasts(true);
+        } else {
+          setForecasts(response.data);
+          setNoForecasts(false);
+        }
       })
       .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching forecasts:", err);
@@ -25,14 +34,19 @@ function Forecasts() {
 
   return (
     <>
-    {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav>
-        <Link to="/login" className="button"><b>Login Page</b></Link>
-        <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
-        <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
-        <Link to="/analytics" className="button"><b>Analytics</b></Link>
-      </nav>
-
+      <div className="forecast">
+      {/* Initialises the navifation bar where sellers can move between pages */}
+        <div className="pageHeading">
+          <nav className="navRow">
+            <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
+            <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
+            <Link to="/analytics" className="button"><b>Analytics</b></Link>
+          </nav>
+          <div className="textHeading">
+            {/* Header to display the page name to the user */}
+            <h1>Forecast</h1>
+          </div>
+        </div>
       {/* Forecast data section outputting predictions and IDs */}
       <section>
         {/* Display message while loading forecasts before outputting data*/}
@@ -40,16 +54,28 @@ function Forecasts() {
           <p>Loading forecasts...</p>
         ) : (
           forecasts.map(forecast => (
-            <div key={forecast.forecast_id}>              <p>Predicted Reservations: {forecast.predicted_reservations}</p>
-              <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
-              <p>User ID : {forecast.user_id}</p>
-              <p>Posting ID {forecast.posting_id}</p>
-              <p></p>
+            <div key={forecast.forecast_id}>   
+              <div className="mainBox">
+                <div className="bundleEntry">
+                  <h1>Predicted Forecast</h1>
+                  <div className="textBox">
+                    <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+                    <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                    <p>User ID : {forecast.user_id}</p>
+                    <p>Posting ID {forecast.posting_id}</p>
+                  </div>
+                </div>
+              </div>
               <hr />
             </div>
           ))
         )}
-      </section>      
+        {noForecasts && (
+          <p style={{color:"red"}}>
+                      No forecast
+                  </p>)}
+      </section>  
+      </div>    
     </>
   );
 }

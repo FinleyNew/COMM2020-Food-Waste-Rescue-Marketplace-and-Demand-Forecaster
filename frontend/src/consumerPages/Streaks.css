@@ -1,0 +1,245 @@
+.streaks section{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.streaks hr{
+    border: none;
+    height: 4px;
+    background-color: var(--border-colour);
+}
+.streaks .pageHeading{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    text-align:  center;
+    justify-content: left;
+    gap: 10px;
+}
+.streaks .navRow{
+    grid-column: 1;
+    gap: 10px;
+    width: 245px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    padding: 8px;
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+.streaks .textHeading{
+    color: var(--text-colour);
+    grid-column: 2;
+    font-size: 11px;
+    align-self: center;
+    margin: 0 auto 10px auto;
+    width: 240px;
+    background-color: var(--bg-container);
+    border: 4px solid var(--border-colour);
+    border-radius: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.streaks .button {
+    background-color: var(--button-bg);
+    font-family: Arial;
+    color: var(--button-text);
+    padding: 10px 30px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.streaks .payButton {
+    display: inline-flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--button-bg);
+    font-family: Arial;
+    color: var(--button-text);
+    padding: 10px 30px;
+    text-decoration: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin: 2%;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 15%;
+    font-weight: bold;
+    border: 4px solid var(--border-colour);
+}
+.streaks .headline{
+    color: var(--text-colour);
+    font-family: Arial;
+    font-size: 35px;
+}
+.streaks .codeText{
+    font-size: 70px;
+    margin-bottom: 50px;
+    margin-top: 45px;
+}
+.streaks .textCentre{
+    text-align: center;
+    font-size: 25px;
+}
+.streaks .icon{
+    width: 70px;
+    height: 70px;
+    content: var(--badge-icon);
+}
+.streaks .rowIcons{
+  display: flex;
+  overflow: visible;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  margin: 10px;
+  gap: 4%;
+  flex-wrap: wrap;
+}
+.streaks .setting{
+    width: 30px;
+    height: 30px;
+}
+.streaks .popup{
+    width: 400px;
+    border-radius: 6px;
+    position: absolute;
+    top: 150%;
+    left: 50%;
+    transform: scale(0.1);
+    text-align: center;
+    padding: 0 30px 30px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+    background-color: var(--bg-container);
+    border: 8px solid var(--border-colour);
+    border-radius: 2rem;
+}
+.streaks .open-popup{
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
+.streaks .popup button{
+    width: 100%;
+    margin-top: 50px;
+    padding: 10px 0;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 5px 5px;
+}
+.streaks .mainBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    padding-bottom: 30px;
+}
+.streaks .bundleEntry{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 40vh;
+    width: 70%;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    color: var(--text-colour);
+}
+.streaks .streaksEntry{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 40vh;
+    width: 70%;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: visible;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-bottom: 30px;
+    color: var(--text-colour);
+}
+.streaks .bundleEntry h1{
+    font-size: 25px; 
+}
+.streaks .textBox{
+    padding-inline: 5%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px;
+    margin-top: 20px;
+}
+.streaks .rowImg{
+    display: block;
+    width: 100%;
+    height: 20vh;
+    object-fit: cover;
+}
+.streaks .bundleImage{
+    display: block;
+    width: 100%;
+    height: 20vh;
+    overflow: hidden;
+    object-fit: cover;
+}
+.streaks .bundleRow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
+}
+.streaks .column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    padding-inline: 3%;
+}
+.streaks .column p{
+    font-size: 20px;
+}
+.streaks .companyIcon{
+    height: 15%;
+    width: 15%;
+    border-radius: 1rem;
+}
+.streaks .centerAlign{
+    display: flex;
+    justify-content: center;
+}
+.streaks .badges{
+    position: relative;
+    display: inline-block;
+}
+.streaks .hoverDesc {
+  position: absolute;
+  overflow: visible;
+  z-index: 10;
+  top: 0%;
+  left: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.9);  
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  opacity: 0;
+  white-space: nowrap;    /* prevent wrapping */
+  transition: opacity 0.1s;
+  text-align: center;
+  border: 2px solid;
+}
+.badges:hover .hoverDesc {
+  opacity: 1;
+}
