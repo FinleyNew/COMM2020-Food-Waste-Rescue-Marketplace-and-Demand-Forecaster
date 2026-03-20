@@ -12,8 +12,8 @@ class IssueReport(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, foreign_key="consumer.user_id", index=True)
     type: ReportType
     description: str
-    status: ReportStatus
-    seller_response: str
+    status: ReportStatus = Field(default=ReportStatus.AWAITING_RESPONSE)
+    seller_response: str | None = Field(default=None)
 
     consumer: "Consumer" = Relationship(back_populates="report")
     posting: "BundlePosting" = Relationship(back_populates="report")
