@@ -52,12 +52,12 @@ def update_bundle(posting_id: int, bundle_update: BundlePostingUpdate, current_u
 def admin_update_bundle(posting_id: int, bundle_update: BundlePostingAdminUpdate, current_user: AdminDep, db: SessionDep):
     return bundle_posting_service.update_bundle_posting(posting_id=posting_id, bundle_update=bundle_update, db=db)
 
-@router.patch("/delete/{posting_id}", response_model=BundlePostingPublic)
-def set_bundle_deleted(posting_id: int, current_user: SellerDep, db: SessionDep):
+@router.delete("/delete/{posting_id}", response_model=BundlePostingPublic)
+def set_bundle_deleted(posting_id: int, current_user: AdminDep, db: SessionDep):
     return bundle_posting_service.set_bundle_deleted(posting_id=posting_id, db=db)
 
 @router.delete("/me/{posting_id}")
-def delete_current_sellers_bundle(posting_id: int, current_user: SellerDep, db: SessionDep):
+def set_current_sellers_bundle_deleted(posting_id: int, current_user: SellerDep, db: SessionDep):
     posting = bundle_posting_service.get_bundle_posting(posting_id=posting_id, db=db)
     if posting in current_user.postings:
         bundle_posting_service.set_bundle_deleted(posting_id=posting_id, db=db)
