@@ -242,7 +242,7 @@ def seed_forecast(db: Session):
     for post in postings:
         bundle_in = BundlePostingCreate(
             user_id=post.user_id or 0,
-            category_id=post.category_id,
+            category=post.category,
             allergens=post.allergens or "",
             available=max(1, post.available),
             price=post.price,
@@ -424,7 +424,7 @@ def seed_tables():
         seed_reservation(db=db)
         update_streaks(db=db)
         seed_record(db=db)
-        # seed_forecast(db=db)
+        seed_forecast(db=db)
         seed_badges(db=db)
     print("Seeding complete")
 
