@@ -27,10 +27,6 @@ class Category(str, Enum):
     DAIRY = "Dairy"
     DRINKS = "Drinks"
 
-class ReportType(str, Enum):
-    SELLER_ISSUE = "seller issue"
-    DEVELOPER_ISSUE = "developer issue"
-
 class ReportStatus(str, Enum):
     AWAITING_RESPONSE = "awaiting response"
     SELLER_RESPONDED = "seller responded"
