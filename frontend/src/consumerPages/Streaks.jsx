@@ -6,7 +6,7 @@ import axios from "axios";
 function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
-  
+  const [badges, setBadges] = useState([]);
 
   useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
     const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
@@ -24,6 +24,26 @@ function Streaks() {
           alert("No data ");
     });
   },[]) //allows the page to rerender if anything changes
+
+  useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
+    const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
+    axios.get(`${API_URL}/api/v1/consumers/me/badges`,{ //the backend server url to get the information for 
+      headers: {
+        "Authorization": `Bearer ${token}`, //sending the token to verify the user
+      }
+    })
+    .then(response => {
+      setBadges(response.data); //updates the react state so the page can rerender with the new info
+      
+    })
+    .catch(err => {
+          console.error("Error fetching badges:", err); //catches any errors and displays an erorr messages 
+          alert("No data ");
+    });
+    
+  },[badges]) //allows the page to rerender if anything changes
+
+  
 
   return (
       <>
@@ -155,6 +175,17 @@ function Streaks() {
             </div>
           </div>
         </div>
+
+
+
+        <div>
+  {badges.map((badge, idx) => (
+    <div key={idx} className="badge">
+      <h3>{badge.name}</h3>
+      <p>{badge.detail}</p>
+    </div>
+  ))}
+</div>
       </>
     );
 }
