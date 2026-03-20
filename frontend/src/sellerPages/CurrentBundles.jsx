@@ -102,16 +102,9 @@ const handleUpdateBundle = (posting_id) => {
 
 
 const completeUpdateBundle = (posting_id) => {
-  const data = {
-      user_id: Number(payload.sub),
-      category: bundleCategory,
-      allergens: bundleAllergens,
-      available: Number(numberAvailable),
-      price: Number(bundlePrice),
-      weight: Number(bundleWeight),
-      start_time: startDateTime.toISOString(),
-      end_time: endDateTime.toISOString()
-    };
+  
+
+    const data={};
     console.log(data);
     //Function to prevent extreme entry for bundle weight with an alert
     if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
@@ -128,6 +121,23 @@ const completeUpdateBundle = (posting_id) => {
       alert("Price must be positive and less than 100");
       return;
     }
+    if(bundleCategory) data.category=bundleCategory;
+    if(bundleAllergens) data.allergens = bundleAllergens;
+    if(numberAvailable) data.available = numberAvailable;
+    if(bundlePrice) data.price = bundlePrice;
+    if(bundleWeight) data.weight = bundleWeight;
+    
+    if(startTime){
+      const today = new Date();
+      const dateString = today.toISOString().split("T")[0];
+      data.start_time = new Date(`${dateString}T${startTime}:00`).toISOString();
+    }
+     if (endTime) {
+    const today = new Date();
+    const dateString = today.toISOString().split("T")[0];
+    data.end_time = new Date(`${dateString}T${endTime}:00`).toISOString();
+  }
+
     console.log(data);
     
     axios.patch(`${API_URL}/api/v1/bundles/${posting_id}`, data ,{
