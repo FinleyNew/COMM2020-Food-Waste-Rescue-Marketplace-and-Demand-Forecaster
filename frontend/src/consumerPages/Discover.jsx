@@ -83,7 +83,7 @@ function Discover() {
           
           <br></br>
         
-          <div>
+          <div className="discover">
 
             {bundles.map(bundle => (
               <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}

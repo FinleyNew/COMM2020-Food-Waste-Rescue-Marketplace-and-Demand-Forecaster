@@ -44,13 +44,14 @@ function CurrentBundles() {
       }
     })
     .then(response => {
-      setBundles(response.data);
-      if (response.data.length === 0) {
-          setNoBundles(true);
-        } else {
-          setBundles(response.data);
-          setNoBundles(false);
-        }
+
+      const activeBundles = Array.isArray(response.data)
+      ? response.data.filter(b => b.status !=="deleted")
+      : [];
+
+
+      setBundles(activeBundles);
+      setNoBundles(activeBundles.length===0);
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
@@ -68,21 +69,28 @@ function CurrentBundles() {
     const API_URL = import.meta.env.VITE_API_URL;
     if (!window.confirm("Delete this bundle?")) return;
     
-    axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
+    axios.patch(`${API_URL}/api/v1/bundles/delete/${postingID}`,{}, {
       headers:{
         Authorization: `Bearer ${token}`,
       }
     })
-    .then(response => {
+    .then((response) => {
       console.log("Deleted:", response.data);
-      alert("Bundle deleted");
-      console.log(token);
+      setBundles(prev => prev.filter(b => b.posting_id !== posting_id));
+  
+      
     })
     .catch(err => { //Returns alert if an error occurs
-         console.error("Backend error detail:", err.response?.data);  // <-- add this
-        console.error("Status:", err.response?.status);
+         console.error("FULL ERROR:", err);
+
+  if (err.response) {
+    console.error("Backend error detail:", err.response.data);
+    console.error("Status:", err.response.status);
+  } else {
+    console.error("No response from server:", err.message);
+  }
     });
-    window.location.reload();
+    
     
     
 };
@@ -129,7 +137,23 @@ const completeUpdateBundle = (posting_id) => {
       }
     })
       .catch(err => {
-          console.error("Request failed:", err);
+         if (err.response) {
+    const backendData = err.response.data;
+    console.error("Status code:", err.response.status);
+
+    // If detail exists and is an array, print each error nicely
+    if (backendData.detail && Array.isArray(backendData.detail)) {
+      backendData.detail.forEach(d => {
+        console.error(`Field: ${d.loc.join(" -> ")}, Message: ${d.msg}, Type: ${d.type}`);
+      });
+    } else {
+      console.error("Backend response data:", backendData);
+    }
+  } else if (err.request) {
+    console.error("No response from server:", err.request);
+  } else {
+    console.error("Error setting up request:", err.message);
+  }
       }); 
     window.location.reload();
 };
@@ -261,14 +285,14 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     >
                     {/* List of options fo the user to choose from the menu */}
                     <option value="">Select Category</option>
-                    <option value="baked_goods">Baked Goods</option>
-                    <option value="fruit">Fruit</option>
-                    <option value="vegetables">Vegetables</option>
-                    <option value="meat">Meat</option>
-                    <option value="seafood">Seafood</option>
-                    <option value="SNACKS">Snacks</option>
-                    <option value="dairy">Dairy</option>
-                    <option value="drinks">Drinks</option>
+                    <option value="Baked Goods">Baked Goods</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Seafood">Seafood</option>
+                    <option value="Snacks">Snacks</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Drinks">Drinks</option>
                     </select>
                   </div>
 
