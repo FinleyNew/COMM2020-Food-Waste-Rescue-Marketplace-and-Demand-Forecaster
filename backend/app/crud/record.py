@@ -2,7 +2,6 @@ import httpx
 from sqlmodel import Session, select, col, func, extract, Time
 from typing import Sequence
 from datetime import datetime
-from app.models.enums import Category, ReservationStatus
 from app.models import Record
 from app.schemas.record import RecordAdminUpdate
 from app.models.bundlePosting import BundlePosting

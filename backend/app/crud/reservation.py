@@ -5,8 +5,9 @@ from sqlalchemy.exc import IntegrityError
 from app.models import Reservation
 from app.models.reservation import generate_claim_code
 from app.schemas.reservation import ReservationCreate
-from app.models.enums import Category, ReservationStatus
+from app.models.enums import ReservationStatus
 from app.schemas.reservation import ReservationAdminUpdate, ReservationCreate
+from app.crud import category as category_crud
 
 def get_all_reservations(db: Session) -> Sequence[Reservation]:
     statement = select(Reservation)
@@ -70,14 +71,14 @@ def check_familiar_face(consumer_id: int, db: Session) -> bool:
 
 def check_well_rounded(consumer_id: int, db: Session) -> bool:
     result = db.exec(
-        select(BundlePosting.category)
+        select(BundlePosting.category_id)
         .join(Reservation, Reservation.posting_id == BundlePosting.posting_id)
         .where(Reservation.user_id == consumer_id)
         .where(Reservation.status == ReservationStatus.COLLECTED)
         .distinct()
     ).all()
-
-    return len(result) >= len(Category)
+    categories = category_crud.get_all_categories(db=db)
+    return len(result) >= len(categories)
 
 def set_no_show(reservation: Reservation, db: Session):
     reservation.status = ReservationStatus.NO_SHOW

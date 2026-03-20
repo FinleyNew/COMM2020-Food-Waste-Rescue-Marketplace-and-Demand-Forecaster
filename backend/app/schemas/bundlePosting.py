@@ -11,7 +11,7 @@ from app.schemas.seller import SellerSummary
 # The base schema for bundle postings
 class BundlePostingBase(SQLModel):
     user_id: int
-    category: str
+    category_id: int
     allergens: str | None
     # Can't have a negative ammount of bundles
     available: int = Field(ge=0) 
@@ -35,7 +35,7 @@ class BundlePostingCreate(BundlePostingBase):
         return self
     
 class BundlePostingUpdate(SQLModel):
-    category: str | None = None
+    category_id: int | None = None
     allergens: str | None = None
     available: int | None = Field(default=None, ge=0)
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)

@@ -15,7 +15,7 @@ class Record(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
-    category: Category
+    category_id: int = Field(foreign_key="category.category_id")
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     raining: bool
     observed_reservations: int

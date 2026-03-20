@@ -3,7 +3,7 @@ from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from app.core.security import get_password_hash
-from app.models.enums import Role, ReservationStatus, BundleStatus, Category
+from app.models.enums import Role, ReservationStatus, BundleStatus
 from app.services.forecast import get_forecast
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User

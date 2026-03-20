@@ -50,7 +50,7 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     #Converting attributes to a usable format
     X_new = pd.DataFrame([{
         "user_id": str(bundle_in.user_id),
-        "category": str(bundle_in.category),
+        "category": str(bundle_in.category_id),
         "price": np.log(float(bundle_in.price)),
         "raining": int(bool(getattr(bundle_in, "raining", False))),
         "hour_sin": np.sin(2*np.pi*hour/24),
