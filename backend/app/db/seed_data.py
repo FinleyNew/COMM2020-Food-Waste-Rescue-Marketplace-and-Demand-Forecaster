@@ -64,7 +64,7 @@ def seed_users(db: Session):
 
     #Add 10 users with admin role
     for _ in range(10): 
-        password=get_password_hash(password)
+        password = fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
         user = User(
             role=Role.ADMIN,
             email=fake.email(),
@@ -340,7 +340,7 @@ def get_report_desc_and_response(status: ReportStatus):
     description = fake.random_element(elements=descriptions)
     index = descriptions.index(description)
     
-    response = seller_response[index] if status == ReportStatus.RESOLVED else None
+    response = seller_response[index] if status in [ReportStatus.RESOLVED, ReportStatus.SELLER_RESPONDED] else None
     
     return description, response
 
