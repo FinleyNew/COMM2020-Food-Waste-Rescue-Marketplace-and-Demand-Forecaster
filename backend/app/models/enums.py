@@ -17,12 +17,12 @@ class BundleStatus(str, Enum):
     EXPIRED = "expired"
     DELETED = "deleted"
 
-# class Category(str, Enum):
-#     BAKED_GOODS = "Baked Goods"
-#     FRUIT = "Fruit"
-#     VEGETABLES = "Vegetables"
-#     MEAT = "Meat"
-#     SEAFOOD = "Seafood"
-#     SNACKS = "Snacks"
-#     DAIRY = "Dairy"
-#     DRINKS = "Drinks"
+class Category(str, Enum):
+    BAKED_GOODS = "Baked Goods"
+    FRUIT = "Fruit"
+    VEGETABLES = "Vegetables"
+    MEAT = "Meat"
+    SEAFOOD = "Seafood"
+    SNACKS = "Snacks"
+    DAIRY = "Dairy"
+    DRINKS = "Drinks"
