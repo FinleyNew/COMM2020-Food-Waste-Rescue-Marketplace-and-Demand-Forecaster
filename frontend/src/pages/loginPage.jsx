@@ -149,33 +149,26 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         setRole(role);
 
         if (role === "consumer") {
-          setUser({
-            username: username,
-            role: "consumer"
-          });
-          localStorage.setItem("username",username);
-          localStorage.setItem("role","consumer")
+          const userObj = { username: username, role: "consumer" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           
           navigate("/discover");
 
         } else if (role === "seller") {
-          setUser({
-            username: username,
-            role: "seller"
-          });
-          localStorage.setItem("username",username);
-          localStorage.setItem("role","seller")
+          const userObj = { username: username, role: "seller" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           
           console.log(openingHours);
           navigate("/current-bundles");
 
         } else {
-          setUser({
-            username: username,
-            role: "admin"
-          });
+          const userObj = { username: username, role: "admin" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           navigate("/view-information");
         }
