@@ -33,3 +33,7 @@ def get_sellers_issue_reports(bundle_id: int, current_seller: SellerDep, db: Ses
 @router.get("/", response_model=list[IssueReportPublic])
 def get_all_issue_reports(current_user: AdminDep, db: SessionDep):
     return issueReport_service.get_all_reports(db=db)
+
+@router.delete("/{issue_id}")
+def delete_issue_report(issue_id: int, current_user: AdminDep, db: SessionDep):
+    issueReport_service.delete_issue_report(issue_id=issue_id, db=db)
