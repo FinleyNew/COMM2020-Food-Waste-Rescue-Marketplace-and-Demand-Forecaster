@@ -44,9 +44,9 @@
 
 /* Creates a button structure with colours and spacings*/
 .analytics .button {
-    background-color: green;
+    background-color: var(--button-bg);
     font-family: Arial;
-    color: white;
+    color: var(--button-text);
     padding: 10px 30px;
     text-align: center;
     display: inline-block;
