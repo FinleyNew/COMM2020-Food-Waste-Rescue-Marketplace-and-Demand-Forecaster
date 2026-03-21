@@ -69,7 +69,7 @@ function CurrentBundles() {
     const API_URL = import.meta.env.VITE_API_URL;
     if (!window.confirm("Delete this bundle?")) return;
     
-    axios.patch(`${API_URL}/api/v1/bundles/delete/${postingID}`,{}, {
+    axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
       headers:{
         Authorization: `Bearer ${token}`,
       }
