@@ -29,11 +29,11 @@ function AddBundles() {
   const [bundleWeight, setBundleWeight] = useState("0");
   
   
-  const [bundleAllergens,setBundleAllergens] = useState("none");
+  const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("Baked Goods");
  
-  const [bundlePrice,setBundlePrice] = useState("0");
-  const [numberAvailable, setNumberAvailable] = useState("0");
+  const [bundlePrice,setBundlePrice] = useState("");
+  const [numberAvailable, setNumberAvailable] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
   const token = localStorage.getItem('token');
