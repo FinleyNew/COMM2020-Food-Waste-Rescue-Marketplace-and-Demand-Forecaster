@@ -33,7 +33,7 @@ class RecordCreate(RecordBase):
         return self
     
 class RecordAdminUpdate(SQLModel):
-    category_id: CategoryPublic | None = None
+    category: CategoryPublic | None = None
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
     raining: bool | None = None
     observed_reservations: int | None = Field(default=None, ge=0)
