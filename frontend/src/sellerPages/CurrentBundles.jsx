@@ -252,7 +252,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                 <div className="rowBox">
                   <div className="textBox">
                     <p>Price: £{bundle.price_display}</p>
-                    <p>Category: {bundle.category}</p>
+                    <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
                     

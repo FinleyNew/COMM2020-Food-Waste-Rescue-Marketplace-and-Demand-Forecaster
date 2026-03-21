@@ -16,9 +16,11 @@ function AdminActionForm() {
     "Delete Reservation",
     "Delete Seller",
     "Delete Consumer",
+    "Create Category",
   ];
 
   const [selectedAction, setSelectedAction] = useState("");
+  const [category, setCategory] = useState("");
   const [userID, setUserID] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -218,6 +220,23 @@ function AdminActionForm() {
         console.error("Error fetching forecasts:", err);
         alert("No data");
       });
+  }
+
+  function createCategory() {
+    const token = localStorage.getItem('token');
+    const API_URL = import.meta.env.VITE_API_URL;
+    const data={
+      name:category
+    }
+    axios.post(`${API_URL}/api/v1/categories/`, data ,{
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(() => {
+      console.log("Category Added");
+    })
   }
 
   return (
@@ -732,6 +751,21 @@ function AdminActionForm() {
             />
           </div>
           <button className="boxButton" onClick={deleteFunction}>Submit</button>
+          </>
+        )}
+        {/* Create Category */}
+        {selectedAction==="Create Category" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter category name to add: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <button className="boxButton" onClick={createCategory}>Submit</button>
           </>
         )}
       </div>

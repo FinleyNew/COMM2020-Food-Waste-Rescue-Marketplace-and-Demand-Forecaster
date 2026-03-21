@@ -5,12 +5,34 @@ import './AddBundles.css'
 import axios from "axios";
 
 function AddBundles() {
+
+
+  const [categories, setCategories] = useState([]); //store the categories
+  useEffect(() => { //to get all the categories at the start so they can be used throughout
+      
+    axios.get(`${API_URL}/api/v1/categories/`, {
+    })
+    .then(response => {
+       setCategories(response.data); //store them in categories
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching categories:", err);
+        //alert("No data ");
+    });
+    },[])
+
+    
+
+
+
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("");
   
-  const [bundlePrice,setBundlePrice] = useState("");
+  
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
+ 
+  const [bundlePrice,setBundlePrice] = useState("");
   const [numberAvailable, setNumberAvailable] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -28,9 +50,13 @@ function AddBundles() {
   const [data, setForecastData] = useState({});
   function addBundle(){
     //Initialise data to be sent to the backend
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
+
     const data = {
       user_id: Number(payload.sub),
-      category: bundleCategory,
+      category: categoryObject,
       allergens: bundleAllergens,
       available: Number(numberAvailable),
       price: Number(bundlePrice),
@@ -54,6 +80,8 @@ function AddBundles() {
       return;
     }
     console.log(data);
+    console.log(categoryObject);
+    console.log(bundleCategory);
     
     axios.post(`${API_URL}/api/v1/bundles/`, data ,{
       headers: {
@@ -61,17 +89,24 @@ function AddBundles() {
         "Content-Type": "application/json"
       }
     })
-      .catch(err => {
-          console.error("Backend error detail:", JSON.stringify(err.response?.data)); // <-- add this console.error("Status:", err.response?.status);
-      console.error("Status:", err.response?.status);
-      }); 
+      
   }
+
+  
+
+    
+   
+
+
   function forecastData(){
     const API_URL = import.meta.env.VITE_API_URL;
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
     //Data to be used in th forecast
     const data = {
       user_id: Number(payload.sub),
-      category: bundleCategory,
+      category: categoryObject,
       allergens: bundleAllergens,
       available: Number(numberAvailable),
       price: Number(bundlePrice),
@@ -79,6 +114,7 @@ function AddBundles() {
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
+    console.log(data);
     //Checks bundle weight to be forecasted isn't extreme
     if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
       alert("Weight must be positive and less than 10,000");
@@ -137,16 +173,11 @@ function AddBundles() {
                     value={bundleCategory}
                     onChange={(e) => setBundleCategory(e.target.value)}
                   >
-                  {/* List of options fo the user to choose from the menu */}
-                  <option value="">Select Category</option>
-                  <option value="Baked Goods">Baked Goods</option>
-                  <option value="Fruit">Fruit</option>
-                  <option value="Vegetables">Vegetables</option>
-                  <option value="Meat">Meat</option>
-                  <option value="Seafood">Seafood</option>
-                  <option value="Snacks">Snacks</option>
-                  <option value="Dairy">Dairy</option>
-                  <option value="Drinks">Drinks</option>
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
                   </select>
                 </div>
               </div>
@@ -227,6 +258,11 @@ function AddBundles() {
                 </div>
               </div>
             </div>
+          </div>
+          <div>
+            <h1>Forecasting</h1>
+            <h1>{data.predicted_reservations}</h1>
+            <h1>{data.predicted_no_show_prob}</h1>
           </div>
       </div>
     </>
