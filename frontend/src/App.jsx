@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"; //importing state so we can use it to change the state of the react page when anything changes
-import { Routes, Route, Link, Navigate } from "react-router-dom"; //needs to be imported so we can add routes between pages
+import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom"; //needs to be imported so we can add routes between pages
 import ProtectedRoute from "./pages/ProtectedRoute"; //to use protected routes, so that consumers cannot enter seller pages and vice versa
 //import './App.css'
 import "./index.css"
@@ -24,10 +24,23 @@ import axios from "axios";
 //|{" "}
 
 function App() {
+
+
+  const [user, setUser] = useState(() => { //user = current state, setuser = function to update user and role later,  useState is a hook to remebember data across re-renders
+  const savedUser = localStorage.getItem("user"); //reads from local storage under the key of user
+  return savedUser ? JSON.parse(savedUser) : null; //if thertes something in local storage, if yes the parse converts back to a js object
+  });
+  const storedUser = user;
+  const username = user?.username;
+  const role = user?.role;
+  console.log("user:", user);
+  console.log("username:", username);
+  console.log("role:", role);
+
   const [settingsPopup, settingsSetPopup] = useState(false);
   const[darkMode, setDarkMode] = useState(false); //store the variable for the current state
-  const username = localStorage.getItem('username');
-  const role = localStorage.getItem('role');
+  //const username = localStorage.getItem('username');
+  //const role = localStorage.getItem('role');
   const [LSLocation,setLSLocation] = useState(localStorage.getItem('location'));
   const LScompanyName = localStorage.getItem('companyName');
   const LSopeningHours = localStorage.getItem('openingHours');
@@ -90,10 +103,7 @@ function App() {
     setDarkMode(!darkMode)
   }
 
-  const [user, setUser] = useState(() => { //user = current state, setuser = function to update user and role later,  useState is a hook to remebember data across re-renders
-  const savedUser = localStorage.getItem("user"); //reads from local storage under the key of user
-  return savedUser ? JSON.parse(savedUser) : null; //if thertes something in local storage, if yes the parse converts back to a js object
-  });
+  
   function settingsClickPopup() {
     settingsSetPopup(!settingsPopup); //if variable is true then popUp needs to be opened 
   }
@@ -102,6 +112,9 @@ function App() {
     settingsSetPopup(false); //if variable is false then popUp needs to be closed
   }
   function deleteAccount(){
+    let correctRole;
+    console.log("role from state:", role);
+  console.log("user from localStorage:", localStorage.getItem("user"));
       if(role=="seller"){
         correctRole = "sellers";
       }
@@ -109,6 +122,7 @@ function App() {
         correctRole="consumers"
       }
       const token = localStorage.getItem('token');
+      console.log(token);
       if (!window.confirm("Delete account?")) return;
       console.log(role);
     axios.delete(`${API_URL}/api/v1/${correctRole}/me`, {
@@ -118,10 +132,15 @@ function App() {
     })
     .then(response => {
       console.log("Deleted:", response.data);
-      alert("Bundle deleted");
+      alert("Account");
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser(null);
+      const navigate = useNavigate();
+      navigate("/login");
     })
     .catch(err => { //Returns alert if an error occurs
-        console.error("Error fetching bundles:", err);
+        console.error("Error:", err.response?.data);
         
     });
     
