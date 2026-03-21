@@ -13,7 +13,8 @@ from app.crud import category as category_crud
 # The crud function for creating a new bundle posting
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window: str, db: Session) -> BundlePosting:
     # Converts the Schema into a Model
-    db_bundle_posting = BundlePosting.model_validate(bundle_in, update={"owner_id": owner_id, "pickup_window": pickup_window})
+    bundle_data = bundle_in.model_dump(exclude={"category"})
+    db_bundle_posting = BundlePosting.model_validate(bundle_data, update={"owner_id": owner_id, "pickup_window": pickup_window, "category_id": bundle_in.category.category_id})
     db.add(db_bundle_posting)
     db.commit()
     db.refresh(db_bundle_posting)
