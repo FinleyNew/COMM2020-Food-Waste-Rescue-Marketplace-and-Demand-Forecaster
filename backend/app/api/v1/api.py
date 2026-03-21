@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import consumers, sellers, reservations, records, forecasts, login, users, bundlesPostings, categories
+from app.api.v1.endpoints import consumers, sellers, reservations, records, forecasts, login, users, bundlesPostings, categories, issueReports
 
 api_router = APIRouter()
 
@@ -14,3 +14,4 @@ api_router.include_router(forecasts.router, prefix = "/forecasts", tags=["foreca
 api_router.include_router(login.router, prefix = "/login", tags=["login"])
 api_router.include_router(users.router, prefix = "/users", tags=["users"])
 api_router.include_router(categories.router, prefix= "/categories", tags=["categories"])
+api_router.include_router(issueReports.router, prefix="/reports", tags=["reports"])
