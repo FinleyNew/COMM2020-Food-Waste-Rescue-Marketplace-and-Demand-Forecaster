@@ -35,8 +35,10 @@ def get_all_issue_reports(current_user: AdminDep, db: SessionDep):
     return issueReport_service.get_all_reports(db=db)
 
 @router.patch("/{issue_id}", response_model=IssueReportPublic)
-def set_issue_report_resolved(issue_id: int, db: SessionDep):
-    
+def set_issue_report_resolved(issue_id: int, current_user: ConsumerDep, db: SessionDep):
+    user_id = current_user.user_id
+    if user_id:
+        return issueReport_service.set_issue_report_resolved(issue_id=issue_id, consumer_id=user_id, db=db)
 
 @router.delete("/{issue_id}")
 def delete_issue_report(issue_id: int, current_user: AdminDep, db: SessionDep):
