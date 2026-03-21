@@ -99,7 +99,7 @@ function AdminActionForm() {
 
 
     if (!userID && selectedAction !== "Update User") {
-    alert("Please enter a User ID");
+    alert("Please enter a valid ID");
     return;
     }
     let data ={};
@@ -586,6 +586,21 @@ function AdminActionForm() {
               value={userID}
               onChange={(e) => setUserID(e.target.value)}
             />
+          </div>
+          <div>
+            <label htmlFor="category">Enter Bundle Category : </label>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  </select>
           </div>
 
            <div className="row">
