@@ -25,3 +25,7 @@ def add_response(response: str, issue_id: int, db: Session) -> IssueReport:
     db.commit()
     db.refresh(report)
     return report
+
+def get_consumer_issue_report(bundle_id: int, consumer_id: int, db: Session) -> IssueReport | None:
+    statement = select(IssueReport).where(IssueReport.posting_id == bundle_id).where(IssueReport.user_id == consumer_id)
+    return db.exec(statement).first()

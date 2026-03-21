@@ -13,3 +13,5 @@ class IssueReportCreate(IssueReportBase):
 class IssueReportPublic(IssueReportBase):
     issue_id: int
     user_id: int
+    seller_response: str
+    status: ReportStatus

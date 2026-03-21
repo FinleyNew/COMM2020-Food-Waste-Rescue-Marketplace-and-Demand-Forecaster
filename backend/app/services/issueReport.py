@@ -14,3 +14,6 @@ def respond_to_issue_report(response: str, issue_id: int, seller_id: int, db: Se
     if report.posting.user_id != seller_id:
         HTTPException(status_code=403, detail="Current seller is not the owner of this reports bundle")
     return issueReport_crud.add_response(response=response, issue_id=issue_id, db=db)
+
+def get_consumer_issue_report(bundle_id: int, consumer_id: int, db: Session) -> IssueReport | None:
+    return issueReport_crud.get_consumer_issue_report(bundle_id=bundle_id, consumer_id=consumer_id, db=db)
