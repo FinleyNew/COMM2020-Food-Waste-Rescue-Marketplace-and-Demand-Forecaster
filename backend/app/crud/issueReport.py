@@ -1,8 +1,11 @@
+from typing import Sequence
+
 from sqlmodel import Session, select
 
 from app.schemas.issueReport import IssueReportCreate
 from app.models.issueReport import IssueReport
 from app.models.enums import ReportStatus
+from app.models.bundlePosting import BundlePosting
 
 
 def create_issue_report(issue_report_in: IssueReportCreate, consumer_id: int, db: Session) -> IssueReport:
@@ -26,6 +29,10 @@ def add_response(response: str, issue_id: int, db: Session) -> IssueReport:
     db.refresh(report)
     return report
 
-def get_consumer_issue_report(bundle_id: int, consumer_id: int, db: Session) -> IssueReport | None:
+def get_consumer_issue_reports(bundle_id: int, consumer_id: int, db: Session) -> Sequence[IssueReport]:
     statement = select(IssueReport).where(IssueReport.posting_id == bundle_id).where(IssueReport.user_id == consumer_id)
-    return db.exec(statement).first()
+    return db.exec(statement).all()
+
+def get_sellers_issue_reports(seller_id: int, db: Session) -> Sequence[IssueReport]:
+    statement = select(IssueReport).join(BundlePosting, IssueReport.posting_id == BundlePosting.posting_id).where(BundlePosting.user_id == seller_id) # type: ignore
+    return db.exec(statement).all()

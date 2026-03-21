@@ -18,8 +18,14 @@ def respond_to_issue_report(response: str, issue_id: int, current_seller: Seller
     if user_id:
         return issueReport_service.respond_to_issue_report(response=response, issue_id=issue_id, seller_id=user_id, db=db)
 
-@router.get("/{bundle_id}", response_model=IssueReportPublic | None)
-def get_consumer_issue_report(bundle_id: int, current_consumer: ConsumerDep, db: SessionDep):
+@router.get("/{bundle_id}", response_model=list[IssueReportPublic])
+def get_consumer_issue_reports(bundle_id: int, current_consumer: ConsumerDep, db: SessionDep):
     user_id = current_consumer.user_id
     if user_id:
-        return issueReport_service.get_consumer_issue_report(bundle_id=bundle_id, consumer_id=user_id, db=db)
+        return issueReport_service.get_consumer_issue_reports(bundle_id=bundle_id, consumer_id=user_id, db=db)
+
+@router.get("/", response_model=list[IssueReportPublic])
+def get_sellers_issue_reports(current_seller: SellerDep, db: SessionDep):
+    user_id = current_seller.user_id
+    if user_id:
+        return issueReport_service.get_sellers_issue_reports(seller_id=user_id, db=db)

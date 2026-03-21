@@ -13,5 +13,5 @@ class IssueReportCreate(IssueReportBase):
 class IssueReportPublic(IssueReportBase):
     issue_id: int
     user_id: int
-    seller_response: str
-    status: ReportStatus
+    seller_response: str | None = None
+    status: ReportStatus = ReportStatus.AWAITING_RESPONSE
