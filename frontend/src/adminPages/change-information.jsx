@@ -3,6 +3,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function AdminActionForm() {
+
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [categories, setCategories] = useState([]); //store the categories
+  useEffect(() => { //to get all the categories at the start so they can be used throughout
+      
+    axios.get(`${API_URL}/api/v1/categories/`, {
+    })
+    .then(response => {
+       setCategories(response.data); //store them in categories
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching categories:", err);
+        //alert("No data ");
+    });
+    },[])
+
+
   const buttonData = [
     "Update Consumer",
     "Update Seller",
@@ -73,6 +91,13 @@ function AdminActionForm() {
     
     
   function completeAction() {
+
+
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
+
+
     if (!userID && selectedAction !== "Update User") {
     alert("Please enter a User ID");
     return;
@@ -93,7 +118,7 @@ function AdminActionForm() {
         break;
       case "Update Bundle":
         suffix=`bundles/admin/${userID}`;
-        if(bundleCategory) data.category = String(bundleCategory);
+        if(categoryObject) data.category = categoryObject;
         if(bundleAllergens) data.allergens = bundleAllergens;
         if(numberAvailable) data.available = Number(numberAvailable);
         if(bundlePrice) data.price = Number(bundlePrice);
@@ -113,7 +138,7 @@ function AdminActionForm() {
         break;
       case "Update Record":
         suffix=`records/admin/${userID}`;
-        if(bundleCategory) data.category = bundleCategory;
+        if(categoryObject) data.category = categoryObject;
         if(bundlePrice) data.price = Number(bundlePrice);
         if(raining) data.raining = raining;
         if(observed_reservations) data.observed_reservations = observed_reservations;
@@ -377,24 +402,19 @@ function AdminActionForm() {
           <br></br>
           <div className="row">
                     {/* drop down for allergens */}
-                    <label htmlFor="category">Enter Bundle Category : </label>
-                    <select
-                      name="category"
-                      id="category"
-                      value={bundleCategory}
-                      onChange={(e) => setBundleCategory(e.target.value)}
-                    >
-                    {/* List of options fo the user to choose from the menu */}
-                    <option value="">Select Category</option>
-                    <option value="Baked Goods">Baked Goods</option>
-                    <option value="Fruit">Fruit</option>
-                    <option value="Vegetables">Vegetables</option>
-                    <option value="Meat">Meat</option>
-                    <option value="Seafood">Seafood</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Dairy">Dairy</option>
-                    <option value="Drinks">Drinks</option>
-                    </select>
+                     <label htmlFor="category">Enter Bundle Category : </label>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  </select>
                   </div>
 
 

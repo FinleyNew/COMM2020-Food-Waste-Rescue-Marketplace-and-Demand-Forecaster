@@ -30,7 +30,7 @@ function AddBundles() {
   
   
   const [bundleAllergens,setBundleAllergens] = useState("");
-  const [bundleCategory, setBundleCategory] = useState("Baked Goods");
+  const [bundleCategory, setBundleCategory] = useState(1);
  
   const [bundlePrice,setBundlePrice] = useState("");
   const [numberAvailable, setNumberAvailable] = useState("");
