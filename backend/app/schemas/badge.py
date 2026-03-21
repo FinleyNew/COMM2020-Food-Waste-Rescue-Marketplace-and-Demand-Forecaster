@@ -5,4 +5,4 @@ class BadgeBase(SQLModel):
     detail: str
 
 class BadgePublic(BadgeBase):
-    pass
+    badge_id: int

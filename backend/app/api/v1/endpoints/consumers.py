@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.deps import AdminDep, ConsumerDep, SessionDep
 from app.schemas.consumer import ConsumerAdminUpdate, ConsumerPublic, ConsumerUpdate, ConsumerCreate
-from app.services import user as user_service
+from app.services import badge as badge_service
 from app.services import consumer as consumer_service
 from app.schemas.user import UserCreate
 from app.schemas.badge import BadgePublic
@@ -24,6 +24,10 @@ def get_all_consumers(current_user: AdminDep, db: SessionDep):
 @router.get("/me/badges", response_model=list[BadgePublic])
 def get_current_consumers_badges(current_consumer: ConsumerDep, db: SessionDep):
     return current_consumer.badges
+
+@router.get("/badges", response_model=list[BadgePublic])
+def get_all_badges(db: SessionDep):
+    return badge_service.get_all_badges(db=db)
 
 # Ednpoint for creating a new consumer
 @router.post("/", response_model = ConsumerPublic)

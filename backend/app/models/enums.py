@@ -16,13 +16,3 @@ class BundleStatus(str, Enum):
     SOLD_OUT = "sold_out"
     EXPIRED = "expired"
     DELETED = "deleted"
-
-class Category(str, Enum):
-    BAKED_GOODS = "Baked Goods"
-    FRUIT = "Fruit"
-    VEGETABLES = "Vegetables"
-    MEAT = "Meat"
-    SEAFOOD = "Seafood"
-    SNACKS = "Snacks"
-    DAIRY = "Dairy"
-    DRINKS = "Drinks"
