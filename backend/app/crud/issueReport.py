@@ -41,6 +41,15 @@ def get_all_reports(db: Session):
     statement = select(IssueReport)
     return db.exec(statement).all()
 
+def set_issue_report_resolved(issue_id: int, db: Session):
+    statement = select(IssueReport).where(IssueReport.issue_id == issue_id)
+    report = db.exec(statement).one()
+    report.status = ReportStatus.RESOLVED
+    db.add(report)
+    db.commit()
+    db.refresh(report)
+    return report
+
 def delete_issue_report(issue_id: int, db: Session):
     statement = select(IssueReport).where(IssueReport.issue_id == issue_id)
     report = db.exec(statement).first()
