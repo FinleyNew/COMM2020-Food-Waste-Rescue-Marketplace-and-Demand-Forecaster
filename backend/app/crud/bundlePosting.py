@@ -76,7 +76,9 @@ def reserve_bundle_posting(posting_id: int, db: Session):
     db.add(bundle_posting)
 
 def update_bundle_posting(db_bundle: BundlePosting, bundle_update: BundlePostingUpdate, pickup_window: str | None, db: Session) -> BundlePosting:
-    update_data = bundle_update.model_dump(exclude_unset=True, exclude={"start_time", "end_time"})
+    update_data = bundle_update.model_dump(exclude_unset=True, exclude={"category", "start_time", "end_time"})
+    if bundle_update.category:
+        db_bundle.category_id = bundle_update.category.category_id
     db_bundle.sqlmodel_update(update_data)
     if pickup_window:
         db_bundle.pickup_window = pickup_window
