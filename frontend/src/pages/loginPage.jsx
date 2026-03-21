@@ -163,7 +163,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           localStorage.setItem("token", token);
           
           console.log(openingHours);
+          
           navigate("/current-bundles");
+
+          closePopup();
 
         } else {
           const userObj = { username: username, role: "admin" }
