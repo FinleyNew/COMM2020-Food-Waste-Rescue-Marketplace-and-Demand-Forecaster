@@ -39,7 +39,7 @@ def test_collection_with_valid_code_success(mock_db):
     mock_db.commit.return_value = None
     mock_db.refresh.return_value = None
 
-    with patch("app.services.reservation.check_at_collection") as mock_check:
+    with patch("app.services.badge.check_at_collection") as mock_check:
         reservation_service.collect_by_code(
             claim_code="ABC123",
             

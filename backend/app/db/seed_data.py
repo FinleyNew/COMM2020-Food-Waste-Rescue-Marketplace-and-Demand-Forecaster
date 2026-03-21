@@ -3,12 +3,13 @@ from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from app.core.security import get_password_hash
-from app.models.enums import Role, ReservationStatus, BundleStatus, Category, ReportStatus
+from app.models.enums import Role, ReservationStatus, BundleStatus, ReportStatus
 from app.services.forecast import get_forecast
 from datetime import datetime, timedelta, timezone
 from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User, IssueReport
 from random import choices
 from app.models.badge import Badge
+from app.models.bundlePosting import Category
 from faker import Faker
 import numpy as np
 from app.schemas.bundlePosting import BundlePostingCreate
@@ -117,15 +118,18 @@ def seed_bundle_posting(db: Session):
     #Get all the sellers
     sellers = db.exec(select(Seller)).all()
 
+    # Fetch categories from DB by name
+    categories = {c.name: c for c in db.exec(select(Category)).all()}
+
     example_allergens = {
-        Category.BAKED_GOODS: ['Milk', 'Eggs', 'Wheat', 'Gluten', 'Soy'],
-        Category.FRUIT: [],
-        Category.VEGETABLES: ['Celery'],
-        Category.MEAT: [],
-        Category.SEAFOOD: ['Shellfish', 'Fish'],
-        Category.SNACKS: ['Milk', 'Eggs', 'Nuts', 'Sesame'],
-        Category.DAIRY: ['Milk', 'Soy'],
-        Category.DRINKS: ['Milk']
+        "Baked Goods": ['Milk', 'Eggs', 'Wheat', 'Gluten', 'Soy'],
+        "Fruit": [],
+        "Vegetables": ['Celery'],
+        "Meat": [],
+        "Seafood": ['Shellfish', 'Fish'],
+        "Snacks": ['Milk', 'Eggs', 'Nuts', 'Sesame'],
+        "Dairy": ['Milk', 'Soy'],
+        "Drinks": ['Milk']
     }
 
     #Add 250 bundle postings
@@ -133,9 +137,9 @@ def seed_bundle_posting(db: Session):
         reservations = fake.random_int(1, 25)
         available = fake.random_int(0, 5)
 
-        category = calculate_category(reservations)
+        category = calculate_category(reservations, categories)
         try:
-            allergens = ', '.join(fake.random_elements(elements=example_allergens[category], unique=True))
+            allergens = ', '.join(fake.random_elements(elements=example_allergens[category.name], unique=True))
         except:
             allergens = None
 
@@ -157,7 +161,7 @@ def seed_bundle_posting(db: Session):
         #Assign each post to a random seller
         posting = BundlePosting(
             user_id=fake.random_element(elements=sellers).user_id,
-            category=category,
+            category_id=category.category_id,
             allergens=allergens,
             available=available,
             reserved=reservations,
@@ -220,7 +224,7 @@ def seed_record(db: Session):
             user_id=post.user_id,
             posting_id=post.posting_id,
             pickup_window=post.pickup_window,
-            category=post.category,
+            category_id=post.category_id,
             price=post.price,
             raining=calculate_rain(reservations),
             observed_reservations=post.reserved,
@@ -346,6 +350,22 @@ def get_report_desc_and_response(status: ReportStatus):
     return description, response
 
 
+def seed_categories(db: Session):
+    BAKED_GOODS = Category(name="Baked Goods")
+    FRUIT = Category(name="Fruit")
+    VEGETABLES = Category(name="Vegetables")
+    MEAT = Category(name="Meat")
+    SEAFOOD = Category(name="Seafood")
+    SNACKS = Category(name="Snacks")
+    DAIRY = Category(name="Dairy")
+    DRINKS = Category(name="Drinks")
+    categories = [
+        BAKED_GOODS, FRUIT, VEGETABLES, MEAT, SEAFOOD, SNACKS, DAIRY, DRINKS
+    ]
+    for category in categories:
+        db.add(category)
+    db.commit()
+
 #Price based on number of reservations
 def calculate_price(reservations: int) -> float:
     base_price = (250/reservations) ** (2/3)
@@ -393,27 +413,28 @@ def calculate_day_of_week(reservations: int) -> int:
     return np.random.choice(a=days, p=probs)
 
 #Category based on number of reservations
-def calculate_category(reservations: int) -> Category:
+def calculate_category(reservations: int, categories: dict) -> Category:
     b = 0.015 * (reservations - 12.5)
     h = 0.55 + b
     o = 1 - h
     k = o/0.45
 
     category_probs = {
-        Category.MEAT: 0.14 * k, 
-        Category.DAIRY: 0.11 * k,
-        Category.FRUIT: 0.09 * k,
-        Category.VEGETABLES: 0.07 * k,
-        Category.SEAFOOD: 0.04 * k,
-        Category.BAKED_GOODS: h * 0.22 / 0.55,
-        Category.SNACKS: h * 0.18 / 0.55,
-        Category.DRINKS: h * 0.15 / 0.55
+        "Meat": 0.14 * k, 
+        "Dairy": 0.11 * k,
+        "Fruit": 0.09 * k,
+        "Vegetables": 0.07 * k,
+        "Seafood": 0.04 * k,
+        "Baked Goods": h * 0.22 / 0.55,
+        "Snacks": h * 0.18 / 0.55,
+        "Drinks": h * 0.15 / 0.55
     }
 
-    categories = list(category_probs.keys())
+    category_list = list(category_probs.keys())
     probs = list(category_probs.values())
+    chosen_name = choices(category_list, weights=probs, k=1)[0]
 
-    return choices(categories, weights=probs, k=1)[0]
+    return categories[chosen_name]
 
 #Rain based on number of reservations
 def calculate_rain(reservations: int) -> bool:
@@ -455,6 +476,7 @@ def seed_tables():
             print("DB already seeded")
             return
         print("Seeding data")
+        seed_categories(db=db)
         seed_users(db=db)
         seed_consumer(db=db)
         seed_seller(db=db)

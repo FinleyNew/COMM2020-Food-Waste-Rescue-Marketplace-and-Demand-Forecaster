@@ -122,7 +122,7 @@ function App() {
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
-        alert("No data ");
+        
     });
     
   }
@@ -141,7 +141,7 @@ function App() {
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching bundles:", err);
-        alert("No data ");
+        //alert("No data ");
     });
     },[role])
   

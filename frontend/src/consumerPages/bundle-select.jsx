@@ -93,7 +93,7 @@ function BundleSelect() {
                 </div>
                 <div className="bundleRow">
                   <div className="column">
-                    <p>Category: {bundle.category}</p> {/* displays the category, allergens and prices */}
+                    <p>Category: {bundle.category.name}</p> {/* displays the category, allergens and prices */}
                     <p>Allergens: {bundle.allergens}</p>
                     <p>Price: £{bundle.price}</p>
                   </div>

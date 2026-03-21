@@ -1,11 +1,15 @@
 from datetime import datetime, timedelta, timezone
+from typing import Sequence
 
 from sqlmodel import Session
-
 from app.crud import badge as badge_crud
 from app.crud import reservation as reservation_crud
 from app.crud import record as record_crud
-from app.models.enums import Category, ReservationStatus
+from app.models.enums import ReservationStatus
+from app.models.badge import Badge
+
+def get_all_badges(db: Session) -> Sequence[Badge]:
+    return badge_crud.get_all_badges(db=db)
 
 def check_at_reservation(consumer_id: int, db: Session):
     check_good_start(consumer_id=consumer_id, db=db)
