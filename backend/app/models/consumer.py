@@ -18,4 +18,4 @@ class Consumer(SQLModel, table=True):
     user: "User" = Relationship(back_populates="consumer")
     reservations: List["Reservation"] = Relationship(back_populates="consumer")
     badges: list[Badge] = Relationship(link_model=ConsumerBadge)
-    report: List["IssueReport"] = Relationship(back_populates="consumer")
+    reports: List["IssueReport"] = Relationship(back_populates="consumer")

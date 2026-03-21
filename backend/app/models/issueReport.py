@@ -14,5 +14,5 @@ class IssueReport(SQLModel, table=True):
     status: ReportStatus = Field(default=ReportStatus.AWAITING_RESPONSE)
     seller_response: str | None = Field(default=None)
 
-    consumer: "Consumer" = Relationship(back_populates="report")
-    posting: "BundlePosting" = Relationship(back_populates="report")
+    consumer: "Consumer" = Relationship(back_populates="reports")
+    posting: "BundlePosting" = Relationship(back_populates="reports")

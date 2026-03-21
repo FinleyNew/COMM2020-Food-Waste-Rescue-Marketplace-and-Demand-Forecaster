@@ -20,5 +20,8 @@ def respond_to_issue_report(response: str, issue_id: int, seller_id: int, db: Se
 def get_consumer_issue_reports(bundle_id: int, consumer_id: int, db: Session) -> Sequence[IssueReport]:
     return issueReport_crud.get_consumer_issue_reports(bundle_id=bundle_id, consumer_id=consumer_id, db=db)
 
-def get_sellers_issue_reports(seller_id: int, db: Session) -> Sequence[IssueReport]:
-    return issueReport_crud.get_sellers_issue_reports(seller_id=seller_id, db=db)
+def get_sellers_issue_reports(bundle_id: int, seller_id: int, db: Session) -> Sequence[IssueReport]:
+    return issueReport_crud.get_sellers_issue_reports(bundle_id=bundle_id, seller_id=seller_id, db=db)
+
+def delete_issue_report(issue_id: int, db: Session):
+    issueReport_crud.delete_issue_report(issue_id=issue_id, db=db)
