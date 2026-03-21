@@ -37,6 +37,10 @@ def get_sellers_issue_reports(bundle_id: int, seller_id: int, db: Session) -> Se
     statement = select(IssueReport).join(BundlePosting, IssueReport.posting_id == BundlePosting.posting_id).where(IssueReport.posting_id == bundle_id).where(BundlePosting.user_id == seller_id) # type: ignore
     return db.exec(statement).all()
 
+def get_all_reports(db: Session):
+    statement = select(IssueReport)
+    return db.exec(statement).all()
+
 def delete_issue_report(issue_id: int, db: Session):
     statement = select(IssueReport).where(IssueReport.issue_id == issue_id)
     report = db.exec(statement).first()
