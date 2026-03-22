@@ -60,6 +60,7 @@ def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
     bundle = get_bundle_posting(posting_id=posting_id, db=db)
     for reservation in bundle.reservations:
         reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
+    forecast_service.delete_forecast(forecast_id=bundle.forecast.forecast_id, db=db)
     return bundlePosting_crud.set_bundle_deleted(bundle=bundle, db=db)
 
 # The service for deleting a bundle posting

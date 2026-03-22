@@ -149,33 +149,29 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         setRole(role);
 
         if (role === "consumer") {
-          setUser({
-            username: username,
-            role: "consumer"
-          });
-          localStorage.setItem("username",username);
-          localStorage.setItem("role","consumer")
+          const userObj = { username: username, role: "consumer" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           
           navigate("/discover");
 
         } else if (role === "seller") {
-          setUser({
-            username: username,
-            role: "seller"
-          });
-          localStorage.setItem("username",username);
-          localStorage.setItem("role","seller")
+          const userObj = { username: username, role: "seller" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           
           console.log(openingHours);
+          
           navigate("/current-bundles");
 
+          closePopup();
+
         } else {
-          setUser({
-            username: username,
-            role: "admin"
-          });
+          const userObj = { username: username, role: "admin" }
+          setUser(userObj)
+          localStorage.setItem("user", JSON.stringify(userObj))
           localStorage.setItem("token", token);
           navigate("/view-information");
         }
@@ -462,7 +458,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     <h3>Terms and Conditions</h3>
                     <div className="scrollBox">
                       <p>Last Updated: 16/03/2026</p>
-                      <p>Platform name: tll.me</p>
+                      <p>Platform name: tlll.me</p>
                       <h3>1. Introduction</h3>
                       <p>These Terms and Conditions govern access to and use of the tlll.com web application. tlll.com is an educational software platform designed to reduce food waste by allowing sellers to list surplus food bundles and consumers to reserve those bundles for collection. By creating an account, accessing the platform, or using any part of the service, you agree to these Terms.</p>
                       <h3>2. About the Platform</h3>

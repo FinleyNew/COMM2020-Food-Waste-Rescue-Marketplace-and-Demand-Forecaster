@@ -2,7 +2,6 @@ import httpx
 from sqlmodel import Session, select, col, func, extract, Time
 from typing import Sequence
 from datetime import datetime
-from app.models.enums import Category, ReservationStatus
 from app.models import Record
 from app.schemas.record import RecordAdminUpdate
 from app.models.bundlePosting import BundlePosting
@@ -16,7 +15,9 @@ from app.services import reservation as reservation_service
 # Will just have a 1 in 10 chance of rain for any record
 
 def update_record(db_record: Record, record_update: RecordAdminUpdate, pickup_window: str | None, db: Session) -> Record:
-    update_data = record_update.model_dump(exclude_unset=True)
+    update_data = record_update.model_dump(exclude_unset=True, exclude={"category"})
+    if record_update.category:
+        db_record.category_id = record_update.category.category_id
     db_record.sqlmodel_update(update_data)
     if pickup_window:
         db_record.pickup_window = pickup_window

@@ -7,6 +7,28 @@ import Bundle from "../assets/BundleImage.png";
 import axios from "axios";
 function CurrentBundles() {
   const [Popup, setPopup] = useState(false);
+
+  const [categories, setCategories] = useState([]); //store the categories
+  useEffect(() => { //to get all the categories at the start so they can be used throughout
+    const API_URL = import.meta.env.VITE_API_URL;
+    axios.get(`${API_URL}/api/v1/categories/`, {
+    })
+    .then(response => {
+       setCategories(response.data); //store them in categories
+       if (response.data.length > 0) {
+      setBundleCategory(response.data[0].category_id); // ✅ real ID as default
+      }
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching categories:", err);
+        //alert("No data ");
+    });
+    },[])
+
+
+
+
+
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //create state
   const [noBundles, setNoBundles] = useState(false);
@@ -75,8 +97,7 @@ function CurrentBundles() {
     console.log(token);
     const postingID = posting_id;
     const API_URL = import.meta.env.VITE_API_URL;
-    
-    axios.patch(`${API_URL}/api/v1/bundles/delete/${postingID}`,{}, {
+    axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
       headers:{
         Authorization: `Bearer ${token}`,
       }
@@ -104,16 +125,19 @@ function CurrentBundles() {
 };
 
 const handleUpdateBundle = (posting_id) => {
- 
+  const bundle = bundles.find(b => b.posting_id === posting_id);
+   setBundleCategory(bundle.category.category_id);
   setUpdateBundle(posting_id);
 };
 
 
 const completeUpdateBundle = (posting_id) => {
   
-
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
     const data={};
-    console.log(data);
+    
     //Function to prevent extreme entry for bundle weight with an alert
     if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
       alert("Weight must be positive and less than 10,000");
@@ -129,11 +153,11 @@ const completeUpdateBundle = (posting_id) => {
       alert("Price must be positive and less than 100");
       return;
     }
-    if(bundleCategory) data.category=bundleCategory;
+    if(categoryObject) data.category = categoryObject;
     if(bundleAllergens) data.allergens = bundleAllergens;
-    if(numberAvailable) data.available = numberAvailable;
-    if(bundlePrice) data.price = bundlePrice;
-    if(bundleWeight) data.weight = bundleWeight;
+    if(numberAvailable) data.available = Number(numberAvailable);
+    if(bundlePrice) data.price = Number(bundlePrice);
+    if(bundleWeight) data.weight = Number(bundleWeight);
     
     if(startTime){
       const today = new Date();
@@ -147,12 +171,16 @@ const completeUpdateBundle = (posting_id) => {
   }
 
     console.log(data);
+    console.log(categoryObject);
     
     axios.patch(`${API_URL}/api/v1/bundles/${posting_id}`, data ,{
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
+    })
+    .then(() => {
+      window.location.reload();
     })
       .catch(err => {
          if (err.response) {
@@ -173,7 +201,7 @@ const completeUpdateBundle = (posting_id) => {
     console.error("Error setting up request:", err.message);
   }
       }); 
-    window.location.reload();
+    
 };
 
 const enterCode = (claim_code) => { //Function to return an entered code from the backend
@@ -244,7 +272,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                 <div className="rowBox">
                   <div className="textBox">
                     <p>Price: £{bundle.price_display}</p>
-                    <p>Category: {bundle.category}</p>
+                    <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
                     
@@ -387,6 +415,62 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     </div>
                   </div>
                   </div>
+
+                  <div className="row">
+                  {/* Makes an input box with a label to input the number of bundles to sell */}
+                  <label htmlFor="numAvailable">Enter Number Available : </label>
+                  <input
+                    id="numAvailable"
+                    type="number"
+                    value={numberAvailable}
+                    onChange={(e) => setNumberAvailable(e.target.value)}
+                  />
+              </div>
+
+                  <div className="row">
+                  {/* An input box with a label to input the bundle price */}
+                  <label htmlFor="price">Enter Bundle Price : </label>
+                  <input
+                    id="price"
+                    type="number"
+                    value={bundlePrice}
+                    onChange={(e) => setBundlePrice(e.target.value)}
+                  />
+                </div>
+
+                  <div className="row">
+                  {/* Outputs an input box with a label asking for bundle weight */}
+                  <label htmlFor="weight">Enter Bundle Weight : </label>
+                  <input
+                    id="weight"
+                    type="number"
+                    value={bundleWeight}
+                    onChange={(e) => setBundleWeight(e.target.value)}
+                  />
+                </div>
+
+                  <div className="row">
+                  {/* Outputs a drop down menu for the user to click a bundle collection time */}
+                  <label htmlFor="collectionTime">Collection Time: </label>
+                  {/* Divides the start and end time before saving them seperately */}
+                  <select
+                    id="collectionTime"
+                    onChange={(e) => {
+                      const[start,end] = e.target.value.split(" - ");
+                      setStartTime(start);
+                      setEndTime(end);
+                    }}
+                  >
+                    {slots.map((slot,idx) =>(
+                      <option key={idx} value={slot}>
+                        {slot}
+                      </option>
+                    ))}
+                  </select>
+                    {/* Button to add bundles when clicked and forecast the data */}
+                </div>
+                <button className="boxButton" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
+                <button className="boxButton" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
                 </>
                 
                   

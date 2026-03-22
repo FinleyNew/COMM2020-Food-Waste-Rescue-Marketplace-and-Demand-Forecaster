@@ -8,7 +8,8 @@ router = APIRouter()
 
 @router.get("/", response_model=list[RecordPublic])
 def get_all_records(current_user: AdminDep, db: SessionDep):
-    return record_service.get_all_records(db=db)
+    records = record_service.get_all_records(db=db)
+    return records or []
 
 @router.patch("/admin/{record_id}", response_model=RecordPublic)
 def admin_update_record(record_id: int, record_update: RecordAdminUpdate, current_user: AdminDep, db: SessionDep):
