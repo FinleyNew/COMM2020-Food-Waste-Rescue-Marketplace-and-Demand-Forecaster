@@ -488,9 +488,12 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
             ))}
           </div>
           {noBundles && (
-          <p style={{color:"red"}}>
-                      No bundles
-                  </p>)}
+          <div className="mainBox">
+            <p className="errorBox" style={{color:"red"}}>
+                No bundles
+            </p>
+          </div>
+          )}
         </div>
     </>
   );
