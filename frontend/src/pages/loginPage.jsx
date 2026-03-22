@@ -239,25 +239,23 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
 
     }
     else if(accountType==="Seller"){
-      const data = {
-        seller_in: {
-          name: companyName,
-          location: location,
-          opening_hours: `${openingTime} - ${closingTime}`
-        },
-        user_in: {
-          email: username,
-          password: password
-        }
+      const formData = new FormData()
+      formData.append('name', companyName)
+      formData.append('location', location)
+      formData.append('opening_hours', `${openingTime} - ${closingTime}`)
+      formData.append('email', username)
+      formData.append('password', password)
+      const logoFile = null
+      if (logoFile) {
+          formData.append('file', logoFile)
       }
-      console.log(data);
-        axios.post(`${API_URL}/api/v1/sellers/`, data, {
+        axios.post(`${API_URL}/api/v1/sellers/`, formData, {
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "multipart/form-data"
           }
           })
           .then(response => {
-              console.log(data);
+              console.log(formData);
               navigate("/login")
               handleAccountCreation();
               closePopup()

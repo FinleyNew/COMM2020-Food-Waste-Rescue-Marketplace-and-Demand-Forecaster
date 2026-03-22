@@ -18,7 +18,7 @@ def get_current_seller(current_seller: SellerDep):
     return current_seller
 
 # Ednpoint for creating a new seller
-@router.post("/")
+@router.post("/", response_model=SellerPublic)
 async def create_seller(
     db: SessionDep,
     name: str = Form(...),
