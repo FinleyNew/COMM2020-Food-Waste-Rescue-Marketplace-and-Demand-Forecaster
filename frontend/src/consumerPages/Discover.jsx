@@ -92,7 +92,7 @@ function Discover() {
               <img src={Bundle} alt="Bundle" className="bundleImage" />
               <div className="textBox">
                 <div className="bundleRow">
-                  <h1>{bundle.category || "Bundle Name"}</h1>
+                  <h1>{bundle.category.name || "Bundle Name"}</h1>
                   <h1>{bundle.available} Available</h1>
                 </div>
                 <div className="bundleRow">

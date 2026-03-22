@@ -6,15 +6,39 @@ import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png";
 import axios from "axios";
 function CurrentBundles() {
+
+  const [categories, setCategories] = useState([]); //store the categories
+  useEffect(() => { //to get all the categories at the start so they can be used throughout
+    const API_URL = import.meta.env.VITE_API_URL;
+    axios.get(`${API_URL}/api/v1/categories/`, {
+    })
+    .then(response => {
+       setCategories(response.data); //store them in categories
+       if (response.data.length > 0) {
+      setBundleCategory(response.data[0].category_id); // ✅ real ID as default
+      }
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching categories:", err);
+        //alert("No data ");
+    });
+    },[])
+
+
+
+
+
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundles, setBundles] = useState([]); //create state
   const [noBundles, setNoBundles] = useState(false);
   const [code, setCode] = useState("");
-  const [updateBundle, setUpdateBundle] = useState(false);
+  const [updateBundle, setUpdateBundle] = useState(null);
   const navigate = useNavigate();
-  
+  const [openReply, setOpenReply] = useState(null); 
+  const [replyText, setReplyText] = useState({});  
   const [bundleWeight, setBundleWeight] = useState("");
-  
+  const [viewReports, setViewReports] = useState("");
+  const [reports, setReports] = useState([]);
   const [bundlePrice,setBundlePrice] = useState("");
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
@@ -66,10 +90,10 @@ function CurrentBundles() {
     const token = localStorage.getItem('token');
     console.log(token);
     const postingID = posting_id;
-    const API_URL = import.meta.env.VITE_API_URL;
+    
     if (!window.confirm("Delete this bundle?")) return;
     
-    axios.patch(`${API_URL}/api/v1/bundles/delete/${postingID}`,{}, {
+    axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
       headers:{
         Authorization: `Bearer ${token}`,
       }
@@ -96,16 +120,19 @@ function CurrentBundles() {
 };
 
 const handleUpdateBundle = (posting_id) => {
- 
-  setUpdateBundle(true);
+  const bundle = bundles.find(b => b.posting_id === posting_id);
+   setBundleCategory(bundle.category.category_id);
+  setUpdateBundle(posting_id);
 };
 
 
 const completeUpdateBundle = (posting_id) => {
   
-
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
     const data={};
-    console.log(data);
+    
     //Function to prevent extreme entry for bundle weight with an alert
     if(Number(bundleWeight)>10000 || Number(bundleWeight) <0){
       alert("Weight must be positive and less than 10,000");
@@ -121,11 +148,11 @@ const completeUpdateBundle = (posting_id) => {
       alert("Price must be positive and less than 100");
       return;
     }
-    if(bundleCategory) data.category=bundleCategory;
+    if(categoryObject) data.category = categoryObject;
     if(bundleAllergens) data.allergens = bundleAllergens;
-    if(numberAvailable) data.available = numberAvailable;
-    if(bundlePrice) data.price = bundlePrice;
-    if(bundleWeight) data.weight = bundleWeight;
+    if(numberAvailable) data.available = Number(numberAvailable);
+    if(bundlePrice) data.price = Number(bundlePrice);
+    if(bundleWeight) data.weight = Number(bundleWeight);
     
     if(startTime){
       const today = new Date();
@@ -139,12 +166,16 @@ const completeUpdateBundle = (posting_id) => {
   }
 
     console.log(data);
+    console.log(categoryObject);
     
     axios.patch(`${API_URL}/api/v1/bundles/${posting_id}`, data ,{
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
+    })
+    .then(() => {
+      window.location.reload();
     })
       .catch(err => {
          if (err.response) {
@@ -165,7 +196,7 @@ const completeUpdateBundle = (posting_id) => {
     console.error("Error setting up request:", err.message);
   }
       }); 
-    window.location.reload();
+    
 };
 
 const enterCode = (claim_code) => { //Function to return an entered code from the backend
@@ -187,6 +218,41 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
 };
 
 
+const handleViewReports = (bundle_id)  => {
+  const token = localStorage.getItem('token');
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  axios.get(`${API_URL}/api/v1/reports/seller/${bundle_id}`, {  
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })                                                      
+  .then(response => {
+    console.log("response created");
+    console.log(response.data);
+    setReports(response.data);
+    setViewReports(bundle_id);
+  });
+}
+
+const submitReply = (issue_id) => {
+  const token = localStorage.getItem('token');
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  axios.patch(`${API_URL}/api/v1/reports/${issue_id}/${replyText[issue_id]}`,
+    {},  // empty body
+    { headers: { "Authorization": `Bearer ${token}` }}  // config goes here
+  )
+  .then(() => {
+    alert("Response sent!");
+    setOpenReply(null);
+    setReplyText(prev => ({ ...prev, [issue_id]: "" }));  // use issue_id not report_id
+    window.location.reload();
+  })
+  .catch(err => console.error(err));
+
+
+};
   return (
     <>
       <div className="currentBundles">
@@ -252,7 +318,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                 <div className="rowBox">
                   <div className="textBox">
                     <p>Price: £{bundle.price_display}</p>
-                    <p>Category: {bundle.category}</p>
+                    <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
                     
@@ -280,30 +346,26 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     <button className="deleteButton" onClick={() => deleteBundle(bundle.posting_id)}>
                         Delete Bundle
                     </button>
+                    <button className="view_reports" onClick={() => handleViewReports(bundle.posting_id)}>View Reports</button>
                   </div>
                 </div>
-                {updateBundle && ( 
+                {updateBundle === bundle.posting_id&& ( 
                   <>
                       <div className="row">
                     {/* drop down for allergens */}
                     <label htmlFor="category">Enter Bundle Category : </label>
-                    <select
-                      name="category"
-                      id="category"
-                      value={bundleCategory}
-                      onChange={(e) => setBundleCategory(e.target.value)}
-                    >
-                    {/* List of options fo the user to choose from the menu */}
-                    <option value="">Select Category</option>
-                    <option value="Baked Goods">Baked Goods</option>
-                    <option value="Fruit">Fruit</option>
-                    <option value="Vegetables">Vegetables</option>
-                    <option value="Meat">Meat</option>
-                    <option value="Seafood">Seafood</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Dairy">Dairy</option>
-                    <option value="Drinks">Drinks</option>
-                    </select>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  </select>
                   </div>
 
 
@@ -375,7 +437,9 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     {/* Button to add bundles when clicked and forecast the data */}
                 </div>
                 <button className="boxButton" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
-                <button className="boxButton" onClick={() => setUpdateBundle(false)}>Cancel Update</button>
+                <button className="boxButton" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
+
+                
                 </>
                 
                   
@@ -383,8 +447,36 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
               )}
               
               
-
               
+
+              {viewReports === bundle.posting_id && (
+              <>
+                {reports.map(report => (
+                  <div key={report.issue_id}>
+                  <p>Description: {report.description}</p>
+                  <p>Status: {report.status}</p>
+                  <p>Seller Response: {report.seller_response}</p>
+
+                <button onClick={() => setOpenReply(openReply === report.issue_id ? null : report.issue_id)}>
+                  {openReply === report.issue_id ? "Cancel" : "Respond"}
+                </button>
+
+                {openReply === report.issue_id && (
+                  <div>
+                  <input
+                    value={replyText[report.issue_id] || ""}
+                    onChange={(e) => setReplyText(prev => ({ ...prev, [report.issue_id]: e.target.value }))}
+                    placeholder="Type Response"
+                  />
+                <br>
+                </br>
+                <button onClick={() => submitReply(report.issue_id)}>Submit Response</button>
+                  </div>
+                )}
+              </div>
+              ))}
+              </>
+            )}
 
                 
 

@@ -30,6 +30,15 @@ function View_information() {
       case "Get All Users":
         suffix="users/";
         break;
+      case "Get All Categories":
+        suffix="categories/"
+        break;
+      case "Get All Badges":
+        suffix="consumers/badges"
+        break;
+      case "Get All Issue Reports":
+        suffix="reports/"
+        break;
       default:
         console.log("Unknown button clicked!");
     }
@@ -58,7 +67,7 @@ function View_information() {
 
 
   
-  const buttonValues = ["Get All Consumers", "Get All Sellers", "Get All Bundles", "Get All Reservations", "Get All Records", "Get All Forecasts", "Get All Users"];
+  const buttonValues = ["Get All Consumers", "Get All Sellers", "Get All Bundles", "Get All Reservations", "Get All Records", "Get All Forecasts", "Get All Users", "Get All Categories", "Get All Badges", "Get All Issue Reports"];
   return (
     <>
     {/* Initialises the navifation bar where sellers can move between pages */}

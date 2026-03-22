@@ -3,6 +3,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function AdminActionForm() {
+
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [categories, setCategories] = useState([]); //store the categories
+  useEffect(() => { //to get all the categories at the start so they can be used throughout
+      
+    axios.get(`${API_URL}/api/v1/categories/`, {
+    })
+    .then(response => {
+       setCategories(response.data); //store them in categories
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching categories:", err);
+        //alert("No data ");
+    });
+    },[])
+
+
   const buttonData = [
     "Update Consumer",
     "Update Seller",
@@ -16,9 +34,12 @@ function AdminActionForm() {
     "Delete Reservation",
     "Delete Seller",
     "Delete Consumer",
+    "Delete Issue Report",
+    "Create Category",
   ];
-
+  const [reportID, setReportID] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
+  const [category, setCategory] = useState("");
   const [userID, setUserID] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -71,8 +92,15 @@ function AdminActionForm() {
     
     
   function completeAction() {
+
+
+    const categoryObject = categories.find(
+      cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
+    );
+
+
     if (!userID && selectedAction !== "Update User") {
-    alert("Please enter a User ID");
+    alert("Please enter a valid ID");
     return;
     }
     let data ={};
@@ -91,7 +119,7 @@ function AdminActionForm() {
         break;
       case "Update Bundle":
         suffix=`bundles/admin/${userID}`;
-        if(bundleCategory) data.category = String(bundleCategory);
+        if(categoryObject) data.category = categoryObject;
         if(bundleAllergens) data.allergens = bundleAllergens;
         if(numberAvailable) data.available = Number(numberAvailable);
         if(bundlePrice) data.price = Number(bundlePrice);
@@ -111,7 +139,7 @@ function AdminActionForm() {
         break;
       case "Update Record":
         suffix=`records/admin/${userID}`;
-        if(bundleCategory) data.category = bundleCategory;
+        if(categoryObject) data.category = categoryObject;
         if(bundlePrice) data.price = Number(bundlePrice);
         if(raining) data.raining = raining;
         if(observed_reservations) data.observed_reservations = observed_reservations;
@@ -195,10 +223,14 @@ function AdminActionForm() {
       case "Delete Consumer":
         suffix=`consumers/${bundleID}`;
         break;
+      case "Delete Issue Report":
+        suffix=`reports/${bundleID}`;
+        break;
       default:
+        break;
 
     }
-    
+    console.log(`${API_URL}/api/v1/${suffix}`);
     axios.delete(`${API_URL}/api/v1/${suffix}` ,{
       
        //Fetch data for the user
@@ -214,10 +246,29 @@ function AdminActionForm() {
           
         
       })
-      .catch(err => { //Returns alert if an error occurs
-        console.error("Error fetching forecasts:", err);
-        alert("No data");
-      });
+      .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+            
+              });
+  }
+
+  function createCategory() {
+    const token = localStorage.getItem('token');
+    const API_URL = import.meta.env.VITE_API_URL;
+    const data={
+      name:category
+    }
+    axios.post(`${API_URL}/api/v1/categories/`, data ,{
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(() => {
+      console.log("Category Added");
+    })
   }
 
   return (
@@ -358,24 +409,19 @@ function AdminActionForm() {
           <br></br>
           <div className="row">
                     {/* drop down for allergens */}
-                    <label htmlFor="category">Enter Bundle Category : </label>
-                    <select
-                      name="category"
-                      id="category"
-                      value={bundleCategory}
-                      onChange={(e) => setBundleCategory(e.target.value)}
-                    >
-                    {/* List of options fo the user to choose from the menu */}
-                    <option value="">Select Category</option>
-                    <option value="Baked Goods">Baked Goods</option>
-                    <option value="Fruit">Fruit</option>
-                    <option value="Vegetables">Vegetables</option>
-                    <option value="Meat">Meat</option>
-                    <option value="Seafood">Seafood</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Dairy">Dairy</option>
-                    <option value="Drinks">Drinks</option>
-                    </select>
+                     <label htmlFor="category">Enter Bundle Category : </label>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  </select>
                   </div>
 
 
@@ -547,6 +593,21 @@ function AdminActionForm() {
               value={userID}
               onChange={(e) => setUserID(e.target.value)}
             />
+          </div>
+          <div>
+            <label htmlFor="category">Enter Bundle Category : </label>
+                  <select
+                    name="category"
+                    id="category"
+                    value={bundleCategory}
+                    onChange={(e) => setBundleCategory(e.target.value)}
+                  >
+                  {categories.map((cat) => (
+                    <option key={cat.category_id} value={cat.category_id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                  </select>
           </div>
 
            <div className="row">
@@ -732,6 +793,36 @@ function AdminActionForm() {
             />
           </div>
           <button className="boxButton" onClick={deleteFunction}>Submit</button>
+          </>
+        )}
+        {/* Delete Issue Report */}
+        {selectedAction==="Delete Issue Report" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter IssueID to delete: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={bundleID}
+              onChange={(e) => setBundleID(e.target.value)}
+            />
+          </div>
+          <button className="boxButton" onClick={deleteFunction}>Submit</button>
+          </>
+        )}
+        {/* Create Category */}
+        {selectedAction==="Create Category" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter category name to add: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <button className="boxButton" onClick={createCategory}>Submit</button>
           </>
         )}
       </div>

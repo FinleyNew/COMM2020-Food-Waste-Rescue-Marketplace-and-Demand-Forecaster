@@ -84,7 +84,7 @@ function Analytics() {
                   <p className="desc">user_id - {analytic.user_id}</p>
                     <p className="desc">Company - Amazon</p>
                     <p className="desc">Price - {analytic.price}</p>
-                    <p className="desc">Category - {analytic.category}</p>
+                    <p className="desc">Category - {analytic.category.name}</p>
                     <p className="desc">Reservations - {analytic.observed_reservations}</p>
                     <p className="desc">No Shows - {analytic.observed_no_show}</p>
                     <p className="desc">Expired - {analytic.observed_expired}</p>

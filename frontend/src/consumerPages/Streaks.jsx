@@ -7,6 +7,7 @@ function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
   const [badges, setBadges] = useState([]);
+  const [allBadges, setAllBadges] = useState([]);
 
   useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
     const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
@@ -42,6 +43,15 @@ function Streaks() {
     });
     
   },[badges]) //allows the page to rerender if anything changes
+
+  useEffect(() => {
+     axios.get(`${API_URL}/api/v1/consumers/badges`,{ //the backend server url to get the information for 
+      
+    })
+    .then(response => {
+      setAllBadges(response.data);
+    })
+  })
 
   
 
@@ -185,6 +195,20 @@ function Streaks() {
       <p>{badge.detail}</p>
     </div>
   ))}
+  {allBadges.map(badge => (
+            
+              <div className="bundleEntry">
+                
+                <div className="textBox">
+                  <div className="bundleRow">
+                    <h1>{badge.name} Name </h1>
+                    <h1>{badge.detail} Detail</h1>
+                  </div>
+                  
+                </div>
+              </div>
+            
+          ))}
 </div>
       </>
     );

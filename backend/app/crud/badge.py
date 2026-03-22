@@ -1,7 +1,11 @@
+from typing import Sequence
 from sqlmodel import Session, select
 
 from app.models.badge import Badge, ConsumerBadge
 
+def get_all_badges(db: Session) -> Sequence[Badge]:
+    statement = select(Badge)
+    return db.exec(statement).all()
 
 def award_badge(badge_name: str, consumer_id: int, db: Session):
     # Get the badge

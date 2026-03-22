@@ -10,6 +10,10 @@ function BundleSelect() {
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
+  const [reportButton, setReportButton] = useState(false);
+  const [viewReport, setViewReportButton] = useState(false);
+  const [showReports, setShowReports] = useState([]);
+  const [report, setReport] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
@@ -53,12 +57,48 @@ function BundleSelect() {
       },
     })
       .then(response => {
-        console.log("response created");
-      })
-      .catch(err => console.error("Error : ",err));
+      setBundles(response.data); // Update state with search results
+    })
+    .catch(err => {
+      console.error("Error searching bundles:", err);
+      setBundles([]); // Clear bundles if search fails
+    });
     
   }
 
+
+
+
+  function createReport() {
+    const data={
+      posting_id:id,
+      description:report,
+    }
+    console.log(data);
+    const token = localStorage.getItem(`token`);
+    axios.post(`${API_URL}/api/v1/reports/`, data ,{
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    
+  }
+
+  function handleViewReports() {
+  const token = localStorage.getItem('token');
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  axios.get(`${API_URL}/api/v1/reports/consumer/${id}`, {  
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })                                                      
+  .then(response => {
+    console.log("response created");
+    setShowReports(response.data);
+  });
+}
 
   return (
     <>
@@ -93,7 +133,7 @@ function BundleSelect() {
                 </div>
                 <div className="bundleRow">
                   <div className="column">
-                    <p>Category: {bundle.category}</p> {/* displays the category, allergens and prices */}
+                    <p>Category: {bundle.category.name}</p> {/* displays the category, allergens and prices */}
                     <p>Allergens: {bundle.allergens}</p>
                     <p>Price: £{bundle.price}</p>
                   </div>
@@ -109,12 +149,47 @@ function BundleSelect() {
                   Pay
                 </button>
                 <Link to="/discover" className="payButton">Back</Link>
+
+                <button className="reportButton" onClick={() => (setReportButton(true))}>Create Report</button>
+                <button className="viewReportButton" onClick={() => (handleViewReports(),setViewReportButton(true))}>View Reports</button>
+
+
               </div>
               {Popup && (
                 <div className="popup open-popup" id="payment">
                   <h1>Payment Successful!</h1>  {/*if the button is clicked, open the pop up to pay*/}
                   <button className="button" onClick={() => (closePopup,navigate("/discover"))}>Confirm</button>
                 </div>
+              )}
+              {reportButton && (
+                <div>
+                  <h1>Please enter the issue to send to the seller.</h1>
+                  <div className="row">
+                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                  <label htmlFor="report">Enter Issue : </label>
+                  <input
+                    id="report"
+                    type="text"
+                    value={report}
+                    onChange={(e) => setReport(e.target.value)}
+                  />
+                  <h1>    </h1>
+                  <button className="button" onClick={() => (createReport(), alert("Report Created"), setTimeout(() => {setReportButton(false)},3000))}>Confirm</button>
+                </div>
+                   {/* {setReportButton(false)} close after report is made */}
+                </div>
+              )}
+              {viewReport && (
+                <>
+                
+                {showReports.map(report => (
+                    <div>
+                      <h1>Description:{report.description},Seller Response:{report.seller_response},Status:{report.status}</h1>
+                      {(setTimeout(() => {setViewReportButton(false)},20000))}
+                    </div>
+       
+                ))}
+                </>
               )}
             </div>
           </div>

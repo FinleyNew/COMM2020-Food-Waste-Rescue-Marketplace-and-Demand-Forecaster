@@ -4,19 +4,20 @@ from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import Column
 from sqlalchemy.dialects import postgresql
-from .enums import BundleStatus, Category
+from .enums import BundleStatus
 
 if TYPE_CHECKING:
     from .seller import Seller
     from .reservation import Reservation
     from .record import Record
     from .forecast import Forecast
+    from .issueReport import IssueReport
 
 # The database table model for BundlePostings
 class BundlePosting(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
-    category: Category
+    category_id: int = Field(foreign_key="categories.category_id")
     allergens: str | None
     available: int
     reserved: int = 0
@@ -31,3 +32,10 @@ class BundlePosting(SQLModel, table=True):
     reservations: List["Reservation"] = Relationship(back_populates="posting")
     record: "Record" = Relationship(back_populates="posting")
     forecast: "Forecast" = Relationship(back_populates="posting")
+    reports: List["IssueReport"] = Relationship(back_populates="posting")
+    category: "Category" = Relationship()
+
+class Category(SQLModel, table=True):
+    __tablename__ = "categories"
+    category_id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    name: str

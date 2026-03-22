@@ -5,5 +5,6 @@ from .bundlePosting import BundlePosting
 from .record import Record
 from .forecast import Forecast
 from .reservation import Reservation
+from .issueReport import IssueReport
 
 __all__ = ["User", "Seller", "Consumer", "BundlePosting", "Record", "Forecast"]
