@@ -36,7 +36,17 @@ jobs:
 
       # Step 4: Run your tests with pytest
       - name: Run tests
-        run: pytest backend/
+        run: pytest backend/ --json-report --json-report-file=backend/test_results.json
+
+      - name: Commit test results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add test_results.json
+          git diff --staged --quiet || git commit -m "Update test results"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker-smoke-test:
     runs-on: ubuntu-latest
