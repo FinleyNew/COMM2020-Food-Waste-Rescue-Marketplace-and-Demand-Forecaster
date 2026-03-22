@@ -100,7 +100,6 @@ function App() {
     setSellerData(null);
     setLSLocation(null);
     settingsClosePopup();
-    navigate("/login");
   }
 
   const toggleDarkMode = () => { //function for turning dark mode on
