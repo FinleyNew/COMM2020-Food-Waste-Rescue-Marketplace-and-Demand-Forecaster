@@ -39,7 +39,7 @@ jobs:
 
       # Step 4: Run your tests with pytest
       - name: Run tests
-        run: pytest backend/ --json-report --json-report-file=test_results.json
+        run: pytest backend/ --json-report --json-report-file=backend/test_results.json
 
       - name: Commit test results
         run: |
