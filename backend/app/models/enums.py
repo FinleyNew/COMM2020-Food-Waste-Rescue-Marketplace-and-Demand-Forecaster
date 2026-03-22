@@ -16,3 +16,8 @@ class BundleStatus(str, Enum):
     SOLD_OUT = "sold_out"
     EXPIRED = "expired"
     DELETED = "deleted"
+
+class ReportStatus(str, Enum):
+    AWAITING_RESPONSE = "awaiting response"
+    SELLER_RESPONDED = "seller responded"
+    RESOLVED = "resolved"

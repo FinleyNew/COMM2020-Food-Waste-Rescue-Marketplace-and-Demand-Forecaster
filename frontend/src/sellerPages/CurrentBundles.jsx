@@ -34,9 +34,11 @@ function CurrentBundles() {
   const [code, setCode] = useState("");
   const [updateBundle, setUpdateBundle] = useState(null);
   const navigate = useNavigate();
-  
+  const [openReply, setOpenReply] = useState(null); 
+  const [replyText, setReplyText] = useState({});  
   const [bundleWeight, setBundleWeight] = useState("");
-  
+  const [viewReports, setViewReports] = useState("");
+  const [reports, setReports] = useState([]);
   const [bundlePrice,setBundlePrice] = useState("");
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState("");
@@ -216,6 +218,41 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
 };
 
 
+const handleViewReports = (bundle_id)  => {
+  const token = localStorage.getItem('token');
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  axios.get(`${API_URL}/api/v1/reports/seller/${bundle_id}`, {  
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })                                                      
+  .then(response => {
+    console.log("response created");
+    console.log(response.data);
+    setReports(response.data);
+    setViewReports(bundle_id);
+  });
+}
+
+const submitReply = (issue_id) => {
+  const token = localStorage.getItem('token');
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  axios.patch(`${API_URL}/api/v1/reports/${issue_id}/${replyText[issue_id]}`,
+    {},  // empty body
+    { headers: { "Authorization": `Bearer ${token}` }}  // config goes here
+  )
+  .then(() => {
+    alert("Response sent!");
+    setOpenReply(null);
+    setReplyText(prev => ({ ...prev, [issue_id]: "" }));  // use issue_id not report_id
+    window.location.reload();
+  })
+  .catch(err => console.error(err));
+
+
+};
   return (
     <>
       <div className="currentBundles">
@@ -309,6 +346,7 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     <button className="deleteButton" onClick={() => deleteBundle(bundle.posting_id)}>
                         Delete Bundle
                     </button>
+                    <button className="view_reports" onClick={() => handleViewReports(bundle.posting_id)}>View Reports</button>
                   </div>
                 </div>
                 {updateBundle === bundle.posting_id&& ( 
@@ -400,6 +438,8 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                 </div>
                 <button className="boxButton" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
                 <button className="boxButton" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
+
+                
                 </>
                 
                   
@@ -407,8 +447,36 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
               )}
               
               
-
               
+
+              {viewReports === bundle.posting_id && (
+              <>
+                {reports.map(report => (
+                  <div key={report.issue_id}>
+                  <p>Description: {report.description}</p>
+                  <p>Status: {report.status}</p>
+                  <p>Seller Response: {report.seller_response}</p>
+
+                <button onClick={() => setOpenReply(openReply === report.issue_id ? null : report.issue_id)}>
+                  {openReply === report.issue_id ? "Cancel" : "Respond"}
+                </button>
+
+                {openReply === report.issue_id && (
+                  <div>
+                  <input
+                    value={replyText[report.issue_id] || ""}
+                    onChange={(e) => setReplyText(prev => ({ ...prev, [report.issue_id]: e.target.value }))}
+                    placeholder="Type Response"
+                  />
+                <br>
+                </br>
+                <button onClick={() => submitReply(report.issue_id)}>Submit Response</button>
+                  </div>
+                )}
+              </div>
+              ))}
+              </>
+            )}
 
                 
 

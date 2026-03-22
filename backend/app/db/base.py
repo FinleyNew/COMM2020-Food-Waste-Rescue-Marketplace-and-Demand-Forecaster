@@ -8,6 +8,7 @@ from app.models.record import Record # noqa
 from app.models.reservation import Reservation # noqa
 from app.models.seller import Seller # noqa
 from app.models.user import User # noqa
+from app.models.issueReport import IssueReport # noqa
 
 # When you call this metadata elsewhere, 
 # it includes all the models listed above.
