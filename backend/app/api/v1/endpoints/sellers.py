@@ -1,8 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Form
 from app.api.deps import AdminDep, SellerDep, SessionDep
 from app.schemas.seller import SellerAdminUpdate, SellerCreate, SellerPublic, SellerUpdate
 from app.services import seller as seller_service
+from fastapi import UploadFile, File
 from app.schemas.user import UserCreate
+from app.services.cloudinary import upload_image
 
 router = APIRouter()
 
@@ -16,8 +18,23 @@ def get_current_seller(current_seller: SellerDep):
     return current_seller
 
 # Ednpoint for creating a new seller
-@router.post("/", response_model = SellerPublic)
-def create_seller(seller_in: SellerCreate, user_in: UserCreate, db: SessionDep):
+@router.post("/")
+async def create_seller(
+    db: SessionDep,
+    name: str = Form(...),
+    location: str = Form(...),
+    opening_hours: str = Form(...),
+    email: str = Form(...),
+    password: str = Form(...),
+    file: UploadFile = File(None),
+):
+    logo_url = "https://res.cloudinary.com/dnbeji59a/image/upload/v1774196127/profile-picture-blank_nnm3vq.jpg"
+    if file:
+        logo_url = await upload_image(await file.read())
+
+    seller_in = SellerCreate(name=name, location=location, opening_hours=opening_hours, logo_url=logo_url)
+    user_in = UserCreate(email=email, password=password)
+
     return seller_service.create_seller(seller_in=seller_in, user_in=user_in, db=db)
 
 @router.patch("/me", response_model=SellerPublic)

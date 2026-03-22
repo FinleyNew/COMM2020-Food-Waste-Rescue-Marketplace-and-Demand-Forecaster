@@ -8,6 +8,7 @@ class SellerBase(SQLModel):
     name: str
     location: str
     opening_hours: str
+    logo_url: str
     # Ensures open_hours is in the right format and valid
     @field_validator("opening_hours")
     @classmethod
