@@ -97,3 +97,6 @@ class BundlePostingPublic(BundlePostingBase):
     
     
     model_config = {"from_attributes": True}
+
+class PostingSummary(SQLModel):
+    seller: SellerSummary
