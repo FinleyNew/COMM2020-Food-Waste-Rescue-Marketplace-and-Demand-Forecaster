@@ -70,6 +70,19 @@
     padding: 2%;
     color: var(--text-colour);
 }
+.addBundles .forecastEntry{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding-inline: 10%;
+    color: var(--text-colour);
+}
 .addBundles .textBox{
     gap: 20px;
     margin-top: 20px;

@@ -259,10 +259,12 @@ function AddBundles() {
               </div>
             </div>
           </div>
-          <div>
-            <h1>Forecasting</h1>
-            <h1>{data.predicted_reservations}</h1>
-            <h1>{data.predicted_no_show_prob}</h1>
+          <div className="mainBox">
+            <div className="forecastEntry">
+              <h1>Forecasting</h1>
+              <h4>Predicted Reservations: {data.predicted_reservations}</h4>
+              <h4>Predicted No Show Probability: {data.predicted_no_show_prob}</h4>
+            </div>
           </div>
       </div>
     </>
