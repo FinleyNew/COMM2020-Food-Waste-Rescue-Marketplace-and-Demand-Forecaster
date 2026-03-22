@@ -84,7 +84,7 @@ function View_information() {
                 style={{
                   padding: "10px 20px",
                   fontSize: "16px",
-                  cursor: "pointer",
+                  cursor: "pointer", 
                 }}
               >
                 {value}
