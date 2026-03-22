@@ -25,8 +25,9 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-  const [accountError, setAccountError] = useState(""); // <-- new
-  const [loginError, setLoginError] = useState(""); // <-- new
+  const [accountError, setAccountError] = useState(""); 
+  const [loginError, setLoginError] = useState(""); 
+  const [sellerProfile, setSellerProfile] = useState(null); //for the profile picture
   
 
   const validPassword = passwordRegex.test(password);
@@ -245,10 +246,12 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       formData.append('opening_hours', `${openingTime} - ${closingTime}`)
       formData.append('email', username)
       formData.append('password', password)
-      const logoFile = null
+      const logoFile = sellerProfile;
+      
       if (logoFile) {
           formData.append('file', logoFile)
       }
+      console.log(formData);
         axios.post(`${API_URL}/api/v1/sellers/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
@@ -420,6 +423,17 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         {accountError}
                     </p>
                   )}
+                  {accountType==="Seller" && (
+                    <>
+                    <div className="rowRegister">
+                    <p>Profile Photo:</p>
+                    <form>
+                      <input type="file" id="sellerImage" name="filename" accept="image/*" onChange={(e) => setSellerProfile(e.target.files[0])}></input>
+                    </form>
+                  </div>
+                    </>
+                  )}
+                  
                   
                   {/* Creates an input box for the user to send their password and saves it */}
                   <div className="rowRegister">
