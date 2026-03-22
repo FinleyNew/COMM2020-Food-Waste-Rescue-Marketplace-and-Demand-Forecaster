@@ -33,6 +33,8 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [agree, setAgree] = useState(false);
   const [conditions, setConditions] = useState(false);
 
+  const [sellerProfile, setSellerProfile] = useState(null);
+
   const toMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
@@ -412,6 +414,11 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         Times must be in format HH:MM
                     </p>
                   )}
+                  {!sellerProfile && (
+                    <p style={{color:"red"}}>
+                        Profile Photo Required
+                    </p>
+                  )}
                   {accountType==="Seller" && invalidTime && (
                     <p style={{color:"red"}}>
                         Invalid Time, Opening Time cannot be before Closing Time
@@ -422,7 +429,12 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         {accountError}
                     </p>
                   )}
-                  
+                  <div className="rowRegister">
+                    <p>Profile Photo:</p>
+                    <form>
+                      <input type="file" id="sellerImage" name="filename" accept="image/*" onChange={(e) => setSellerProfile(e.target.files[0])}></input>
+                    </form>
+                  </div>
                   {/* Creates an input box for the user to send their password and saves it */}
                   <div className="rowRegister">
                     <p>Password:</p>
@@ -631,7 +643,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   )}
                   <div className="rowRegister">
                     <button onClick={createAccount} //was close popup
-                              disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword || !agree}
+                              disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword || !agree || !sellerProfile}
                               >Create Account</button>
                     <button onClick={handleCancel}>Cancel</button>
                   </div>

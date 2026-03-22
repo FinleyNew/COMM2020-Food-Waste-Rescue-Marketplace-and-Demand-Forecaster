@@ -31,6 +31,7 @@ function CurrentBundles() {
 
 
   const API_URL = import.meta.env.VITE_API_URL;
+  const [forecasts, setForecasts] = useState([]);
   const [bundles, setBundles] = useState([]); //create state
   const [noBundles, setNoBundles] = useState(false);
   const [code, setCode] = useState("");
@@ -58,7 +59,32 @@ function CurrentBundles() {
       return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
      });
   const [data, setForecastData] = useState({});
+  const [noForecasts, setNoForecasts] = useState(false);
 
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+  
+      axios.get(`${API_URL}/api/v1/forecasts/me`, { //Fetch data for the user
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => {
+          //setForecasts(response.data); // data is likely an array
+          //setAnalytics(response.data);
+        if (response.data.length === 0) {
+            setNoForecasts(true);
+          } else {
+            setForecasts(response.data);
+            setNoForecasts(false);
+          }
+        })
+        .catch(err => { //Returns alert if an error occurs
+          console.error("Error fetching forecasts:", err);
+          alert("No data");
+        });
+    }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -284,14 +310,36 @@ const confirmCollect = () => {
                     <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
-                    
+                    <div className="forecastColumn">
+                      {(() => {
+                      const forecast = forecasts.find(f => f.posting_id === bundle.posting_id);
+                      return forecast ? (
+                        <>
+                          <h2>Forecast:</h2>
+                          <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+                          <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                        </>
+                        ) : (
+                         <p>No Forecast Available</p>
+                        );
+                    })()}
+                    </div>
                   </div>
                   {/* Holds the middle column data for the bundle entry */}
                   <div className="textBox">
+                    <p>Reserved: {bundle.reserved}</p>
                     <p>Allergens: {bundle.allergens} </p>
                     <p>Date to Collect: {bundle.formatted_date}</p>
                     <p>Time to Collect: {bundle.formatted_time_range}</p>
-                    <p>Reserved: {bundle.reserved}</p>
+                    <div className="buttonColumn">
+                      <button className="updateButton" onClick={() => handleUpdateBundle(bundle.posting_id)}>
+                          Update Bundle
+                      </button>
+                      {/* Button to delete bundles on click */}
+                      <button className="deleteButton" onClick={() => setDeleteID(bundle.posting_id)}>
+                          Delete Bundle
+                      </button>
+                    </div>
                   </div>
                   <div className="columnBox">
                   {/* Contains company image and first column data */}
@@ -302,13 +350,6 @@ const confirmCollect = () => {
                         className="companyIcon"
                       />
                     </div>
-                    {/* Button to delete bundles on click */}
-                    <button className="updateButton" onClick={() => handleUpdateBundle(bundle.posting_id)}>
-                        Update Bundle
-                    </button>
-                    <button className="deleteButton" onClick={() => setDeleteID(bundle.posting_id)}>
-                        Delete Bundle
-                    </button>
                   </div>
                 </div>
                 {deleteID === bundle.posting_id && (

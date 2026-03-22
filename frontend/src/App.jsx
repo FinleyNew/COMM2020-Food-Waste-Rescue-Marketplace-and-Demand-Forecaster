@@ -262,7 +262,7 @@ function App() {
             </div>) : (
             <>
               <h1>Settings</h1>
-              <p>Account Details:</p>
+              <h3>Account Details:</h3>
               <div className="settingsTextBox">
                 <p>Email: {username}</p>
                 <p>Account Type: {role}</p>
@@ -289,7 +289,7 @@ function App() {
                 </label>
               </div>
               <br></br>
-              <h3>Change Details</h3>
+              <h3>Change Details:</h3>
               <button onClick={deleteAccount}>Delete Account</button>
               <br></br>
               {role==="seller" && (

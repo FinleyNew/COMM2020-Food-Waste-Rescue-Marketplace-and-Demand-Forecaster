@@ -285,3 +285,9 @@
     flex-direction: row;
     gap: 20px;
 }
+
+.currentBundles .buttonColumn{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
