@@ -7,6 +7,7 @@ import Bundle from "../assets/BundleImage.png";
 import axios from "axios";
 function CurrentBundles() {
   const [Popup, setPopup] = useState(false);
+  const [collectPopup, setCollectPopup] = useState(false);
 
   const [categories, setCategories] = useState([]); //store the categories
   useEffect(() => { //to get all the categories at the start so they can be used throughout
@@ -16,7 +17,7 @@ function CurrentBundles() {
     .then(response => {
        setCategories(response.data); //store them in categories
        if (response.data.length > 0) {
-      setBundleCategory(response.data[0].category_id); // ✅ real ID as default
+      setBundleCategory(response.data[0].category_id); // real ID as default
       }
     })
     .catch(err => { //Returns alert if an error occurs
@@ -204,12 +205,15 @@ const completeUpdateBundle = (posting_id) => {
     
 };
 
-const enterCode = (claim_code) => { //Function to return an entered code from the backend
-  if (!window.confirm("Collect this bundle?")) return;
+const enterCode = (inputCode) => { //Function to return an entered code from the backend
+  setCollectPopup(true);
+};
+
+const confirmCollect = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem('token'); 
 
-  axios.get(`${API_URL}/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
+  axios.get(`${API_URL}/api/v1/reservations/collect/${code}`, { //Fetches inputted tocken
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
@@ -217,9 +221,14 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
   })
     .then(response => {
       console.log("Collected:", response.data);
-      alert("Bundle collected");
+      setCollectPopup(false);
+      setCode("")
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      alert("Collection Failed");
+      setCollectPopup(false);
+    });
 };
 
 
@@ -415,78 +424,24 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
                     </div>
                   </div>
                   </div>
-
-                  <div className="row">
-                  {/* Makes an input box with a label to input the number of bundles to sell */}
-                  <label htmlFor="numAvailable">Enter Number Available : </label>
-                  <input
-                    id="numAvailable"
-                    type="number"
-                    value={numberAvailable}
-                    onChange={(e) => setNumberAvailable(e.target.value)}
-                  />
-              </div>
-
-                  <div className="row">
-                  {/* An input box with a label to input the bundle price */}
-                  <label htmlFor="price">Enter Bundle Price : </label>
-                  <input
-                    id="price"
-                    type="number"
-                    value={bundlePrice}
-                    onChange={(e) => setBundlePrice(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs an input box with a label asking for bundle weight */}
-                  <label htmlFor="weight">Enter Bundle Weight : </label>
-                  <input
-                    id="weight"
-                    type="number"
-                    value={bundleWeight}
-                    onChange={(e) => setBundleWeight(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs a drop down menu for the user to click a bundle collection time */}
-                  <label htmlFor="collectionTime">Collection Time: </label>
-                  {/* Divides the start and end time before saving them seperately */}
-                  <select
-                    id="collectionTime"
-                    onChange={(e) => {
-                      const[start,end] = e.target.value.split(" - ");
-                      setStartTime(start);
-                      setEndTime(end);
-                    }}
-                  >
-                    {slots.map((slot,idx) =>(
-                      <option key={idx} value={slot}>
-                        {slot}
-                      </option>
-                    ))}
-                  </select>
-                    {/* Button to add bundles when clicked and forecast the data */}
-                </div>
-                <button className="boxButton" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
-                <button className="boxButton" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
                 </>
-                
-                  
-                
               )}
-              
-              
-
-              
-
-                
-
               </div>
           
             ))}
           </div>
+          {collectPopup && (
+            <div className="popupRegister open-popupRegister">
+              <div className="updateBox">
+                <h1>Confirm Bundle Collect</h1>
+                <h2>Are you sure you want to collect the bundle?</h2>
+                <div className="collectRow">
+                  <button className="deleteBundleButton" onClick={confirmCollect}>Confirm</button>
+                  <button className="deleteBundleButton" onClick={() => setCollectPopup(false)}>Back</button>
+                </div>
+              </div>
+            </div>
+          )}
           {noBundles && (
           <div className="mainBox">
             <p className="errorBox" style={{color:"red"}}>

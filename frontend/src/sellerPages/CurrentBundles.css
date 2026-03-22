@@ -280,3 +280,8 @@
     padding: 10px;
     color: var(--text-colour);
 }
+.currentBundles .collectRow{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}

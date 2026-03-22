@@ -66,7 +66,6 @@ function Forecasts() {
                   </div>
                 </div>
               </div>
-              <hr />
             </div>
           ))
         )}
