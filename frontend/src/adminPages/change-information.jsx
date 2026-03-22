@@ -34,9 +34,10 @@ function AdminActionForm() {
     "Delete Reservation",
     "Delete Seller",
     "Delete Consumer",
+    "Delete Issue Report",
     "Create Category",
   ];
-
+  const [reportID, setReportID] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [category, setCategory] = useState("");
   const [userID, setUserID] = useState("");
@@ -222,10 +223,14 @@ function AdminActionForm() {
       case "Delete Consumer":
         suffix=`consumers/${bundleID}`;
         break;
+      case "Delete Issue Report":
+        suffix=`reports/${bundleID}`;
+        break;
       default:
+        break;
 
     }
-    
+    console.log(`${API_URL}/api/v1/${suffix}`);
     axios.delete(`${API_URL}/api/v1/${suffix}` ,{
       
        //Fetch data for the user
@@ -241,10 +246,12 @@ function AdminActionForm() {
           
         
       })
-      .catch(err => { //Returns alert if an error occurs
-        console.error("Error fetching forecasts:", err);
-        alert("No data");
-      });
+      .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+            
+              });
   }
 
   function createCategory() {
@@ -778,6 +785,21 @@ function AdminActionForm() {
           <>
             <div className="row">
             <label htmlFor="numAvailable3">Enter UserID to delete: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={bundleID}
+              onChange={(e) => setBundleID(e.target.value)}
+            />
+          </div>
+          <button className="boxButton" onClick={deleteFunction}>Submit</button>
+          </>
+        )}
+        {/* Delete Issue Report */}
+        {selectedAction==="Delete Issue Report" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter IssueID to delete: </label>
             <input
               id="numAvailable3"
               type="text"
