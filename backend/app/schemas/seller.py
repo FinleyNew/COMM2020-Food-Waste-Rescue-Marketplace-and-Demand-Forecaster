@@ -55,3 +55,4 @@ class SellerPublic(SellerBase):
 # Summary of seller info that is returned with a bundle
 class SellerSummary(SQLModel):
     name: str
+    logo_url: str
