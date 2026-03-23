@@ -100,3 +100,14 @@ class BundlePostingPublic(BundlePostingBase):
 
 class PostingSummary(SQLModel):
     seller: SellerSummary
+    pickup_window: Any = Field(exclude=True)
+
+    @computed_field
+    def formatted_date(self) -> str:
+        return self.pickup_window.lower.strftime("%d/%m/%Y")
+    
+    @computed_field
+    def formatted_time_range(self) -> str:
+        start: datetime = self.pickup_window.lower
+        end: datetime = self.pickup_window.upper
+        return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
