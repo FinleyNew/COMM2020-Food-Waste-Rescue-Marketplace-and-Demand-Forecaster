@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import './Discover.css';
 import axios from "axios";
-import Company from "../assets/Company.png";
+import Company from "../assets/BundleImage.png";
 import Bundle from "../assets/BundleImage.png";
 
 function Discover() {

@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Codes.css'
-import Company from "../assets/Company.png";
+import Company from "../assets/BundleImage.png";
 import axios from "axios";
 function Codes() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -70,7 +70,7 @@ function Codes() {
               </span>
             </p>
             <p>Pickup Date: {bundle.posting.formatted_date}</p>
-            <p>Bundle ID: {bundle.posting.formatted_time_range}</p>
+            <p>Pickup Time: {bundle.posting.formatted_time_range}</p>
           </div>
 
           <div className="column">
