@@ -56,3 +56,4 @@ class SellerPublic(SellerBase):
 class SellerSummary(SQLModel):
     name: str
     logo_url: str
+    location: str
