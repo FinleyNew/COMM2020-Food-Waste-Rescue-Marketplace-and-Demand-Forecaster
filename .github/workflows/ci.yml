@@ -52,7 +52,7 @@ jobs:
           git checkout ${{ github.head_ref || github.ref_name }}
           git pull origin ${{ github.head_ref || github.ref_name }}
           git add backend/test_results.json
-          git diff --staged --quiet || git commit -m "Update test results"
+          git diff --staged --quiet || git commit -m "Update test results [skip ci]"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
