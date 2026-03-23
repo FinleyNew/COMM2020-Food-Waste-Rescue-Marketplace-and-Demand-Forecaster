@@ -131,6 +131,7 @@ def test_seller_opening_after_closing_rejected():
             name="Test Shop",
             location="Exeter High Street",
             opening_hours="18:00 - 09:00",
+            logo_url="https://example.com/logo.png",
         )
     assert "closing time must be after opening time" in str(exc.value).lower()
 
@@ -143,6 +144,7 @@ def test_seller_valid_hours_accepted():
         name="Test Shop",
         location="Exeter High Street",
         opening_hours="09:00 - 17:00",
+        logo_url="https://example.com/logo.png",
     )
     assert seller.opening_hours == "09:00 - 17:00"
 
@@ -156,6 +158,7 @@ def test_seller_invalid_hours_format_rejected():
             name="Test Shop",
             location="Exeter High Street",
             opening_hours="nine to five",
+            logo_url="https://example.com/logo.png",
         )
 
 
@@ -177,6 +180,7 @@ def test_seller_name_whitespace_trimmed():
         name="  Exeter Cafe  ",
         location="High Street",
         opening_hours="09:00 - 17:00",
+        logo_url="https://example.com/logo.png",
     )
     assert seller.name == "Exeter Cafe"
 
