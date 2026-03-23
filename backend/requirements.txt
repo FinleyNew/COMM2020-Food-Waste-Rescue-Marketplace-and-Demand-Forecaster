@@ -58,3 +58,4 @@ bcrypt
 apscheduler
 sendgrid
 cloudinary
+pytest-json-report
