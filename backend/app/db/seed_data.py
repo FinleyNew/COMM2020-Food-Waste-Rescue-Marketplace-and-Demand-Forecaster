@@ -3,10 +3,10 @@ from sqlmodel import Session, select, func
 from psycopg2.extras import DateTimeTZRange
 from app.db.session import engine
 from app.core.security import get_password_hash
-from app.models.enums import Role, ReservationStatus, BundleStatus
+from app.models.enums import Role, ReservationStatus, BundleStatus, ReportStatus
 from app.services.forecast import get_forecast
 from datetime import datetime, timedelta, timezone
-from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User
+from app.db.base import BundlePosting, Consumer, Forecast, Record, Reservation, Seller, User, IssueReport
 from random import choices
 from app.models.badge import Badge
 from app.models.bundlePosting import Category
@@ -65,7 +65,7 @@ def seed_users(db: Session):
 
     #Add 10 users with admin role
     for _ in range(10): 
-        password=get_password_hash(password)
+        password = fake.password(length=8, special_chars=False, digits=True, upper_case=False, lower_case=True)
         user = User(
             role=Role.ADMIN,
             email=fake.email(),
@@ -290,6 +290,66 @@ def seed_badges(db: Session):
 
     db.commit()
 
+def seed_issue_reports(db: Session):
+    reservations = db.exec(select(Reservation)).all()
+
+    reports_to_seed = 150
+    
+    #Seed 150 reports for a random consumers reservation
+    for _ in range(reports_to_seed):
+        reservation = fake.random_element(elements=reservations)
+        
+        status = fake.random_element(elements=list(ReportStatus))
+        
+        description, response = get_report_desc_and_response(status)
+        
+        issue_report = IssueReport(
+            posting_id=reservation.posting_id,
+            user_id=reservation.user_id,
+            description=description,
+            status=status,
+            seller_response=response,
+        )
+        db.add(issue_report)
+    
+    db.commit()
+
+#Get a random description and depending on the status, a matching response
+def get_report_desc_and_response(status: ReportStatus):
+    descriptions = [
+        "Category on the post does not match items recieved.",
+        "Incorrect allergens listed.",
+        "Store closed when collecting.",
+        "Items were past their expiration date.",
+        "The bundle contained less food than advertised.",
+        "The seller was rude during the collection process.",
+        "The food quality was poor or unsafe to consume.",
+        "The pickup location was difficult to find or inaccessible.",
+        "The seller refused to provide the bundle despite a valid reservation.",
+        "The packaging was damaged, causing the food to be contaminated.",
+    ]
+
+    seller_response =[
+        "We apologize for the confusion. We will ensure our staff categorizes items correctly in the future.",
+        "Thank you for bringing this to our attention. We have updated our allergen protocols immediately.",
+        "We are very sorry for the inconvenience. Please contact support for a full refund.",
+        "We strive for freshness and will investigate why these items were not removed from stock sooner.",
+        "We apologize that the bundle did not meet expectations. We will review our portioning standards.",
+        "We are sorry to hear about your experience. We are addressing this with our team internally.",
+        "Safety is our priority. We have discarded the remaining batch and are investigating the cause.",
+        "Thank you for the feedback. We will provide clearer instructions for finding our pickup point.",
+        "We apologize for the error in our system. We are working to ensure this doesn't happen again.",
+        "We are sorry for the damage. We will look into more robust packaging for our rescue bundles.",
+    ]
+
+    description = fake.random_element(elements=descriptions)
+    index = descriptions.index(description)
+    
+    response = seller_response[index] if status in [ReportStatus.RESOLVED, ReportStatus.SELLER_RESPONDED] else None
+    
+    return description, response
+
+
 def seed_categories(db: Session):
     BAKED_GOODS = Category(name="Baked Goods")
     FRUIT = Category(name="Fruit")
@@ -426,6 +486,7 @@ def seed_tables():
         seed_record(db=db)
         seed_forecast(db=db)
         seed_badges(db=db)
+        seed_issue_reports(db=db)
     print("Seeding complete")
 
 if __name__ == "__main__":

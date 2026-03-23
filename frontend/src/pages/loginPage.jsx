@@ -367,7 +367,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       />
                   </div>
                     <div className="rowRegister">
-                    <p>Location: </p>
+                    <p>Postcode: </p>
                     <input
                       type="text"
                       value={location}
@@ -422,7 +422,6 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         {accountError}
                     </p>
                   )}
-                  
                   {/* Creates an input box for the user to send their password and saves it */}
                   <div className="rowRegister">
                     <p>Password:</p>

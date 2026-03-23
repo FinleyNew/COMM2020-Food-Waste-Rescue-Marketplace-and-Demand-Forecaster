@@ -6,6 +6,7 @@ from app.models.badge import Badge, ConsumerBadge
 if TYPE_CHECKING:
     from .user import User
     from .reservation import Reservation
+    from .issueReport import IssueReport
 
 # The database table model for Consumers
 class Consumer(SQLModel, table=True):
@@ -17,3 +18,4 @@ class Consumer(SQLModel, table=True):
     user: "User" = Relationship(back_populates="consumer")
     reservations: List["Reservation"] = Relationship(back_populates="consumer")
     badges: list[Badge] = Relationship(link_model=ConsumerBadge)
+    reports: List["IssueReport"] = Relationship(back_populates="consumer")

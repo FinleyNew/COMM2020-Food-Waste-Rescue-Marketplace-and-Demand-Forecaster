@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import './change-information.css'
 
 function AdminActionForm() {
 
@@ -34,9 +35,10 @@ function AdminActionForm() {
     "Delete Reservation",
     "Delete Seller",
     "Delete Consumer",
+    "Delete Issue Report",
     "Create Category",
   ];
-
+  const [reportID, setReportID] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [category, setCategory] = useState("");
   const [userID, setUserID] = useState("");
@@ -222,10 +224,14 @@ function AdminActionForm() {
       case "Delete Consumer":
         suffix=`consumers/${bundleID}`;
         break;
+      case "Delete Issue Report":
+        suffix=`reports/${bundleID}`;
+        break;
       default:
+        break;
 
     }
-    
+    console.log(`${API_URL}/api/v1/${suffix}`);
     axios.delete(`${API_URL}/api/v1/${suffix}` ,{
       
        //Fetch data for the user
@@ -241,10 +247,12 @@ function AdminActionForm() {
           
         
       })
-      .catch(err => { //Returns alert if an error occurs
-        console.error("Error fetching forecasts:", err);
-        alert("No data");
-      });
+      .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+
+            
+              });
   }
 
   function createCategory() {
@@ -266,255 +274,69 @@ function AdminActionForm() {
 
   return (
     <>
-    <nav>
-            <Link to="/login">Login Page</Link> |{" "}
-            <Link to="/view-information">View Information</Link> | {" "}
-            <Link to="/deployment-history">Deployment History</Link>
-          </nav>
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif", maxWidth: "500px", margin: "0 auto" }}>
-      <h1 style={{ textAlign: "center" }}>Admin Actions</h1>
+    <div className="change">
+      <nav className="navRow">
+        <Link to="/view-information" className="button">View Information</Link>
+        <Link to="/deployment-history" className="button">Deployment History</Link>
+      </nav>
+      <div style={{ padding: "20px", fontFamily: "Arial, sans-serif", maxWidth: "500px", margin: "0 auto" }}>
+        <h1 className="header">Admin Actions</h1>
 
-      <div style={{ marginTop: "20px" }}>
-        {/* Dropdown */}
-        <select
-          value={selectedAction}
-          onChange={(e) => setSelectedAction(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            cursor: "pointer",
-          }}
-        >
-          <option value="">Select Action</option>
-          {buttonData.map((action, idx) => (
-            <option key={idx} value={action}>
-              {action}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div style={{ marginTop: "20px" }}>
+          {/* Dropdown */}
+          <select
+            value={selectedAction}
+            onChange={(e) => setSelectedAction(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+            }}
+          >
+            <option value="">Select Action</option>
+            {buttonData.map((action, idx) => (
+              <option key={idx} value={action}>
+                {action}
+              </option>
+            ))}
+          </select>
+        </div>
+        <br></br>
 
-      {/* Conditional input for specific actions
-      value={numberAvailable}
-                    <button className="boxButton" onClick={completeAction}>Add Bundle</button> */}
-      <div style={{ marginTop: "20px" }}>
-        {/* UPDATING CONSUMER */}
-        {selectedAction === "Update Consumer" && (
-          <>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter UserID: </label>
-            <input
-              id="numAvailable3"
-              type="number"
-              value={userID}
-              onChange={(e) => setUserID(e.target.value)}
-            />
-          </div>
-          <br></br>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter Name: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <br></br>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter Streak: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={streak}
-              onChange={(e) => setStreak(e.target.value)}
-            />
-          </div>
-          <button className="boxButton" onClick={completeAction}>Submit</button>
-          </>
-        )}
-        {/* UPDATE SELLER */}
-        {selectedAction === "Update Seller" && (
-          <>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter UserID: </label>
-            <input
-              id="numAvailable3"
-              type="number"
-              value={userID}
-              onChange={(e) => setUserID(e.target.value)}
-            />
-          </div>
-          <br></br>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter Name: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <br></br>
-          <div className="row">
-            <label htmlFor="numAvailable3">Location: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </div>
-          <div className="row">
-                    <p>Opening Time : </p>
-                    <input
-                      type="text"
-                      value={openingTime}
-                      onChange={(e) => setOpeningTime(e.target.value)}
-                      />
-            </div>
+        {/* Conditional input for specific actions
+        value={numberAvailable}
+                      <button className="boxButton" onClick={completeAction}>Add Bundle</button> */}
+        <div className="container">
+          {/* UPDATING CONSUMER */}
+          {selectedAction === "Update Consumer" && (
+            <>
             <div className="row">
-                    <p>Closing Time : </p>
-                    <input
-                      type="text"
-                      value={closingTime}
-                      onChange={(e) => setClosingTime(e.target.value)}
-                      />
+              <label htmlFor="numAvailable3">Enter UserID: </label>
+              <input
+                id="numAvailable3"
+                type="number"
+                value={userID}
+                onChange={(e) => setUserID(e.target.value)}
+              />
             </div>
-          <button className="boxButton" onClick={completeAction}>Submit</button>
-          </>
-        )}
-        {/* UPDATE BUNDLE */}
-        {selectedAction === "Update Bundle" && (
-          <>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter Bundle ID: </label>
-            <input
-              id="numAvailable3"
-              type="number"
-              value={userID}
-              onChange={(e) => setUserID(e.target.value)}
-            />
-          </div>
-          <br></br>
-          <div className="row">
-                    {/* drop down for allergens */}
-                     <label htmlFor="category">Enter Bundle Category : </label>
-                  <select
-                    name="category"
-                    id="category"
-                    value={bundleCategory}
-                    onChange={(e) => setBundleCategory(e.target.value)}
-                  >
-                  {categories.map((cat) => (
-                    <option key={cat.category_id} value={cat.category_id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                  </select>
-                  </div>
-
-
-                  <div>
-                <div className="row">
-                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
-                  <label htmlFor="allergens">Enter Bundle Allergens : </label>
-                  <input
-                    id="allergens"
-                    type="text"
-                    value={bundleAllergens}
-                    onChange={(e) => setBundleAllergens(e.target.value)}
-                  />
-                  </div>
-                </div>
-
-
-                  <div className="row">
-                  {/* Makes an input box with a label to input the number of bundles to sell */}
-                  <label htmlFor="numAvailable">Enter Number Available : </label>
-                  <input
-                    id="numAvailable"
-                    type="number"
-                    value={numberAvailable}
-                    onChange={(e) => setNumberAvailable(e.target.value)}
-                  />
-              </div>
-
-                  <div className="row">
-                  {/* An input box with a label to input the bundle price */}
-                  <label htmlFor="price">Enter Bundle Price : </label>
-                  <input
-                    id="price"
-                    type="number"
-                    value={bundlePrice}
-                    onChange={(e) => setBundlePrice(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs an input box with a label asking for bundle weight */}
-                  <label htmlFor="weight">Enter Bundle Weight : </label>
-                  <input
-                    id="weight"
-                    type="number"
-                    value={bundleWeight}
-                    onChange={(e) => setBundleWeight(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs a drop down menu for the user to click a bundle collection time */}
-                  <label htmlFor="collectionTime">Collection Time: </label>
-                  {/* Divides the start and end time before saving them seperately */}
-                  <select
-                    id="collectionTime"
-                    onChange={(e) => {
-                      const[start,end] = e.target.value.split(" - ");
-                      setStartTime(start);
-                      setEndTime(end);
-                    }}
-                  >
-                    {slots.map((slot,idx) =>(
-                      <option key={idx} value={slot}>
-                        {slot}
-                      </option>
-                    ))}
-                  </select>
-                    {/* Button to add bundles when clicked and forecast the data */}
-                </div>
-
-                <div className="row">
-                  {/* Outputs an input box with a label asking for bundle weight */}
-                  <label htmlFor="weight">Enter UserID : </label>
-                  <input
-                    id="weight"
-                    type="number"
-                    value={userIdentification}
-                    onChange={(e) => setUserIdentification(e.target.value)}
-                  />
-                </div>
-
-                <div className="row">
-                    {/* drop down for allergens */}
-                    <label htmlFor="category">Enter Bundle Status : </label>
-                    <select
-                      name="category"
-                      id="category"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                    {/* List of options fo the user to choose from the menu */}
-                    <option value="">Select Category</option>
-                    <option value="expired">Expired</option>
-                    <option value="available">Available</option>
-                    <option value="sold_out">Sold Out</option>
-                    <option value="reserved">Reserved</option>
-                    
-                    </select>
-                  </div>
+              <label htmlFor="numAvailable3">Enter Name: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            <div className="setRow">
+              <p>Closing Time : </p>
+              <input
+                type="text"
+                value={closingTime}
+                onChange={(e) => setClosingTime(e.target.value)}
+                />
+            </div>
           <button className="boxButton" onClick={completeAction}>Submit</button>
           </>
         )}
@@ -531,48 +353,6 @@ function AdminActionForm() {
             />
           </div>
           <button className="boxButton" onClick={deleteBundle}>Submit</button>
-          </>
-        )}
-        {/* Update Reservations */}
-        {selectedAction==="Update Reservation" && (
-          <>
-            <div className="row">
-            <label htmlFor="numAvailable3">Enter Reservation ID to delete: </label>
-            <input
-              id="numAvailable3"
-              type="number"
-              value={userID}
-              onChange={(e) => setUserID(e.target.value)}
-            />
-          </div>
-          <div className="row">
-                    {/* drop down for allergens */}
-                    <label htmlFor="category">Enter Bundle Status : </label>
-                    <select
-                      name="category"
-                      id="category"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                    {/* List of options fo the user to choose from the menu */}
-                    <option value="">Select Category</option>
-                    <option value="no_show">No Show</option>
-                    <option value="reserved">Reserved</option>
-                    <option value="collected">Collected</option>
-                    
-                    </select>
-          </div>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter timestamp: </label>
-            <input
-              id="numAvailable3"
-              type="datetime-local"
-              value={timestamp}
-              onChange={(e) => setTimeStamp(e.target.value)}
-            />
-          </div>
-
-          <button className="boxButton" onClick={completeAction}>Submit</button>
           </>
         )}
         {/* UPDATE RECORD */}
@@ -658,7 +438,7 @@ function AdminActionForm() {
               onChange={(e) => setBundleWeight(e.target.value)}
             />
           </div>
-          <div className="row">
+          <div className="setRow">
                     <p>Start Time : </p>
                     <input
                       type="datetime-local"
@@ -666,7 +446,7 @@ function AdminActionForm() {
                       onChange={(e) => setStartTimeStamp(e.target.value)}
                       />
             </div>
-            <div className="row">
+            <div className="setRow">
                     <p>End Time : </p>
                     <input
                       type="datetime-local"
@@ -675,109 +455,366 @@ function AdminActionForm() {
                       />
             </div>
             <button className="boxButton" onClick={completeAction}>Submit</button>
-          
-          </>
-        )}
-        {/* Update User */}
-        {selectedAction==="Update User" && (
-          <>
+            </>
+          )}
+          {/* UPDATE SELLER */}
+          {selectedAction === "Update Seller" && (
+            <>
             <div className="row">
-            <label htmlFor="numAvailable3">Enter UserID to update: </label>
-            <input
-              id="numAvailable3"
-              type="number"
-              value={userID}
-              onChange={(e) => setUserID(e.target.value)}
-            />
-          </div>
-          
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter email: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="row">
-            <label htmlFor="numAvailable3">Enter password: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+              <label htmlFor="numAvailable3">Enter UserID: </label>
+              <input
+                id="numAvailable3"
+                type="number"
+                value={userID}
+                onChange={(e) => setUserID(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <label htmlFor="numAvailable3">Enter Name: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <label htmlFor="numAvailable3">Location: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+            <div className="setRow">
+              <p>Opening Time : </p>
+              <input
+                type="text"
+                value={openingTime}
+                onChange={(e) => setOpeningTime(e.target.value)}
+                />
+            </div>
+            <div className="setRow">
+              <p>Closing Time : </p>
+              <input
+                type="text"
+                value={closingTime}
+                onChange={(e) => setClosingTime(e.target.value)}
+                />
+            </div>
+            <br></br>
+            <button className="boxButton" onClick={completeAction}>Submit</button>
+            </>
+          )}
+          {/* UPDATE BUNDLE */}
+          {selectedAction === "Update Bundle" && (
+            <>
+            <div className="row">
+              <label htmlFor="numAvailable3">Enter Bundle ID: </label>
+              <input
+                id="numAvailable3"
+                type="number"
+                value={userID}
+                onChange={(e) => setUserID(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              {/* drop down for allergens */}
+              <label htmlFor="category">Enter Bundle Category : </label>
+              <select
+                name="category"
+                id="category"
+                value={bundleCategory}
+                onChange={(e) => setBundleCategory(e.target.value)}
+              >
+              {/* List of options fo the user to choose from the menu */}
+              <option value="">Select Category</option>
+              <option value="Baked Goods">Baked Goods</option>
+              <option value="Fruit">Fruit</option>
+              <option value="Vegetables">Vegetables</option>
+              <option value="Meat">Meat</option>
+              <option value="Seafood">Seafood</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Drinks">Drinks</option>
+              </select>
+            </div>
 
-          <button className="boxButton" onClick={completeAction}>Submit</button>
-          </>
-        )}
-        {/* Delete Forecast */}
-        {selectedAction==="Delete Forecast" && (
-          <>
+
+                    <div>
+                  <div className="row">
+                    {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                    <label htmlFor="allergens">Enter Bundle Allergens : </label>
+                    <input
+                      id="allergens"
+                      type="text"
+                      value={bundleAllergens}
+                      onChange={(e) => setBundleAllergens(e.target.value)}
+                    />
+                    </div>
+                  </div>
+
+
+                    <div className="row">
+                    {/* Makes an input box with a label to input the number of bundles to sell */}
+                    <label htmlFor="numAvailable">Enter Number Available : </label>
+                    <input
+                      id="numAvailable"
+                      type="number"
+                      value={numberAvailable}
+                      onChange={(e) => setNumberAvailable(e.target.value)}
+                    />
+                </div>
+
+                    <div className="row">
+                    {/* An input box with a label to input the bundle price */}
+                    <label htmlFor="price">Enter Bundle Price : </label>
+                    <input
+                      id="price"
+                      type="number"
+                      value={bundlePrice}
+                      onChange={(e) => setBundlePrice(e.target.value)}
+                    />
+                  </div>
+
+                    <div className="row">
+                    {/* Outputs an input box with a label asking for bundle weight */}
+                    <label htmlFor="weight">Enter Bundle Weight : </label>
+                    <input
+                      id="weight"
+                      type="number"
+                      value={bundleWeight}
+                      onChange={(e) => setBundleWeight(e.target.value)}
+                    />
+                  </div>
+
+                    <div className="row">
+                    {/* Outputs a drop down menu for the user to click a bundle collection time */}
+                    <label htmlFor="collectionTime">Collection Time: </label>
+                    {/* Divides the start and end time before saving them seperately */}
+                    <select
+                      id="collectionTime"
+                      onChange={(e) => {
+                        const[start,end] = e.target.value.split(" - ");
+                        setStartTime(start);
+                        setEndTime(end);
+                      }}
+                    >
+                      {slots.map((slot,idx) =>(
+                        <option key={idx} value={slot}>
+                          {slot}
+                        </option>
+                      ))}
+                    </select>
+                      {/* Button to add bundles when clicked and forecast the data */}
+                  </div>
+
+                  <div className="row">
+                    {/* Outputs an input box with a label asking for bundle weight */}
+                    <label htmlFor="weight">Enter UserID : </label>
+                    <input
+                      id="weight"
+                      type="number"
+                      value={userIdentification}
+                      onChange={(e) => setUserIdentification(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="row">
+                      {/* drop down for allergens */}
+                      <label htmlFor="category">Enter Bundle Status : </label>
+                      <select
+                        name="category"
+                        id="category"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
+                      {/* List of options fo the user to choose from the menu */}
+                      <option value="">Select Category</option>
+                      <option value="expired">Expired</option>
+                      <option value="available">Available</option>
+                      <option value="sold_out">Sold Out</option>
+                      <option value="reserved">Reserved</option>
+                      
+                      </select>
+                    </div>
+            <button className="boxButton" onClick={completeAction}>Submit</button>
+            </>
+          )}
+          {/* Update Reservations */}
+          {selectedAction==="Update Reservation" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter Reservation ID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="number"
+                value={userID}
+                onChange={(e) => setUserID(e.target.value)}
+              />
+            </div>
             <div className="row">
-            <label htmlFor="numAvailable3">Enter ForecastID to delete: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={bundleID}
-              onChange={(e) => setBundleID(e.target.value)}
-            />
-          </div>
-          <button className="boxButton" onClick={deleteFunction}>Submit</button>
-          </>
-        )}
-        {/* Delete Record */}
-        {selectedAction==="Delete Record" && (
-          <>
+                      {/* drop down for allergens */}
+                      <label htmlFor="category">Enter Bundle Status : </label>
+                      <select
+                        name="category"
+                        id="category"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                      >
+                      {/* List of options fo the user to choose from the menu */}
+                      <option value="">Select Category</option>
+                      <option value="no_show">No Show</option>
+                      <option value="reserved">Reserved</option>
+                      <option value="collected">Collected</option>
+                      
+                      </select>
+            </div>
             <div className="row">
-            <label htmlFor="numAvailable3">Enter RecordID to delete: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={bundleID}
-              onChange={(e) => setBundleID(e.target.value)}
-            />
-          </div>
-          <button className="boxButton" onClick={deleteFunction}>Submit</button>
-          </>
-        )}
-        {/* Delete Reservation */}
-        {selectedAction==="Delete Reservation" && (
-          <>
+              <label htmlFor="numAvailable3">Enter timestamp: </label>
+              <input
+                id="numAvailable3"
+                type="datetime-local"
+                value={timestamp}
+                onChange={(e) => setTimeStamp(e.target.value)}
+              />
+            </div>
+
+            <button className="boxButton" onClick={completeAction}>Submit</button>
+            </>
+          )}
+          {/* Update User */}
+          {selectedAction==="Update User" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter UserID to update: </label>
+              <input
+                id="numAvailable3"
+                type="number"
+                value={userID}
+                onChange={(e) => setUserID(e.target.value)}
+              />
+            </div>
+            
             <div className="row">
-            <label htmlFor="numAvailable3">Enter ReservationID to delete: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={bundleID}
-              onChange={(e) => setBundleID(e.target.value)}
-            />
-          </div>
-          <button className="boxButton" onClick={deleteFunction}>Submit</button>
-          </>
-        )}
-        {/* Delete Seller */}
-        {selectedAction==="Delete Seller" && (
-          <>
+              <label htmlFor="numAvailable3">Enter email: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
             <div className="row">
-            <label htmlFor="numAvailable3">Enter UserID to delete: </label>
-            <input
-              id="numAvailable3"
-              type="text"
-              value={bundleID}
-              onChange={(e) => setBundleID(e.target.value)}
-            />
-          </div>
-          <button className="boxButton" onClick={deleteFunction}>Submit</button>
-          </>
-        )}
+              <label htmlFor="numAvailable3">Enter password: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <button className="boxButton" onClick={completeAction}>Submit</button>
+            </>
+          )}
+          {/* Delete Forecast */}
+          {selectedAction==="Delete Forecast" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter ForecastID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={bundleID}
+                onChange={(e) => setBundleID(e.target.value)}
+              />
+            </div>
+            <button className="boxButton" onClick={deleteFunction}>Submit</button>
+            </>
+          )}
+          {/* Delete Record */}
+          {selectedAction==="Delete Record" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter RecordID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={bundleID}
+                onChange={(e) => setBundleID(e.target.value)}
+              />
+            </div>
+            <button className="boxButton" onClick={deleteFunction}>Submit</button>
+            </>
+          )}
+          {/* Delete Reservation */}
+          {selectedAction==="Delete Reservation" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter ReservationID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={bundleID}
+                onChange={(e) => setBundleID(e.target.value)}
+              />
+            </div>
+            <button className="boxButton" onClick={deleteFunction}>Submit</button>
+            </>
+          )}
+          {/* Delete Seller */}
+          {selectedAction==="Delete Seller" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter UserID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={bundleID}
+                onChange={(e) => setBundleID(e.target.value)}
+              />
+            </div>
+            <button className="boxButton" onClick={deleteFunction}>Submit</button>
+            </>
+          )}
+          {/* Delete Consumer */}
+          {selectedAction==="Delete Consumer" && (
+            <>
+              <div className="row">
+              <label htmlFor="numAvailable3">Enter UserID to delete: </label>
+              <input
+                id="numAvailable3"
+                type="text"
+                value={bundleID}
+                onChange={(e) => setBundleID(e.target.value)}
+              />
+            </div>
+            <button className="boxButton" onClick={deleteFunction}>Submit</button>
+            </>
+            )}
+        </div>
         {/* Delete Consumer */}
         {selectedAction==="Delete Consumer" && (
           <>
             <div className="row">
             <label htmlFor="numAvailable3">Enter UserID to delete: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={bundleID}
+              onChange={(e) => setBundleID(e.target.value)}
+            />
+          </div>
+          <button className="boxButton" onClick={deleteFunction}>Submit</button>
+          </>
+        )}
+        {/* Delete Issue Report */}
+        {selectedAction==="Delete Issue Report" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter IssueID to delete: </label>
             <input
               id="numAvailable3"
               type="text"
