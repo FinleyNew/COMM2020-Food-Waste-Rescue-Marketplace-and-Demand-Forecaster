@@ -94,6 +94,10 @@ function Discover() {
                 <div className="bundleRow">
                   <h1>{bundle.category.name || "Bundle Name"}</h1>
                   <h1>{bundle.available} Available</h1>
+                  <h1>Contents: {bundle.contents}</h1>
+                  <h1>Pickup Location: {bundle.seller.location}</h1>
+                  <h1>Pickup Date: {bundle.formatted_date}</h1>
+                  <h1>{bundle.discount_percent}% off original price</h1>
                 </div>
                 <div className="bundleRow">
                   <div className="column">
