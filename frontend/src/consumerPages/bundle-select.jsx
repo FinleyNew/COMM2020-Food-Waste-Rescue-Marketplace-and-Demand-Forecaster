@@ -182,7 +182,15 @@ function BundleSelect() {
                     />
                     <br></br>
                     <br></br>
-                    <button className="button" onClick={() => (createReport(), closeReportPopup())}>Confirm</button>
+                    <button className="button" onClick={() => {
+                      if(report.trim()==="") {
+                        closeReportPopup(); 
+                        return;
+                      } 
+                      createReport();
+                      closeReportPopup()
+                    }}
+                    >Confirm</button>
                   </div>
                 </div>
                    {/* {setReportButton(false)} close after report is made */}

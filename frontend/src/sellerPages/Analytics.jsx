@@ -98,9 +98,6 @@ function Analytics() {
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
-          <div>
-            <img src={logo} alt="Company" className="companyIcon" />
-          </div>
           
         </div>
           <div className="mainBox">

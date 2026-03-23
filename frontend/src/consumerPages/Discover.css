@@ -246,6 +246,8 @@
 .discover .companyIcon{
     height: 15%;
     width: 15%;
+    max-height: 300px;
+    max-width: 300px;
     border-radius: 1rem;
 }
 .discover .centerAlign{

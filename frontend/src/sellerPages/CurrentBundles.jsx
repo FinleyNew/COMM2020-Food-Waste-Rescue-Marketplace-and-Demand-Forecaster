@@ -341,7 +341,7 @@ const submitReply = (issue_id) => {
                   className="bundleImage"
                 />
                 <div className="rowBox">
-                  <h1>Bundle Name</h1>
+                  <h1>{bundle.seller.name}</h1>
                 </div>
                 <div className="rowBox">
                   <div className="textBox">
