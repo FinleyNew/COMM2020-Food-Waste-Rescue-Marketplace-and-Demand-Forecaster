@@ -47,6 +47,7 @@ jobs:
         run: pytest --json-report --json-report-file=test_results.json
 
       - name: Commit test results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
