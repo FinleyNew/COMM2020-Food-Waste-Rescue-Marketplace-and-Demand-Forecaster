@@ -18,6 +18,7 @@ permissions:
 jobs:
   # Python / FastAPI backend tests
   backend-tests:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest  # The virtual machine GitHub provides
 
     steps:
