@@ -70,52 +70,21 @@ function Analytics() {
     <>
       <div className="analytics">
         {/* Initialises the navifation bar where sellers can move between pages */}
+        <div className="pageHeading">
           <nav class="navRow">
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
-          
-          <section>
-            {/* Desciption entries outputted to screen with the user_id */}
-            {analytics.map(analytic => (
-                <div key={analytic.posting_id}>
-                  <div className="desc">
-                  <p className="desc">user_id - {analytic.user_id}</p>
-                    <p className="desc">Company - Amazon</p>
-                    <p className="desc">Price - {analytic.price}</p>
-                    <p className="desc">Category - {analytic.category.name}</p>
-                    <p className="desc">Reservations - {analytic.observed_reservations}</p>
-                    <p className="desc">No Shows - {analytic.observed_no_show}</p>
-                    <p className="desc">Expired - {analytic.observed_expired}</p>
-                    <p className="desc">Pickup Date - {analytic.pickup_date}</p>
-                    <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
-                    <p className="desc">Raining - {analytic.raining.toString()}</p>
-                    <p className="desc">Weight - {analytic.weight}</p>
-                    
-                  </div>
-                </div>
-              ))
-            }
-          </section>
+          <div className="textHeading">
+            <h1>Analytics</h1>
+          </div>
+        </div>
           <div className="mainBox">
             <div className="analyticsContent">
               {/* Makes a grid structure with top row containing the company image and circle object with waste prevention stats */}
               <div className="gridRow">
-                <img className="companyImage" src={Company}></img>
-                <div className="gridColumn">
-                  <p className="bubbleText">Total Waste Prevented</p>
-                  <div className="circleObject">
-                    <img className="circleBubble" 
-                      src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
-                    <p className="weight">{totalWeight}kg</p>
-                  </div>
-                </div>
-              </div>
-              {/* Second row of the grid providing a bar chart with collection analyrics and a bundle image */}
-              <div className="gridRow">
-                <div className="gridColumn">
-                  {/*idx = index */}
+                {/*idx = index */}
                   <div className="barChart">
                     {chartData.map((item, idx) => (  
                       <div key={idx} className="barContainer">
@@ -132,12 +101,44 @@ function Analytics() {
                   </div>
                     ))}
                   </div>
-                </div>
                 <div className="gridColumn">
-                  <img src="https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M="></img>
+                  <p className="bubbleText">Total Waste Prevented</p>
+                  <div className="circleObject">
+                    <img className="circleBubble" 
+                      src="https://img.freepik.com/premium-vector/big-green-sun-vector-icon-green-sun-symbol_302321-2439.jpg?semt=ais_user_personalization&w=740&q=80"></img>
+                    <p className="weight">{totalWeight}kg</p>
+                  </div>
                 </div>
+                <img className="companyImage" src={Company}></img>
               </div>
             </div>
+            <div className="textHeading">
+              <h2>Data</h2>
+            </div>
+            <div className="analyticsContent">
+              <div className="gridRow">
+                {/* Desciption entries outputted to screen with the user_id */}
+                {analytics.map(analytic => (
+                    <div key={analytic.posting_id}>
+                      <div className="desc">
+                      <p className="desc">user_id - {analytic.user_id}</p>
+                        <p className="desc">Company - Amazon</p>
+                        <p className="desc">Price - {analytic.price}</p>
+                        <p className="desc">Category - {analytic.category.name}</p>
+                        <p className="desc">Reservations - {analytic.observed_reservations}</p>
+                        <p className="desc">No Shows - {analytic.observed_no_show}</p>
+                        <p className="desc">Expired - {analytic.observed_expired}</p>
+                        <p className="desc">Pickup Date - {analytic.pickup_date}</p>
+                        <p className="desc">Pickup Date Formatted - {analytic.formatted_date}</p>
+                        <p className="desc">Raining - {analytic.raining.toString()}</p>
+                        <p className="desc">Weight - {analytic.weight}</p>
+                        
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+          </div>
           </div>
         </div>
         {noAnalytics && (

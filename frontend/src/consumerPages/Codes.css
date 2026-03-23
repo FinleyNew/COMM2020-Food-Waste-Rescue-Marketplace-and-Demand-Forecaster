@@ -208,3 +208,17 @@
 .codes .statusno_show{
     color: red;
 }
+.codes .errorBox{
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    height: fit-content;
+    width: fit-content;
+    border-radius: 2rem;
+    background-color: var(--bg-container);
+    overflow: hidden;
+    border: 8px solid var(--border-colour);
+    box-sizing: border-box;
+    padding: 10px;
+    color: var(--text-colour);
+}

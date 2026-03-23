@@ -1,13 +1,15 @@
 import { Routes, Route, Link } from "react-router-dom";
+import './DeploymentHistory.css'
 function DeploymentHistory() {
   return (
     <>
     {/* Initialises the navifation bar where sellers can move between pages */}
-      <nav>
-        <Link to="/login">Login Page</Link> |{" "}
-        <Link to="/change-information">Change Information</Link> |{" "}
-        <Link to="/view-information">View Information</Link>
+    <div className="deployment">  
+      <nav className="navRow">
+        <Link to="/change-information" className="button">Change Information</Link>
+        <Link to="/view-information" className="button">View Information</Link>
       </nav>
+    </div>
     </>
   );
 }
