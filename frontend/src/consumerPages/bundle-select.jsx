@@ -134,6 +134,10 @@ function BundleSelect() {
                 <div className="bundleRow">
                   <div className="column">
                     <p>Category: {bundle.category.name}</p> {/* displays the category, allergens and prices */}
+                    <h1>Contents: {bundle.contents}</h1>
+                  <h1>Pickup Location: {bundle.seller.location}</h1>
+                  <h1>Pickup Date: {bundle.formatted_date}</h1>
+                  <h1>{bundle.discount_percent}% off original price</h1>
                     <p>Allergens: {bundle.allergens}</p>
                     <p>Price: £{bundle.price}</p>
                   </div>

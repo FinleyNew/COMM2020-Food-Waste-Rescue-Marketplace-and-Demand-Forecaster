@@ -56,6 +56,8 @@ function AdminActionForm() {
   const [location, setLocation] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [description, setDescription] = useState("");
+  
   const [status, setStatus] = useState("");
   const [bundleID, setBundleID] = useState("");
   const [timestamp, setTimeStamp] = useState("");

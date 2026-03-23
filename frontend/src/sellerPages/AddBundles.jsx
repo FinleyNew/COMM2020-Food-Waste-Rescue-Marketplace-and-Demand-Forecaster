@@ -31,7 +31,8 @@ function AddBundles() {
   
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState(1);
- 
+  const [description, setDescription] = useState("");
+  const [initialPrice, setInitialPrice] = useState("");
   const [bundlePrice,setBundlePrice] = useState("");
   const [numberAvailable, setNumberAvailable] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -61,6 +62,8 @@ function AddBundles() {
       available: Number(numberAvailable),
       price: Number(bundlePrice),
       weight: Number(bundleWeight),
+      initial_price: Number(initialPrice),
+      contents: description,
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
@@ -216,7 +219,34 @@ function AddBundles() {
                     onChange={(e) => setBundlePrice(e.target.value)}
                   />
                 </div>
+                
               </div>
+               <div className="textBox">
+                <div className="row">
+                  {/* An input box with a label to input the bundle price */}
+                  <label htmlFor="Iprice">Enter Initial Price : </label>
+                  <input
+                    id="Iprice"
+                    type="number"
+                    value={initialPrice}
+                    onChange={(e) => setInitialPrice(e.target.value)}
+                  />
+                </div>
+                
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                  <label htmlFor="desc">Enter Bundle Description : </label>
+                  <input
+                    id="desc"
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div className="textBox">
                 <div className="row">
                   {/* Outputs an input box with a label asking for bundle weight */}
