@@ -100,7 +100,7 @@ def check_eco_advocate(consumer_id: int, db: Session):
     weight = sum(r.posting.weight for r in reservations)
     # If its greater than ten kgs award the badge
     if weight >= 10000:
-        badge_crud.award_badge(badge_name="Waste Warrior", consumer_id=consumer_id, db=db)
+        badge_crud.award_badge(badge_name="Eco Advocate", consumer_id=consumer_id, db=db)
 
 def check_green_guardian(consumer_id: int, db: Session):
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
@@ -108,7 +108,7 @@ def check_green_guardian(consumer_id: int, db: Session):
     weight = sum(r.posting.weight for r in reservations)
     # If its greater than twenty five kgs award the badge
     if weight >= 25000:
-        badge_crud.award_badge(badge_name="Waste Warrior", consumer_id=consumer_id, db=db)
+        badge_crud.award_badge(badge_name="Green Guardian", consumer_id=consumer_id, db=db)
 
 def check_punctual(consumer_id: int, db: Session):
     reservations = reservation_crud.get_reservations_by_consumer(consumer_id=consumer_id, db=db)
