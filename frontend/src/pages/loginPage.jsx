@@ -368,7 +368,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       />
                   </div>
                     <div className="rowRegister">
-                    <p>Location: </p>
+                    <p>Postcode: </p>
                     <input
                       type="text"
                       value={location}

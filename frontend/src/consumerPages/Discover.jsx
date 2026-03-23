@@ -106,7 +106,11 @@ function Discover() {
             </div>
           </Link>
         ))}
-        {bundles.length === 0 && <p style={{ color: "red" }}>No bundles found</p>}
+        <div className="mainBox">
+          {bundles.length === 0 && <p className="errorBox" style={{ color: "red" }}>
+            No Bundles Found
+            </p>}
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import Company from "../assets/Company.png";
 import Bundle from "../assets/BundleImage.png";
 import axios from "axios";
 function CurrentBundles() {
+  const [Popup, setPopup] = useState(false);
+  const [collectPopup, setCollectPopup] = useState(false);
 
   const [categories, setCategories] = useState([]); //store the categories
   useEffect(() => { //to get all the categories at the start so they can be used throughout
@@ -15,7 +17,7 @@ function CurrentBundles() {
     .then(response => {
        setCategories(response.data); //store them in categories
        if (response.data.length > 0) {
-      setBundleCategory(response.data[0].category_id); // ✅ real ID as default
+      setBundleCategory(response.data[0].category_id); // real ID as default
       }
     })
     .catch(err => { //Returns alert if an error occurs
@@ -29,10 +31,12 @@ function CurrentBundles() {
 
 
   const API_URL = import.meta.env.VITE_API_URL;
+  const [forecasts, setForecasts] = useState([]);
   const [bundles, setBundles] = useState([]); //create state
   const [noBundles, setNoBundles] = useState(false);
   const [code, setCode] = useState("");
   const [updateBundle, setUpdateBundle] = useState(null);
+  const [deleteID, setDeleteID] = useState(null);
   const navigate = useNavigate();
   const [openReply, setOpenReply] = useState(null); 
   const [replyText, setReplyText] = useState({});  
@@ -57,7 +61,32 @@ function CurrentBundles() {
       return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
      });
   const [data, setForecastData] = useState({});
+  const [noForecasts, setNoForecasts] = useState(false);
 
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+  
+      axios.get(`${API_URL}/api/v1/forecasts/me`, { //Fetch data for the user
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => {
+          //setForecasts(response.data); // data is likely an array
+          //setAnalytics(response.data);
+        if (response.data.length === 0) {
+            setNoForecasts(true);
+          } else {
+            setForecasts(response.data);
+            setNoForecasts(false);
+          }
+        })
+        .catch(err => { //Returns alert if an error occurs
+          console.error("Error fetching forecasts:", err);
+          alert("No data");
+        });
+    }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -82,17 +111,21 @@ function CurrentBundles() {
         alert("No data");
       });
   },[])
+  function openPopup() {
+    setPopup(true); //if variable is true then popUp needs to be opened 
+  }
+  function closePopup() {
+    setPopup(false); //if variable is false then popUp needs to be closed
+  }
 
 
 
-  const deleteBundle = (posting_id) => { //Function to delete bundles from backend
+  const confirmDelete = (posting_id) => { //Function to delete bundles from backend
     console.log(typeof(posting_id));
     const token = localStorage.getItem('token');
     console.log(token);
     const postingID = posting_id;
-    
-    if (!window.confirm("Delete this bundle?")) return;
-    
+    const API_URL = import.meta.env.VITE_API_URL;
     axios.delete(`${API_URL}/api/v1/bundles/me/${postingID}`, {
       headers:{
         Authorization: `Bearer ${token}`,
@@ -101,11 +134,12 @@ function CurrentBundles() {
     .then((response) => {
       console.log("Deleted:", response.data);
       setBundles(prev => prev.filter(b => b.posting_id !== posting_id));
-  
-      
+      setDeleteID(null);
     })
     .catch(err => { //Returns alert if an error occurs
          console.error("FULL ERROR:", err);
+         setDeleteID(null);
+        alert("Delete Failed");
 
   if (err.response) {
     console.error("Backend error detail:", err.response.data);
@@ -199,12 +233,15 @@ const completeUpdateBundle = (posting_id) => {
     
 };
 
-const enterCode = (claim_code) => { //Function to return an entered code from the backend
-  if (!window.confirm("Collect this bundle?")) return;
+const enterCode = (inputCode) => { //Function to return an entered code from the backend
+  setCollectPopup(true);
+};
+
+const confirmCollect = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem('token'); 
 
-  axios.get(`${API_URL}/api/v1/reservations/collect/${claim_code}`, { //Fetches inputted tocken
+  axios.get(`${API_URL}/api/v1/reservations/collect/${code}`, { //Fetches inputted tocken
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
@@ -212,9 +249,14 @@ const enterCode = (claim_code) => { //Function to return an entered code from th
   })
     .then(response => {
       console.log("Collected:", response.data);
-      alert("Bundle collected");
+      setCollectPopup(false);
+      setCode("")
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      alert("Collection Failed");
+      setCollectPopup(false);
+    });
 };
 
 
@@ -285,22 +327,6 @@ const submitReply = (issue_id) => {
               </form>
               <br></br>
           </div>
-          <div className="searchRow">
-            <p>Search for a Bundle: </p>
-            <form onSubmit={(e) => {
-                e.preventDefault();
-                enterCode(code);
-              }}>
-                <input
-                  id="enterCode"
-                  type="text"
-                  placeholder="Search"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                />
-            </form>
-            <br></br>
-          </div>
         </div>
           {/* Columns structure for displaying bundle infomation */}
           <div className="mainBox">
@@ -321,14 +347,36 @@ const submitReply = (issue_id) => {
                     <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
-                    
+                    <div className="forecastColumn">
+                      {(() => {
+                      const forecast = forecasts.find(f => f.posting_id === bundle.posting_id);
+                      return forecast ? (
+                        <>
+                          <h2>Forecast:</h2>
+                          <p>Predicted Reservations: {forecast.predicted_reservations}</p>
+                          <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                        </>
+                        ) : (
+                         <p>No Forecast Available</p>
+                        );
+                    })()}
+                    </div>
                   </div>
                   {/* Holds the middle column data for the bundle entry */}
                   <div className="textBox">
+                    <p>Reserved: {bundle.reserved}</p>
                     <p>Allergens: {bundle.allergens} </p>
                     <p>Date to Collect: {bundle.formatted_date}</p>
                     <p>Time to Collect: {bundle.formatted_time_range}</p>
-                    <p>Reserved: {bundle.reserved}</p>
+                    <div className="buttonColumn">
+                      <button className="updateButton" onClick={() => handleUpdateBundle(bundle.posting_id)}>
+                          Update Bundle
+                      </button>
+                      {/* Button to delete bundles on click */}
+                      <button className="deleteButton" onClick={() => setDeleteID(bundle.posting_id)}>
+                          Delete Bundle
+                      </button>
+                    </div>
                   </div>
                   <div className="columnBox">
                   {/* Contains company image and first column data */}
@@ -339,116 +387,124 @@ const submitReply = (issue_id) => {
                         className="companyIcon"
                       />
                     </div>
-                    {/* Button to delete bundles on click */}
-                    <button className="updateButton" onClick={() => handleUpdateBundle(bundle.posting_id)}>
-                        Update Bundle
-                    </button>
-                    <button className="deleteButton" onClick={() => deleteBundle(bundle.posting_id)}>
-                        Delete Bundle
-                    </button>
-                    <button className="view_reports" onClick={() => handleViewReports(bundle.posting_id)}>View Reports</button>
                   </div>
                 </div>
-                {updateBundle === bundle.posting_id&& ( 
+                {deleteID === bundle.posting_id && (
+                  <div className="popupRegister open-popupRegister">
+                    <div className="updateBox">
+                      <h2>Would you like to delete this bundle?</h2>
+                      <div className="rowBox">
+                        <button className="deleteBundleButton" onClick={() => confirmDelete(bundle.posting_id)}>Delete</button>
+                        <button className="deleteBundleButton" onClick={() => setDeleteID(null)}>Cancel</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {updateBundle === bundle.posting_id && ( 
                   <>
+                  <div className="popupRegister open-popupRegister">
+                    <div className="updateBox">
+                      <h1>Update Details</h1>
+                      <br></br>
+                          <div className="row">
+                        {/* drop down for allergens */}
+                        <label htmlFor="category">Enter Bundle Category : </label>
+                        <select
+                          name="category"
+                          id="category"
+                          value={bundleCategory}
+                          onChange={(e) => setBundleCategory(e.target.value)}
+                        >
+                        {/* List of options fo the user to choose from the menu */}
+                        <option value="">Select Category</option>
+                        <option value="Baked Goods">Baked Goods</option>
+                        <option value="Fruit">Fruit</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Meat">Meat</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Drinks">Drinks</option>
+                        </select>
+                      </div>
+
+
+                      <div>
+                    <div className="row">
+                      {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                      <label htmlFor="allergens">Enter Bundle Allergens : </label>
+                      <input
+                        id="allergens"
+                        type="text"
+                        value={bundleAllergens}
+                        onChange={(e) => setBundleAllergens(e.target.value)}
+                      />
+                    </div>
+                    <br></br>
+
+                    <div className="row">
+                      </div>
+                      {/* Makes an input box with a label to input the number of bundles to sell */}
+                      <label htmlFor="numAvailable">Enter Number Available : </label>
+                      <input
+                        id="numAvailable"
+                        type="number"
+                        value={numberAvailable}
+                        onChange={(e) => setNumberAvailable(e.target.value)}
+                      />
+                    </div>
+
                       <div className="row">
-                    {/* drop down for allergens */}
-                    <label htmlFor="category">Enter Bundle Category : </label>
-                  <select
-                    name="category"
-                    id="category"
-                    value={bundleCategory}
-                    onChange={(e) => setBundleCategory(e.target.value)}
-                  >
-                  {categories.map((cat) => (
-                    <option key={cat.category_id} value={cat.category_id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                  </select>
+                      {/* An input box with a label to input the bundle price */}
+                      <label htmlFor="price">Enter Bundle Price : </label>
+                      <input
+                        id="price"
+                        type="number"
+                        value={bundlePrice}
+                        onChange={(e) => setBundlePrice(e.target.value)}
+                      />
+                    </div>
+
+                      <div className="row">
+                      {/* Outputs an input box with a label asking for bundle weight */}
+                      <label htmlFor="weight">Enter Bundle Weight : </label>
+                      <input
+                        id="weight"
+                        type="number"
+                        value={bundleWeight}
+                        onChange={(e) => setBundleWeight(e.target.value)}
+                      />
+                    </div>
+
+                      <div className="row">
+                      {/* Outputs a drop down menu for the user to click a bundle collection time */}
+                      <label htmlFor="collectionTime">Collection Time: </label>
+                      {/* Divides the start and end time before saving them seperately */}
+                      <select
+                        id="collectionTime"
+                        onChange={(e) => {
+                          const[start,end] = e.target.value.split(" - ");
+                          setStartTime(start);
+                          setEndTime(end);
+                        }}
+                      >
+                        {slots.map((slot,idx) =>(
+                          <option key={idx} value={slot}>
+                            {slot}
+                          </option>
+                        ))}
+                      </select>
+                        {/* Button to add bundles when clicked and forecast the data */}
+                    </div>
+                    <div className="rowBox">
+                      <button className="button" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
+                      <button className="button" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
+                    </div>
                   </div>
-
-
-                  <div>
-                <div className="row">
-                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
-                  <label htmlFor="allergens">Enter Bundle Allergens : </label>
-                  <input
-                    id="allergens"
-                    type="text"
-                    value={bundleAllergens}
-                    onChange={(e) => setBundleAllergens(e.target.value)}
-                  />
                   </div>
-                </div>
-
-
-                  <div className="row">
-                  {/* Makes an input box with a label to input the number of bundles to sell */}
-                  <label htmlFor="numAvailable">Enter Number Available : </label>
-                  <input
-                    id="numAvailable"
-                    type="number"
-                    value={numberAvailable}
-                    onChange={(e) => setNumberAvailable(e.target.value)}
-                  />
-              </div>
-
-                  <div className="row">
-                  {/* An input box with a label to input the bundle price */}
-                  <label htmlFor="price">Enter Bundle Price : </label>
-                  <input
-                    id="price"
-                    type="number"
-                    value={bundlePrice}
-                    onChange={(e) => setBundlePrice(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs an input box with a label asking for bundle weight */}
-                  <label htmlFor="weight">Enter Bundle Weight : </label>
-                  <input
-                    id="weight"
-                    type="number"
-                    value={bundleWeight}
-                    onChange={(e) => setBundleWeight(e.target.value)}
-                  />
-                </div>
-
-                  <div className="row">
-                  {/* Outputs a drop down menu for the user to click a bundle collection time */}
-                  <label htmlFor="collectionTime">Collection Time: </label>
-                  {/* Divides the start and end time before saving them seperately */}
-                  <select
-                    id="collectionTime"
-                    onChange={(e) => {
-                      const[start,end] = e.target.value.split(" - ");
-                      setStartTime(start);
-                      setEndTime(end);
-                    }}
-                  >
-                    {slots.map((slot,idx) =>(
-                      <option key={idx} value={slot}>
-                        {slot}
-                      </option>
-                    ))}
-                  </select>
-                    {/* Button to add bundles when clicked and forecast the data */}
-                </div>
-                <button className="boxButton" onClick={() => completeUpdateBundle(bundle.posting_id)}>Confirm Update Bundle</button>
-                <button className="boxButton" onClick={() => setUpdateBundle(null)}>Cancel Update</button>
-
-                
                 </>
-                
-                  
-                
               )}
               
-              
-              
-
               {viewReports === bundle.posting_id && (
               <>
                 {reports.map(report => (
@@ -477,17 +533,29 @@ const submitReply = (issue_id) => {
               ))}
               </>
             )}
-
-                
-
               </div>
           
             ))}
           </div>
+          {collectPopup && (
+            <div className="popupRegister open-popupRegister">
+              <div className="updateBox">
+                <h1>Confirm Bundle Collect</h1>
+                <h2>Are you sure you want to collect the bundle?</h2>
+                <div className="collectRow">
+                  <button className="deleteBundleButton" onClick={confirmCollect}>Confirm</button>
+                  <button className="deleteBundleButton" onClick={() => setCollectPopup(false)}>Back</button>
+                </div>
+              </div>
+            </div>
+          )}
           {noBundles && (
-          <p style={{color:"red"}}>
-                      No bundles
-                  </p>)}
+          <div className="mainBox">
+            <p className="errorBox" style={{color:"red"}}>
+                No bundles
+            </p>
+          </div>
+          )}
         </div>
     </>
   );

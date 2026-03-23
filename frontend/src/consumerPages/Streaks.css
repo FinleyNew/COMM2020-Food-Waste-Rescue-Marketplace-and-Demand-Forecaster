@@ -88,7 +88,6 @@
 .streaks .icon{
     width: 70px;
     height: 70px;
-    content: var(--badge-icon);
 }
 .streaks .rowIcons{
   display: flex;

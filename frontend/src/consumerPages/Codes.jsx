@@ -59,7 +59,7 @@ function Codes() {
                   </div>
                   <div className="bundleRow">
                     <div className="column">
-                      <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status}</span></p>
+                      <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status.toUpperCase()}</span></p>
                       <p>Reservation ID : {bundle.reservation_id}</p>
                       <p>Bundle ID: {bundle.posting_id}</p>
                     </div>
@@ -73,9 +73,10 @@ function Codes() {
             </div>
         ))}
         {noBundles && (
-        <p style={{color:"red"}}>
-                    No bundles
-                </p>)}
+        <div className="mainBox">  
+          <p className="errorBox" style={{color:"red"}}>
+                      No bundles
+                  </p></div>)}
       </div>
       </>
     );

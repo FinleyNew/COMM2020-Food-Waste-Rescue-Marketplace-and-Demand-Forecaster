@@ -66,16 +66,20 @@ function Forecasts() {
                   </div>
                 </div>
               </div>
-              <hr />
             </div>
           ))
         )}
         {noForecasts && (
-          <p style={{color:"red"}}>
-                      No forecast
-                  </p>)}
+          <div className="mainBox">
+            <div className="errorBox">
+              <p style={{color:"red"}}>
+                  No forecast
+              </p>
+            </div>
+          </div>
+        )}
       </section>  
-      </div>    
+      </div>  
     </>
   );
 }
