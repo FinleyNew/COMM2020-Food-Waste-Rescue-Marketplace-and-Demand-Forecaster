@@ -14,7 +14,7 @@ import AddBundles from "./sellerPages/AddBundles";
 import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
 import Forecasts from "./sellerPages/Forecasts";
-import DeploymentHistory from "./adminPages/DeploymentHistory";
+import View_tests from "./adminPages/view-tests";
 import View_information from "./adminPages/view-information";
 import Change_information from "./adminPages/change-information";
 import HomePage from "./pages/HomePage";
@@ -230,7 +230,7 @@ function App() {
 
 
 
-        <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />
+        <Route path="/view-tests" element={<ProtectedRoute user={user} requireRole="admin"><View_tests /></ProtectedRoute>} />
         <Route path="/view-information" element={<ProtectedRoute user={user} requireRole="admin"><View_information /></ProtectedRoute>} />
         <Route path="/change-information" element={<ProtectedRoute user={user} requireRole="admin"><Change_information /></ProtectedRoute>} />
 

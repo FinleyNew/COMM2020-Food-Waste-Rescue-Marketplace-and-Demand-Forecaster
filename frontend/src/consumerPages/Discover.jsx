@@ -100,7 +100,7 @@ function Discover() {
                     <p>Collection Time: {bundle.formatted_time_range}</p>
                     <p>Price: £{bundle.price_display}</p>
                   </div>
-                  <img src={Company} alt="Company" className="companyIcon" />
+                  <img src={bundle.seller.logo_url} alt="Company" className="companyIcon" />
                 </div>
               </div>
             </div>

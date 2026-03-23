@@ -51,7 +51,7 @@ function Forecasts() {
       <section>
         {/* Display message while loading forecasts before outputting data*/}
         {forecasts.length === 0 ? (
-          <p>Loading forecasts...</p>
+          <h1></h1>
         ) : (
           forecasts.map(forecast => (
             <div key={forecast.forecast_id}>   

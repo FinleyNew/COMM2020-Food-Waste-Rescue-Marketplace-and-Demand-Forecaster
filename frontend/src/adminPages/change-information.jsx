@@ -37,7 +37,9 @@ function AdminActionForm() {
     "Delete Consumer",
     "Delete Issue Report",
     "Create Category",
+    "Create Admin",
   ];
+  
   const [reportID, setReportID] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [category, setCategory] = useState("");
@@ -70,7 +72,7 @@ function AdminActionForm() {
   const endDateTime = new Date(`${dateString}T${endTime}:00`); //creating new end time
   const [startTimestamp, setStartTimeStamp] = useState("");
   const [endTimestamp, setEndTimeStamp] = useState("");
-  
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const [openingTime, setOpeningTime] = useState("");
   const [closingTime, setClosingTime] = useState("");
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -272,12 +274,31 @@ function AdminActionForm() {
     })
   }
 
+  function createAdmin() {
+    const token = localStorage.getItem('token');
+    const API_URL = import.meta.env.VITE_API_URL;
+    const data={
+      email:email,
+      password:password,
+    };
+    console.log(data);
+    axios.post(`${API_URL}/api/v1/admins/`, data ,{
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(() => {
+      console.log("Admin Added");
+    })
+  }
+
   return (
     <>
     <div className="change">
       <nav className="navRow">
         <Link to="/view-information" className="button">View Information</Link>
-        <Link to="/deployment-history" className="button">Deployment History</Link>
+        <Link to="/view-tests" className="button">View Tests</Link>
       </nav>
       <div style={{ padding: "20px", fontFamily: "Arial, sans-serif", maxWidth: "500px", margin: "0 auto" }}>
         <h1 className="header">Admin Actions</h1>
@@ -838,6 +859,32 @@ function AdminActionForm() {
             />
           </div>
           <button className="boxButton" onClick={createCategory}>Submit</button>
+          </>
+        )}
+        {selectedAction==="Create Admin" && (
+          <>
+            <div className="row">
+            <label htmlFor="numAvailable3">Enter admin email: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="row">
+            <label htmlFor="numAvailable3">Enter admin password: </label>
+            <input
+              id="numAvailable3"
+              type="text"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {email && !emailRegex.test(email) && (
+            <p style={{color: "red"}}>Email must contain @ and contain a domain name</p>
+          )} 
+          <button className="boxButton" onClick={createAdmin}>Submit</button>
           </>
         )}
       </div>

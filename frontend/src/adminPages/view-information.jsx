@@ -75,7 +75,7 @@ function View_information() {
       {/* Initialises the navifation bar where sellers can move between pages */}
         <nav className="navRow">
           <Link to="/change-information" className="button">Change Information</Link>
-          <Link to="/deployment-history" className="button">Deployment History</Link>
+          <Link to="/view-tests" className="button">View Tests</Link>
         </nav>
         <div className="container">
           <div className="box" style={{ padding: "20px", textAlign: "center" }}>
