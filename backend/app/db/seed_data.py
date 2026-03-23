@@ -150,6 +150,8 @@ def seed_bundle_posting(db: Session):
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
+        price = calculate_price(reservations)
+
         #Randomise status based on pickup window
         if pickup_window.upper != None:
             if datetime.now(timezone.utc) > pickup_window.upper:
@@ -166,10 +168,12 @@ def seed_bundle_posting(db: Session):
             allergens=allergens,
             available=available,
             reserved=reservations,
-            price=Decimal(calculate_price(reservations)),
+            price=Decimal(price),
             pickup_window=pickup_window,
             status=status,
-            weight=fake.random_int(250, 2000)
+            weight=fake.random_int(250, 2000),
+            initial_price=Decimal(price*fake.pyfloat(min_value=1.2, max_value=2)),
+            contents=f"A selection of surplus {category.name} items."
         )
         db.add(posting)
     db.commit()
@@ -249,7 +253,9 @@ def seed_forecast(db: Session):
             price=post.price,
             weight=post.weight,
             start_time=post.pickup_window.lower,
-            end_time=post.pickup_window.upper
+            end_time=post.pickup_window.upper,
+            initial_price=post.initial_price,
+            contents=post.contents
         )
         forecast_data = get_forecast(bundle_in, db)
         forecast = Forecast(
