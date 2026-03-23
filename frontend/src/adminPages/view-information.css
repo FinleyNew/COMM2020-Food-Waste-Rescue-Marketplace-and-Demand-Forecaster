@@ -1,3 +1,7 @@
+.view {
+    color: var(--text-colour);
+}
+
 .view .navRow{
     grid-column: 1;
     gap: 10px;
