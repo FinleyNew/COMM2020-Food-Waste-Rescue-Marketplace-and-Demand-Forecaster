@@ -6,7 +6,7 @@ import axios from "axios";
 
 function AddBundles() {
 
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [categories, setCategories] = useState([]); //store the categories
   useEffect(() => { //to get all the categories at the start so they can be used throughout
       
@@ -21,11 +21,6 @@ function AddBundles() {
     });
     },[])
 
-    
-
-
-
-  const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("0");
   
   
@@ -49,6 +44,7 @@ function AddBundles() {
       return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
      });
   const [data, setForecastData] = useState({});
+  const [successPopup, setSuccessPopup] = useState(false);
   function addBundle(){
     //Initialise data to be sent to the backend
     const categoryObject = categories.find(
@@ -91,6 +87,9 @@ function AddBundles() {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
+    })
+    .then(() => {
+      setSuccessPopup(true);
     })
       
   }
@@ -296,6 +295,12 @@ function AddBundles() {
               <h4>Predicted No Show Probability: {data.predicted_no_show_prob}</h4>
             </div>
           </div>
+          {successPopup && (
+            <div className="popup open-popup">
+              <h1>Success!</h1>
+              <button className="button" onClick={() => setSuccessPopup(false)}>Ok</button>
+            </div>
+          )}
       </div>
     </>
   );
