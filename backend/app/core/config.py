@@ -40,6 +40,10 @@ class Settings(BaseSettings):
 
     OPENWEATHER_API_KEY: str = ""
 
+    CLOUDINARY_CLOUD_NAME: str = ""
+    CLOUDINARY_API_KEY: str = ""
+    CLOUDINARY_API_SECRET: str = ""
+
     SENDGRID_API_KEY: str = ""
     SENDGRID_FROM_EMAIL: str = ""
 

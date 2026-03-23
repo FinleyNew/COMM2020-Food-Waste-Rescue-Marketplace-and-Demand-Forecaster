@@ -1,6 +1,8 @@
 from datetime import datetime
 from sqlmodel import SQLModel
 from app.models.enums import ReservationStatus
+from app.schemas.seller import SellerSummary
+from app.schemas.bundlePosting import PostingSummary
 
 # The base schema for reservations
 class ReservationBase(SQLModel):
@@ -21,3 +23,4 @@ class ReservationPublic(ReservationBase):
     claim_code: str
     status: ReservationStatus
     timestamp: datetime
+    posting: PostingSummary

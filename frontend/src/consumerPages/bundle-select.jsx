@@ -126,7 +126,7 @@ function BundleSelect() {
                 <div className="bundleRow">
                   <h1>Bundle Name</h1>
                   <img
-                      src={Company}
+                      src={bundle.seller.logo_url}
                       alt="Company"
                       className="companyIcon" //holds the specific bundle image
                     />

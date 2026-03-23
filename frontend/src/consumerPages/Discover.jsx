@@ -100,13 +100,17 @@ function Discover() {
                     <p>Collection Time: {bundle.formatted_time_range}</p>
                     <p>Price: £{bundle.price_display}</p>
                   </div>
-                  <img src={Company} alt="Company" className="companyIcon" />
+                  <img src={bundle.seller.logo_url} alt="Company" className="companyIcon" />
                 </div>
               </div>
             </div>
           </Link>
         ))}
-        {bundles.length === 0 && <p style={{ color: "red" }}>No bundles found</p>}
+        <div className="mainBox">
+          {bundles.length === 0 && <p className="errorBox" style={{ color: "red" }}>
+            No Bundles Found
+            </p>}
+        </div>
       </div>
     </div>
   );

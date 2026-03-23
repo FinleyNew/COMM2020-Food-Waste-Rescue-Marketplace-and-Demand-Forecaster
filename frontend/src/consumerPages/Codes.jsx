@@ -48,34 +48,48 @@ function Codes() {
               <h1>Codes</h1>
           </nav>
         </div>
-        {bundles.map(bundle => ( //have to use a map as there are multiple objects all with multiple data attributes, so using a map to traverse them
-          <div key={bundle.posting_id}> {/* needs a key to uniquely identify a specific object when traversing through them all */}
-            <div className="mainBox">
-              <div className="bundleEntry">
-                <div className="textBox">
-                  <div className="bundleRow">
-                    <h1>Bundle Name</h1>
-                    <h2>Claim Code: {bundle.claim_code}</h2> {/* displaying all the information by accessing the specific object */}
-                  </div>
-                  <div className="bundleRow">
-                    <div className="column">
-                      <p>Status: <span className={`status${bundle.status.toLowerCase()}`}>{bundle.status}</span></p>
-                      <p>Reservation ID : {bundle.reservation_id}</p>
-                      <p>Bundle ID: {bundle.posting_id}</p>
-                    </div>
-                    <div className="column">
-                      <img src={Company} alt="Company" className="companyIcon"/>
-                    </div>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-        ))}
+        {bundles.map((bundle) => (
+  <Link
+    to={`/bundle/${bundle.posting_id}`}
+    className="mainBox"
+    key={bundle.posting_id}
+  >
+    <div className="bundleEntry">
+      <div className="textBox">
+        <div className="bundleRow">
+          <h1>{bundle.posting.seller.name}</h1>
+          <h2>Claim Code: {bundle.claim_code}</h2>
+        </div>
+
+        <div className="bundleRow">
+          <div className="column">
+            <p>
+              Status:{" "}
+              <span className={`status${bundle.status.toLowerCase()}`}>
+                {bundle.status.toUpperCase()}
+              </span>
+            </p>
+            <p>Pickup Date: {bundle.posting.formatted_date}</p>
+            <p>Bundle ID: {bundle.posting.formatted_time_range}</p>
+          </div>
+
+          <div className="column">
+            <img
+              src={bundle.posting.seller.logo_url}
+              alt="Company"
+              className="companyIcon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </Link>
+))}
         {noBundles && (
-        <p style={{color:"red"}}>
-                    No bundles
-                </p>)}
+        <div className="mainBox">  
+          <p className="errorBox" style={{color:"red"}}>
+                      No bundles
+                  </p></div>)}
       </div>
       </>
     );

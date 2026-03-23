@@ -14,7 +14,7 @@ import AddBundles from "./sellerPages/AddBundles";
 import Analytics from "./sellerPages/Analytics";
 import CurrentBundles from "./sellerPages/CurrentBundles";
 import Forecasts from "./sellerPages/Forecasts";
-import DeploymentHistory from "./adminPages/DeploymentHistory";
+import View_tests from "./adminPages/view-tests";
 import View_information from "./adminPages/view-information";
 import Change_information from "./adminPages/change-information";
 import HomePage from "./pages/HomePage";
@@ -91,6 +91,16 @@ function App() {
       document.documentElement.classList.add("dark");
     }
   },[]);
+
+  const logOut = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("location");
+    setUser(null);
+    setSellerData(null);
+    setLSLocation(null);
+    settingsClosePopup();
+  }
 
   const toggleDarkMode = () => { //function for turning dark mode on
     if(darkMode){ //if dark mode is selected (return back to light)
@@ -220,7 +230,7 @@ function App() {
 
 
 
-        <Route path="/deployment-history" element={<ProtectedRoute user={user} requireRole="admin"><DeploymentHistory /></ProtectedRoute>} />
+        <Route path="/view-tests" element={<ProtectedRoute user={user} requireRole="admin"><View_tests /></ProtectedRoute>} />
         <Route path="/view-information" element={<ProtectedRoute user={user} requireRole="admin"><View_information /></ProtectedRoute>} />
         <Route path="/change-information" element={<ProtectedRoute user={user} requireRole="admin"><Change_information /></ProtectedRoute>} />
 
@@ -236,7 +246,7 @@ function App() {
       </button>
       {settingsPopup && (
         <div className="settingsPopup settingsOpenPopup">
-          {location.pathname === "/login" ? (
+          {!user || location.pathname === "/login" ? (
           <div>
             <h1>Please login to an account to access settings</h1>
             <input
@@ -251,21 +261,36 @@ function App() {
             </div>) : (
             <>
               <h1>Settings</h1>
-              <p>Account Details:</p>
+              <h3>Account Details:</h3>
               <div className="settingsTextBox">
                 <p>Email: {username}</p>
                 <p>Account Type: {role}</p>
                 {role === "seller" && (
                   <>
                   <p>Company Name: {sellerData?.name}</p>
-                  <p>Location: {sellerData?.location}</p>
+                  <p>Postcode: {sellerData?.location}</p>
                   <p>Opening Hours: {sellerData?.opening_hours}</p>
                   </>
                 )}
               </div>
-              <Link to="/login" className="signOutButton" onClick={(settingsClosePopup)}><b>Sign Out</b></Link>
+              <Link to="/login" className="signOutButton" onClick={() => logOut()}><b>Sign Out</b></Link>
               <br></br>
+              <h3>Accessibility:</h3>
+              <div className="settingsRow">
+                <input
+                  type="checkbox"
+                  id="darkModeToggle"
+                  checked={darkMode}
+                  onChange={toggleDarkMode}
+                />
+                <label htmlFor="darkModeToggle">
+                  {darkMode ? "Dark Mode" : "Light Mode"}
+                </label>
+              </div>
+              <br></br>
+              <h3>Change Details:</h3>
               <button onClick={deleteAccount}>Delete Account</button>
+              <br></br>
               {role==="seller" && (
                 <button onClick={handleUpdateDetails}>Update Details</button>
               )}
@@ -304,28 +329,13 @@ function App() {
                       onChange={(e) => setClosingTime(e.target.value)}
                       />
                   </div>
-
+                  <br></br>
                   <button onClick={completeUpdatedDetails} //was close popup
                               
                               >Update Details</button>
                     </>
               )}
               
-              
-              
-              <br></br>
-              <p>Accessibility:</p>
-              <div className="settingsRow">
-                <input
-                  type="checkbox"
-                  id="darkModeToggle"
-                  checked={darkMode}
-                  onChange={toggleDarkMode}
-                />
-                <label htmlFor="darkModeToggle">
-                  {darkMode ? "Dark Mode" : "Light Mode"}
-                </label>
-              </div>
               <br></br>
               <br></br>
               <button className="settingsButton" onClick={settingsClosePopup}>Back</button>

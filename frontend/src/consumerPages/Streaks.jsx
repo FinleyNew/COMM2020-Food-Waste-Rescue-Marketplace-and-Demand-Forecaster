@@ -2,6 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Streaks.css'
 import noBadge from "../assets/NoBadge.png";
+import Badge from "../assets/Badge.png";
 import axios from "axios";
 function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -42,7 +43,7 @@ function Streaks() {
           alert("No data ");
     });
     
-  },[badges]) //allows the page to rerender if anything changes
+  },[]) //allows the page to rerender if anything changes
 
   useEffect(() => {
      axios.get(`${API_URL}/api/v1/consumers/badges`,{ //the backend server url to get the information for 
@@ -51,7 +52,7 @@ function Streaks() {
     .then(response => {
       setAllBadges(response.data);
     })
-  })
+  }, [])
 
   
 
@@ -79,137 +80,68 @@ function Streaks() {
               </div>
               <p className="textCentre">Badges</p>
               <div className="rowIcons">
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
+                {allBadges.slice(0,4).map((badge)=> {
+                  const unlock = badges.some(userBadge => userBadge.name === badge.name);
+                  return (
+                    <div key={badge.badge_id} className="badges">
+                      <img className="icon" src={unlock ? Badge : noBadge}></img>
+                      <div className="hoverDesc">
+                        {badge.name}
+                        <br></br>
+                        {unlock ? badge.detail : "Badge is Locked"}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <div className="rowIcons">
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
+                {allBadges.slice(4,8).map((badge)=> {
+                  const unlock = badges.some(userBadge => userBadge.name === badge.name);
+                  return (
+                    <div key={badge.badge_id} className="badges">
+                      <img className="icon" src={unlock ? Badge : noBadge}></img>
+                      <div className="hoverDesc">
+                        {badge.name}
+                        <br></br>
+                        {unlock ? badge.detail : "Badge is Locked"}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <div className="rowIcons">
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
+                {allBadges.slice(8,12).map((badge)=> {
+                  const unlock = badges.some(userBadge => userBadge.name === badge.name);
+                  return (
+                    <div key={badge.badge_id} className="badges">
+                      <img className="icon" src={unlock ? Badge : noBadge}></img>
+                      <div className="hoverDesc">
+                        {badge.name}
+                        <br></br>
+                        {unlock ? badge.detail : "Badge is Locked"}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <div className="rowIcons">
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
-                <div className="badges">
-                  <div className="icon" src={noBadge}></div>
-                  <div className="hoverDesc">
-                    Badge is Locked
-                  </div>
-                </div>
+                {allBadges.slice(12,16).map((badge)=> {
+                  const unlock = badges.some(userBadge => userBadge.name === badge.name);
+                  return (
+                    <div key={badge.badge_id} className="badges">
+                      <img className="icon" src={unlock ? Badge : noBadge}></img>
+                      <div className="hoverDesc">
+                        {badge.name}
+                        <br></br>
+                        {unlock ? badge.detail : "Badge is Locked"}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
-
-
-
-        <div>
-  {badges.map((badge, idx) => (
-    <div key={idx} className="badge">
-      <h3>{badge.name}</h3>
-      <p>{badge.detail}</p>
-    </div>
-  ))}
-  {allBadges.map(badge => (
-            
-              <div className="bundleEntry">
-                
-                <div className="textBox">
-                  <div className="bundleRow">
-                    <h1>{badge.name} Name </h1>
-                    <h1>{badge.detail} Detail</h1>
-                  </div>
-                  
-                </div>
-              </div>
-            
-          ))}
-</div>
       </>
     );
 }

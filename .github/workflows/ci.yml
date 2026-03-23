@@ -10,17 +10,24 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 # --- JOBS ---
 # Jobs run in parallel by default
 jobs:
   # Python / FastAPI backend tests
   backend-tests:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest  # The virtual machine GitHub provides
 
     steps:
       # Check out repo code onto the runner
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       # Install Python
       - name: Set up Python
@@ -36,7 +43,21 @@ jobs:
 
       # Step 4: Run your tests with pytest
       - name: Run tests
-        run: pytest backend/
+        working-directory: backend
+        run: pytest --json-report --json-report-file=test_results.json
+
+      - name: Commit test results
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout ${{ github.head_ref || github.ref_name }}
+          git pull origin ${{ github.head_ref || github.ref_name }}
+          git add backend/test_results.json
+          git diff --staged --quiet || git commit -m "Update test results [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docker-smoke-test:
     runs-on: ubuntu-latest

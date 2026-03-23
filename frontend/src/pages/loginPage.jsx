@@ -25,8 +25,9 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-  const [accountError, setAccountError] = useState(""); // <-- new
-  const [loginError, setLoginError] = useState(""); // <-- new
+  const [accountError, setAccountError] = useState(""); 
+  const [loginError, setLoginError] = useState(""); 
+  const [sellerProfile, setSellerProfile] = useState(null); //for the profile picture
   
 
   const validPassword = passwordRegex.test(password);
@@ -239,25 +240,25 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
 
     }
     else if(accountType==="Seller"){
-      const data = {
-        seller_in: {
-          name: companyName,
-          location: location,
-          opening_hours: `${openingTime} - ${closingTime}`
-        },
-        user_in: {
-          email: username,
-          password: password
-        }
+      const formData = new FormData()
+      formData.append('name', companyName)
+      formData.append('location', location)
+      formData.append('opening_hours', `${openingTime} - ${closingTime}`)
+      formData.append('email', username)
+      formData.append('password', password)
+      const logoFile = sellerProfile;
+      
+      if (logoFile) {
+          formData.append('file', logoFile)
       }
-      console.log(data);
-        axios.post(`${API_URL}/api/v1/sellers/`, data, {
+      console.log(formData);
+        axios.post(`${API_URL}/api/v1/sellers/`, formData, {
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "multipart/form-data"
           }
           })
           .then(response => {
-              console.log(data);
+              console.log(formData);
               navigate("/login")
               handleAccountCreation();
               closePopup()
@@ -367,7 +368,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       />
                   </div>
                     <div className="rowRegister">
-                    <p>Location: </p>
+                    <p>Postcode: </p>
                     <input
                       type="text"
                       value={location}
@@ -422,6 +423,17 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         {accountError}
                     </p>
                   )}
+                  {accountType==="Seller" && (
+                    <>
+                    <div className="rowRegister">
+                    <p>Profile Photo:</p>
+                    <form>
+                      <input type="file" id="sellerImage" name="filename" accept="image/*" onChange={(e) => setSellerProfile(e.target.files[0])}></input>
+                    </form>
+                  </div>
+                    </>
+                  )}
+                  
                   
                   {/* Creates an input box for the user to send their password and saves it */}
                   <div className="rowRegister">
