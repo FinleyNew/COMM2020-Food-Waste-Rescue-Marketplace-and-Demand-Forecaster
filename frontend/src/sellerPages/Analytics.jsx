@@ -8,7 +8,29 @@ function Analytics() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [analytics, setAnalytics] = useState([])
   const [noAnalytics, setNoAnalytics] = useState(false);
+  const [logo, setLogo] = useState("");
+
   
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    axios.get(`${API_URL}/api/v1/sellers/me`,{
+      headers:{
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => {
+      
+      setLogo(response.data.logo_url);
+      console.log(logo);
+    })
+    .catch(err => { //Returns alert if an error occurs
+        console.error("Error fetching bundles:", err);
+        
+      });
+
+  },[])
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -76,9 +98,10 @@ function Analytics() {
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
-          <div className="textHeading">
-            <h1>Analytics</h1>
+          <div>
+            <img src={logo} alt="Company" className="companyIcon" />
           </div>
+          
         </div>
           <div className="mainBox">
             <div className="analyticsContent">
@@ -109,7 +132,7 @@ function Analytics() {
                     <p className="weight">{totalWeight}kg</p>
                   </div>
                 </div>
-                <img className="companyImage" src={Company}></img>
+                <img className="companyImage" src={logo}></img>
               </div>
             </div>
             <div className="textHeading">
