@@ -8,6 +8,12 @@ class SellerBase(SQLModel):
     name: str
     location: str
     opening_hours: str
+
+    @field_validator("name")
+    @classmethod
+    def strip_name(cls, v: str) -> str:
+        return v.strip()
+
     # Ensures open_hours is in the right format and valid
     @field_validator("opening_hours")
     @classmethod
