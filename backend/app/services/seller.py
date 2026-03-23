@@ -31,6 +31,7 @@ def create_seller(seller_in: SellerCreate, user_in: UserCreate, db: Session) -> 
         coords = get_coordinates(seller_in.location)
         latitude, longitude = coords if coords else (None, None)
         # Create a new consumer with that Id
+        
         seller = seller_crud.create_seller(seller_in=seller_in, user_id=user_id, longitude=longitude, latitude=latitude, db=db)
         db.commit()
         db.refresh(seller)

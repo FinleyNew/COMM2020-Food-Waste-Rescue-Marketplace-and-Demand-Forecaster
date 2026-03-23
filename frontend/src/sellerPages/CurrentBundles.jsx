@@ -382,7 +382,7 @@ const submitReply = (issue_id) => {
                   {/* Contains company image and first column data */}
                     <div className="displayImage">
                       <img
-                        src={Company}
+                        src={bundle.seller.logo_url}
                         alt="Company"
                         className="companyIcon"
                       />

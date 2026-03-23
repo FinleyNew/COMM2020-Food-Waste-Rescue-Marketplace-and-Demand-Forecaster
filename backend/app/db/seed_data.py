@@ -109,7 +109,8 @@ def seed_seller(db: Session):
             location=fake.address(),
             latitude=latitude,
             longitude=longitude,
-            opening_hours=opening_hours
+            opening_hours=opening_hours,
+            logo_url="https://res.cloudinary.com/dnbeji59a/image/upload/v1774196127/profile-picture-blank_nnm3vq.jpg"
         )
         db.add(seller)
     db.commit()

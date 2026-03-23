@@ -64,7 +64,7 @@ function Codes() {
                       <p>Bundle ID: {bundle.posting_id}</p>
                     </div>
                     <div className="column">
-                      <img src={Company} alt="Company" className="companyIcon"/>
+                      <img src={bundle.posting.seller.logo_url} alt="Company" className="companyIcon"/>
                     </div>
                   </div>
                 </div>
