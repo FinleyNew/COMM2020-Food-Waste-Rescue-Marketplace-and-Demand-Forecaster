@@ -38,11 +38,11 @@ function AddBundles() {
   const dateString = today.toISOString().split("T")[0]; // YYYY-MM-DD, removing the time to replace with the selected time
   const startDateTime = new Date(`${dateString}T${startTime}:00`); //creating new start time
   const endDateTime = new Date(`${dateString}T${endTime}:00`); //creating new end time
-  const slots = Array.from({ length: 24 }, (_, i) => 
-    { const start = i;
-      const end = i + 1; 
-      return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
-     });
+  const slots = Array.from({ length: 11 }, (_, i) => 
+  { const start = i + 8;
+    const end = start + 1; 
+    return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
+  });
   const [data, setForecastData] = useState({});
   const [successPopup, setSuccessPopup] = useState(false);
   function addBundle(){
