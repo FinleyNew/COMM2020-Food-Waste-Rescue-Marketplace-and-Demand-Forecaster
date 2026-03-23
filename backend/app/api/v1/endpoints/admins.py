@@ -10,6 +10,7 @@ from app.services import user as user_service
 
 router = APIRouter()
 
+# Endpoint for getting latest test results
 @router.get("/tests")
 def get_test_results(admin: AdminDep):
     if not os.path.exists("test_results.json"):
