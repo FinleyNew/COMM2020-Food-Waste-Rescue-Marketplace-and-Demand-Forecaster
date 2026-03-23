@@ -215,7 +215,8 @@ function App() {
     <>
       
         <Routes>
-        
+
+        <Route path="/" element={<LoginPage setUser={setUser} />} />
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
 
         <Route path="/discover" element={<ProtectedRoute user={user} requireRole="consumer"><Discover /></ProtectedRoute>} /> {/* protected route only allows a user with the correct type to access that page */}
