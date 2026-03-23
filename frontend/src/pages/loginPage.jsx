@@ -369,7 +369,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       />
                   </div>
                     <div className="rowRegister">
-                    <p>Location: </p>
+                    <p>Postcode: </p>
                     <input
                       type="text"
                       value={location}
@@ -430,7 +430,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     </p>
                   )}
                   <div className="rowRegister">
-                    <p>Profile Photo:</p>
+                    <p>Profile Photo (Optional):</p>
                     <form>
                       <input type="file" id="sellerImage" name="filename" accept="image/*" onChange={(e) => setSellerProfile(e.target.files[0])}></input>
                     </form>

@@ -220,7 +220,7 @@ function AddBundles() {
               <div className="textBox">
                 <div className="row">
                   {/* Outputs an input box with a label asking for bundle weight */}
-                  <label htmlFor="weight">Enter Bundle Weight : </label>
+                  <label htmlFor="weight">Enter Bundle Weight (grams): </label>
                   <input
                     id="weight"
                     type="number"

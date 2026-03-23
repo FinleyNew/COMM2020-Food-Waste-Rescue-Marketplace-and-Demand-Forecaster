@@ -268,7 +268,7 @@ function App() {
                 {role === "seller" && (
                   <>
                   <p>Company Name: {sellerData?.name}</p>
-                  <p>Location: {sellerData?.location}</p>
+                  <p>Postcode: {sellerData?.location}</p>
                   <p>Opening Hours: {sellerData?.opening_hours}</p>
                   </>
                 )}
