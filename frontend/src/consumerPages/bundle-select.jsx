@@ -84,6 +84,9 @@ function BundleSelect() {
     })
     
   }
+  function closeReportPopup() {
+    setReportButton(false);
+  }
 
   function handleViewReports() {
   const token = localStorage.getItem('token');
@@ -124,7 +127,7 @@ function BundleSelect() {
               />{/* holds the base company image */}
               <div className="textBox">
                 <div className="bundleRow">
-                  <h1>Bundle Name</h1>
+                  <h1>{bundle.seller.name}</h1>
                   <img
                       src={bundle.seller.logo_url}
                       alt="Company"
@@ -134,16 +137,16 @@ function BundleSelect() {
                 <div className="bundleRow">
                   <div className="column">
                     <p>Category: {bundle.category.name}</p> {/* displays the category, allergens and prices */}
-                    <h1>Contents: {bundle.contents}</h1>
-                  <h1>Pickup Location: {bundle.seller.location}</h1>
-                  <h1>Pickup Date: {bundle.formatted_date}</h1>
-                  <h1>{bundle.discount_percent}% off original price</h1>
-                    <p>Allergens: {bundle.allergens}</p>
+                    <p>Contents: {bundle.contents}</p>
+                    <p>Pickup Location: {bundle.seller.location}</p>
+                    <p>Pickup Date: {bundle.formatted_date}</p>
                     <p>Price: £{bundle.price}</p>
                   </div>
                   <div className="column">
                     <p>Date to Collect: {bundle.formatted_date}</p> {/* displays the formatted date and the time range */}
                     <p>Time to Collect: {bundle.formatted_time_range}</p>
+                    <p>{bundle.discount_percent}% off original price</p>
+                    <p>Allergens: {bundle.allergens}</p>
                   </div>
                 </div>
                 <br></br>
@@ -153,9 +156,8 @@ function BundleSelect() {
                   Pay
                 </button>
                 <Link to="/discover" className="payButton">Back</Link>
-
-                <button className="reportButton" onClick={() => (setReportButton(true))}>Create Report</button>
-                <button className="viewReportButton" onClick={() => (handleViewReports(),setViewReportButton(true))}>View Reports</button>
+                <button className="payButton" onClick={() => (setReportButton(true))}>Create Report</button>
+                <button className="payButton" onClick={() => (handleViewReports(),setViewReportButton(true))}>View Reports</button>
 
 
               </div>
@@ -166,34 +168,46 @@ function BundleSelect() {
                 </div>
               )}
               {reportButton && (
-                <div>
-                  <h1>Please enter the issue to send to the seller.</h1>
-                  <div className="row">
-                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
-                  <label htmlFor="report">Enter Issue : </label>
-                  <input
-                    id="report"
-                    type="text"
-                    value={report}
-                    onChange={(e) => setReport(e.target.value)}
-                  />
-                  <h1>    </h1>
-                  <button className="button" onClick={() => (createReport(), alert("Report Created"), setTimeout(() => {setReportButton(false)},3000))}>Confirm</button>
+                <div className="popup open-popup">
+                  <div className="textBox">
+                    <h1>Please enter the issue to send to the seller.</h1>
+                    <div className="row">
+                    {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                    <label htmlFor="report">Enter Issue : </label>
+                    <input
+                      id="report"
+                      type="text"
+                      value={report}
+                      onChange={(e) => setReport(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
+                    <button className="button" onClick={() => (createReport(), closeReportPopup())}>Confirm</button>
+                  </div>
                 </div>
                    {/* {setReportButton(false)} close after report is made */}
                 </div>
               )}
               {viewReport && (
-                <>
-                
-                {showReports.map(report => (
-                    <div>
-                      <h1>Description:{report.description},Seller Response:{report.seller_response},Status:{report.status}</h1>
-                      {(setTimeout(() => {setViewReportButton(false)},20000))}
+                <div className="popup open-popup">
+                  <h1>View Reports</h1>
+                    <div className="textBox">
+                      {showReports.length === 0 ? (
+                        <p>No reports found</p>
+                      ) : (
+                      <div className="reportsFormat">
+                        {showReports.map((report) => (
+                          <>
+                            <h1>Description: {report.description}</h1>
+                            <h1>Seller Response: {report.seller_response}</h1>
+                            <h1>Status: {report.status}</h1>
+                          </>
+                        ))}
+                      </div>
+                      )}
+                      <button className="button" onClick={() => setViewReportButton(false)}>Close</button>
                     </div>
-       
-                ))}
-                </>
+                </div>
               )}
             </div>
           </div>

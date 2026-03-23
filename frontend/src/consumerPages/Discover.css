@@ -290,3 +290,8 @@
     padding: 10px;
     color: var(--text-colour);
 }
+.discover .reportsFormat{
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
