@@ -6,7 +6,7 @@ from sqlmodel import Field, SQLModel
 
 from app.schemas.category import CategoryPublic
 
-# The base schema for Records
+# The base schema for records
 class RecordBase(SQLModel):
     user_id: int
     posting_id: int
@@ -32,6 +32,7 @@ class RecordCreate(RecordBase):
             raise ValueError("end_time must be after start_time")
         return self
     
+# The schema for admins updating a record
 class RecordAdminUpdate(SQLModel):
     category: CategoryPublic | None = None
     price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
@@ -73,7 +74,7 @@ class RecordPublic(RecordBase):
         return self.pickup_window.lower.date()
     
     # Computed field to get the formatted date
-    # exp: Friday, Feb 13
+    # ex: Friday, Feb 13
     @computed_field
     def formatted_date(self) -> str:
         return self.pickup_window.lower.strftime("%A, %b %d")

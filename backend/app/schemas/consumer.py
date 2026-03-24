@@ -6,14 +6,14 @@ class ConsumerBase(SQLModel):
     display_name: str = Field(min_length=1, max_length=50)
 
 # The create schema for consumers
-# Currently not in use
 class ConsumerCreate(ConsumerBase):
     pass
 
-# Only admin should use this
+# The schema to update a consumer
 class ConsumerUpdate(SQLModel):
     display_name: str | None = Field(default=None, min_length=1, max_length=50)
 
+# The schema for admins to update a consumer
 class ConsumerAdminUpdate(ConsumerUpdate):
     streak: int | None = Field(default=None, ge=0)
 
