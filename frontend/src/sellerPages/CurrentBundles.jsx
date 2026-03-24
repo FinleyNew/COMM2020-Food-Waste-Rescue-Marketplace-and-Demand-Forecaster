@@ -358,7 +358,7 @@ const submitReply = (issue_id) => {
                         <>
                           <h2>Forecast:</h2>
                           <p>Predicted Reservations: {forecast.predicted_reservations}</p>
-                          <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                          Predicted No-show Probability: {(forecast.predicted_no_show_prob * 100).toFixed(1)}%
                         </>
                         ) : (
                          <p>No Forecast Available</p>
