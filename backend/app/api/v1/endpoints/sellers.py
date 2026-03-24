@@ -5,6 +5,8 @@ from app.services import seller as seller_service
 from fastapi import UploadFile, File
 from app.schemas.user import UserCreate
 from app.services.cloudinary import upload_image
+from app.schemas.analytics import DiscountBandMetrics, SellerAnalyticsSummary, SellerOperationalInsights, SellerSellThroughBreakdown
+from app.services import analytics as analytics_service
 
 router = APIRouter()
 
@@ -53,3 +55,19 @@ def delete_current_seller(current_user: SellerDep, db: SessionDep):
 @router.delete("/{user_id}")
 def delete_seller(user_id: int, current_user: AdminDep, db: SessionDep):
     seller_service.delete_seller(user_id=user_id, db=db)
+
+@router.get("/me/analytics/summary", response_model=SellerAnalyticsSummary)
+def get_seller_analytics_summary(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_analytics_summary(seller_id=current_seller.user_id, db=db)
+
+@router.get("/me/analytics/sell-through-breakdown", response_model=SellerSellThroughBreakdown)
+def get_seller_sell_through_breakdown(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_sell_through_breakdown(seller_id=current_seller.user_id, db=db)
+
+@router.get("/me/analytics/pricing-effectiveness", response_model=list[DiscountBandMetrics])
+def get_seller_pricing_effectiveness(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_pricing_effectiveness(seller_id=current_seller.user_id, db=db)
+
+@router.get("/me/analytics/operational-insights", response_model=SellerOperationalInsights)
+def get_seller_operational_insights(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_operational_insights(seller_id=current_seller.user_id, db=db)
