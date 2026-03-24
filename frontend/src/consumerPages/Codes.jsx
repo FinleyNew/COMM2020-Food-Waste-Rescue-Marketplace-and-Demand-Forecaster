@@ -49,11 +49,7 @@ function Codes() {
           </nav>
         </div>
         {bundles.map((bundle) => (
-  <Link
-    to={`/bundle/${bundle.posting_id}`}
-    className="mainBox"
-    key={bundle.posting_id}
-  >
+  
     <div className="bundleEntry">
       <div className="textBox">
         <div className="bundleRow">
@@ -83,7 +79,7 @@ function Codes() {
         </div>
       </div>
     </div>
-  </Link>
+  
 ))}
         {noBundles && (
         <div className="mainBox">  

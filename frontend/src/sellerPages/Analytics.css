@@ -8,7 +8,7 @@
 .analytics .navRow{
     grid-column: 1;
     gap: 10px;
-    width: 515px;
+    width: 395px;
     background-color: var(--bg-container);
     border: 4px solid var(--border-colour);
     padding: 8px;

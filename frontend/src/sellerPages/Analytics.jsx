@@ -96,7 +96,6 @@ function Analytics() {
           <nav class="navRow">
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
-            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
           
         </div>
