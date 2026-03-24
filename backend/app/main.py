@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.scheduler import start_scheduler, stop_scheduler
 
+# This starts and stops the scheduler
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     start_scheduler()
