@@ -6,9 +6,10 @@ from app.schemas.category import CategoryCreate
 from app.models.bundlePosting import Category
 from app.crud import category as category_crud
 
-
+# Creates a new category
 def create_category(category_in: CategoryCreate, db: Session) -> Category:
     return category_crud.create_category(category_in=category_in, db=db)
 
+# Gets all the categories
 def get_all_categories(db: Session) -> Sequence[Category]:
     return category_crud.get_all_categories(db=db)

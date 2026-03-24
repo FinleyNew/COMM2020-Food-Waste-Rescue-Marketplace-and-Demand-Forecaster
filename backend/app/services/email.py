@@ -2,6 +2,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from app.core.config import settings
 
+# Sends an email to the specified email
 def send_email(to_email: str, subject: str, body: str):
     message = Mail(
         from_email=settings.SENDGRID_FROM_EMAIL,
