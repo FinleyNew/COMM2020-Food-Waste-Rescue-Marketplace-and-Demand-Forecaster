@@ -5,6 +5,8 @@ from app.services import seller as seller_service
 from fastapi import UploadFile, File
 from app.schemas.user import UserCreate
 from app.services.cloudinary import upload_image
+from app.schemas.analytics import SellerAnalyticsSummary
+from app.services import analytics as analytics_service
 
 router = APIRouter()
 
@@ -53,3 +55,7 @@ def delete_current_seller(current_user: SellerDep, db: SessionDep):
 @router.delete("/{user_id}")
 def delete_seller(user_id: int, current_user: AdminDep, db: SessionDep):
     seller_service.delete_seller(user_id=user_id, db=db)
+
+@router.get("/me/analytics/summary", response_model=SellerAnalyticsSummary)
+def get_seller_analytics_summary(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_analytics_summary(seller_id=current_seller.user_id, db=db)
