@@ -3,6 +3,43 @@ from sqlmodel import Session
 from app.models.record import Record
 
 
+def get_seller_sell_through_breakdown(seller_id: int, db: Session) -> dict:
+    result = db.query(
+        func.sum(Record.observed_reservations).label("total_reserved"),
+        func.sum(Record.observed_no_show).label("total_no_shows"),
+        func.sum(Record.observed_expired).label("total_expired"),
+    ).filter(Record.user_id == seller_id).first()
+
+    total_reserved = result.total_reserved or 0
+    total_no_shows = result.total_no_shows or 0
+    total_expired = result.total_expired or 0
+    total_collected = max(total_reserved - total_no_shows, 0)
+    total_posted = total_reserved + total_expired
+
+    collected_pct_of_posted = 0.0
+    no_show_pct_of_posted = 0.0
+    expired_pct_of_posted = 0.0
+    if total_posted > 0:
+        collected_pct_of_posted = (total_collected / total_posted) * 100
+        no_show_pct_of_posted = (total_no_shows / total_posted) * 100
+        expired_pct_of_posted = (total_expired / total_posted) * 100
+
+    return {
+        "total_posted": total_posted,
+        "total_collected": total_collected,
+        "total_no_shows": total_no_shows,
+        "total_expired": total_expired,
+        "collected_pct_of_posted": round(collected_pct_of_posted, 2),
+        "no_show_pct_of_posted": round(no_show_pct_of_posted, 2),
+        "expired_pct_of_posted": round(expired_pct_of_posted, 2),
+        "outcome_breakdown": [
+            {"label": "collected", "value": total_collected, "pct": round(collected_pct_of_posted, 2)},
+            {"label": "no_show", "value": total_no_shows, "pct": round(no_show_pct_of_posted, 2)},
+            {"label": "expired", "value": total_expired, "pct": round(expired_pct_of_posted, 2)},
+        ],
+    }
+
+
 def get_seller_analytics_summary(seller_id: int, db: Session) -> dict:
     # Aggregate data from Record table for the seller.
     # Note: total_posted is interpreted as total bundle units posted,
