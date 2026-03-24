@@ -42,7 +42,7 @@ def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosti
         c.category_id for c in db.exec(select(Category)).all()
         if query.lower() in c.name.lower() or c.name.lower() in query.lower()
     ]
-    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category_id.in_(matching_category_ids), Seller.name.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
+    statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category_id.in_(matching_category_ids), Seller.name.ilike(search), BundlePosting.contents.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
 def get_to_be_emailed_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:

@@ -6,6 +6,8 @@ from app.services import consumer as consumer_service
 
 router = APIRouter()
 
+# Endpoint for getting all the reservations in the DB
+# Can only be used by admins
 @router.get("/", response_model=list[ReservationPublic])
 def get_all_reservations(current_user: AdminDep, db: SessionDep):
     return reservation_service.get_all_reservations(db=db)
@@ -23,11 +25,12 @@ def create_reservation(reservation_in: ReservationCreate, current_consumer: Cons
             db=db
         )
 
+# Endpoint for admins to update a specific reservation
 @router.patch("/admin/{reservation_id}", response_model=ReservationPublic)
 def admin_update_reservation(reservation_id: int, reservation_update: ReservationAdminUpdate, current_user: AdminDep, db: SessionDep):
     return reservation_service.update_reservation(reservation_id=reservation_id, reservation_update=reservation_update, db=db)
 
-# Endpoint for setting the reservation status to collected if the claim code matches
+# Endpoint for setting the reservation status to collected, but onlyif the claim code matches
 @router.get("/collect/{claim_code}", response_model= ReservationPublic)
 def collect_by_code(claim_code: str, current_seller: SellerDep, db: SessionDep):
     user_id = current_seller.user_id
@@ -43,6 +46,7 @@ def get_current_consumers_reservations(current_consumer: ConsumerDep, db: Sessio
     return current_consumer.reservations or []
     
 # Endpoint for deleting a reservation
+# Can only be used by admins
 @router.delete("/{reservation_id}")
 def delete_reservation(reservation_id: int, current_user: AdminDep, db: SessionDep):
     reservation_service.delete_reservation(reservation_id=reservation_id, db=db)

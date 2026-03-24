@@ -101,7 +101,7 @@ class BundlePostingPublic(BundlePostingBase):
     
     @computed_field
     def discount_percent(self) -> str:
-        discount_percent = ((self.price / self.initial_price)*100)
+        discount_percent = ((self.initial_price - self.price) / self.initial_price)*100
         return str(round(discount_percent, 0))
     
     

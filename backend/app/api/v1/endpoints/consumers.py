@@ -19,41 +19,49 @@ def get_current_consumer(current_consumer: ConsumerDep, db: SessionDep):
         consumer_service.check_streak(consumer_id=consumer_id, db=db)
     return current_consumer
 
+# Endpoint for getting all consumers
+# Can only be accessed by admins
 @router.get("/", response_model=list[ConsumerPublic])
 def get_all_consumers(current_user: AdminDep, db: SessionDep):
     return consumer_service.get_all_consumers(db=db)
 
+# Endpoint for getting the current sellers achieved badges
 @router.get("/me/badges", response_model=list[BadgePublic])
 def get_current_consumers_badges(current_consumer: ConsumerDep, db: SessionDep):
     return current_consumer.badges
 
+# Endpoint for getting all the badges
 @router.get("/badges", response_model=list[BadgePublic])
 def get_all_badges(db: SessionDep):
     return badge_service.get_all_badges(db=db)
 
-
+# Endpoint for getting the current consumers personal impact summary
 @router.get("/me/personal-impact-summary", response_model=ConsumerPersonalImpactSummary)
 def get_consumer_personal_impact_summary(current_consumer: ConsumerDep, db: SessionDep):
-    return analytics_service.get_consumer_personal_impact_summary(consumer_id=current_consumer.user_id, db=db)
+    return analytics_service.get_consumer_personal_impact_summary(consumer_id=current_consumer.user_id, db=db) # type: ignore
 
 # Ednpoint for creating a new consumer
 @router.post("/", response_model = ConsumerPublic)
 def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: SessionDep):
     return consumer_service.create_consumer(consumer_in=consumer_in, user_in=user_in, db=db)
 
+# Endpoint for updating the current consumer
 @router.patch("/me", response_model=ConsumerPublic)
 def update_consumer(current_consumer: ConsumerDep, consumer_update: ConsumerUpdate, db: SessionDep):
     return consumer_service.update_consumer(current_consumer=current_consumer, consumer_update=consumer_update, db=db)
 
+# Endpoints for admins to update a specific user
 @router.patch("/admin/{user_id}", response_model=ConsumerPublic)
 def admin_update_consumer(user_id: int, consumer_update: ConsumerAdminUpdate, current_user: AdminDep, db: SessionDep):
     current_consumer = consumer_service.get_consumer_by_id(user_id=user_id, db=db)
     return consumer_service.update_consumer(current_consumer=current_consumer, consumer_update=consumer_update, db=db)
 
+# Endpoint for the current user to delete their account
 @router.delete("/me")
 def delete_current_consumer(current_user: ConsumerDep, db: SessionDep):
     consumer_service.delete_consumer(user_id=current_user.user_id, db=db) # type: ignore
 
+# Endpoint for admins to delete a specific users account
 @router.delete("/{user_id}")
 def delete_consumer(user_id: int, current_user: AdminDep, db: SessionDep):
     consumer_service.delete_consumer(user_id=user_id, db=db)
