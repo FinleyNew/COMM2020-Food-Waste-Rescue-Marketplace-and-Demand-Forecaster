@@ -6,7 +6,7 @@ import Badge from "../assets/Badge.png";
 import axios from "axios";
 function Streaks() {
   const API_URL = import.meta.env.VITE_API_URL;
-  const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
+  const [bundle,setBundle] = useState(""); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
   const [badges, setBadges] = useState([]);
   const [allBadges, setAllBadges] = useState([]);
   const [impactSummary, setImpactSummary] = useState("");
