@@ -51,6 +51,8 @@ def test_bundle_negative_price_rejected():
             weight=500,
             start_time=now + timedelta(hours=1),
             end_time=now + timedelta(hours=3),
+            initial_price=10.00,
+            contents="test content"
         )
     assert "price" in str(exc.value).lower()
 
@@ -76,6 +78,8 @@ def test_bundle_zero_price_rejected():
             weight=500,
             start_time=now + timedelta(hours=1),
             end_time=now + timedelta(hours=3),
+            initial_price=10.00,
+            contents="test content"
         )
     assert "price" in str(exc.value).lower()
 
@@ -101,6 +105,8 @@ def test_bundle_end_before_start_rejected():
             weight=500,
             start_time=now + timedelta(hours=3),
             end_time=now + timedelta(hours=1),
+            initial_price=10.00,
+            contents="test content"
         )
     assert "end_time must be after start_time" in str(exc.value)
 

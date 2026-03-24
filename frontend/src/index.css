@@ -84,6 +84,7 @@ body {
     visibility: visible;
     top: 12%;
     transform: translateX(-50%) scale(1);
+    color: var(--text-colour);
 }
 .settingsRow{
     display: flex;

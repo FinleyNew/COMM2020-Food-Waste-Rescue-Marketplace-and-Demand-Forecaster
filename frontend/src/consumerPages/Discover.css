@@ -246,6 +246,8 @@
 .discover .companyIcon{
     height: 15%;
     width: 15%;
+    max-height: 300px;
+    max-width: 300px;
     border-radius: 1rem;
 }
 .discover .centerAlign{
@@ -289,4 +291,9 @@
     box-sizing: border-box;
     padding: 10px;
     color: var(--text-colour);
+}
+.discover .reportsFormat{
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

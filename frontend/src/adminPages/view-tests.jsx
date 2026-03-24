@@ -38,42 +38,44 @@ function View_tests() {
           </Link>
         </nav>
 
-
-        {testData && (
-          <div>
-            <h1>Passed: {testData.summary.passed}</h1>
-            <h1>Total: {testData.summary.total}</h1>
-            <h1>Collected: {testData.summary.collected}</h1>
-          </div>
-          )}
+            {testData && (
+              <div className="row">
+                <h1 className="header">Passed: {testData.summary.passed}</h1>
+                <h1 className="header">Total: {testData.summary.total}</h1>
+                <h1 className="header">Collected: {testData.summary.collected}</h1>
+              </div>
+            )}
+          
 
           {testData && Array.isArray(testData.collectors) && (
-  <div className="collectorList">
+  <div className="container">
     <h2>Collectors</h2>
+    <div className="tests">
 
-    {testData.collectors.map((collector, idx) => (
-      <div key={idx} className="collectorEntry">
-        <h3>{collector.nodeid || "(root)"}</h3>
-        <p>Outcome: {collector.outcome}</p>
+      {testData.collectors.map((collector, idx) => (
+        <div key={idx} className="collectorEntry">
+          <h3>{collector.nodeid || "(root)"}</h3>
+          <p>Outcome: {collector.outcome}</p>
 
-        {/* Show children (result array) */}
-        {collector.result && collector.result.length > 0 && (
-          <div className="collectorChildren">
-            <p>Contents:</p>
+          {/* Show children (result array) */}
+          {collector.result && collector.result.length > 0 && (
+            <div className="collectorChildren">
+              <p>Contents:</p>
 
-            {collector.result.map((item, i) => (
-              <div key={i} className="collectorItem">
-                <p>Node: {item.nodeid}</p>
-                <p>Type: {item.type}</p>
+              {collector.result.map((item, i) => (
+                <div key={i} className="collectorItem">
+                  <p>Node: {item.nodeid}</p>
+                  <p>Type: {item.type}</p>
 
-                {/* Some items also have lineno */}
-                {item.lineno && <p>Line: {item.lineno}</p>}
-              </div>
-            ))}
-          </div>
-        )}
+                  {/* Some items also have lineno */}
+                  {item.lineno && <p>Line: {item.lineno}</p>}
+                </div>
+              ))}
+            </div>
+          )}
       </div>
-    ))}
+      ))}
+    </div>
   </div>
 )}
       </div>

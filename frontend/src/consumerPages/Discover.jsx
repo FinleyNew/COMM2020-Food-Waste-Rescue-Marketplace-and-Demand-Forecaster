@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import './Discover.css';
 import axios from "axios";
-import Company from "../assets/Company.png";
+import Company from "../assets/BundleImage.png";
 import Bundle from "../assets/BundleImage.png";
 
 function Discover() {
@@ -99,6 +99,12 @@ function Discover() {
                   <div className="column">
                     <p>Collection Time: {bundle.formatted_time_range}</p>
                     <p>Price: £{bundle.price_display}</p>
+                    <p>{bundle.discount_percent}% off original price</p>
+                  </div>
+                  <div className="column">
+                    <p>Contents: {bundle.contents}</p>
+                    <p>Pickup Location: {bundle.seller.location}</p>
+                    <p>Pickup Date: {bundle.formatted_date}</p>
                   </div>
                   <img src={bundle.seller.logo_url} alt="Company" className="companyIcon" />
                 </div>

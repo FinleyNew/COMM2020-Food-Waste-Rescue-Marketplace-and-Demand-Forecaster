@@ -20,7 +20,11 @@ class BundlePostingBase(SQLModel):
     # Price should only have 2 decimal places
     price: Decimal = Field(gt=0, decimal_places=2) 
     # Weight is in grams
-    weight: int = Field(gt=0) 
+    weight: int = Field(gt=0)
+
+    initial_price: Decimal = Field(ge=0, decimal_places=2)
+    contents: str
+ 
     
 # The create schema for bundle postings
 # Inherits from base 
@@ -94,6 +98,11 @@ class BundlePostingPublic(BundlePostingBase):
         start: datetime = self.pickup_window.lower
         end: datetime = self.pickup_window.upper
         return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
+    
+    @computed_field
+    def discount_percent(self) -> str:
+        discount_percent = ((self.price / self.initial_price)*100)
+        return str(round(discount_percent, 0))
     
     
     model_config = {"from_attributes": True}

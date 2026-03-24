@@ -302,6 +302,15 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <br></br>
+          {/* Makes a button that submits entires to above input boxes when selected*/}
+          <div className="rowRegister">
+            <button className="loginButton" onClick={loginFunction}>Login</button>
+            <button className="loginButton" onClick={() => (openPopup(""))}> {/* if the pay button is clicked it sends the information to the create reservation page */}
+                  Register
+            </button>
+          </div>
+      </div>
           {loginError && (
             <div className="popupRegister open-popupRegister">
               <h3>No Account Found</h3>
@@ -312,14 +321,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
               <button onClick={() => setLoginError("")}>Confirm</button>
             </div>
           )}
-          <br></br>
-          {/* Makes a button that submits entires to above input boxes when selected*/}
-          <div className="rowRegister">
-            <button className="loginButton" onClick={loginFunction}>Login</button>
-            <button className="loginButton" onClick={() => (openPopup(""))}> {/* if the pay button is clicked it sends the information to the create reservation page */}
-                  Register
-            </button>
-          </div>
+
               {Popup && (
                 <div className="popupRegister open-popupRegister">
                   <h3>Account Registration</h3>
@@ -649,7 +651,6 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   </div>
                 </div>
               )}
-      </div>
       </div>
     </div>
   );

@@ -40,6 +40,8 @@
     box-sizing: border-box;
     padding-bottom: 30px;
     color: var(--text-colour);
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 /* Creates a button structure with colours and spacings*/
@@ -68,10 +70,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 20px;
   gap: 300px;
-  margin-inline: 50px;
+  margin-inline: 0px;
 }
 /* Formatting for an image */
 .analytics .companyImage{

@@ -49,6 +49,7 @@ function CurrentBundles() {
   const [numberAvailable, setNumberAvailable] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [description, setDescription] = useState("")
   const token = localStorage.getItem('token');
   const payload = JSON.parse(atob(token.split('.')[1]));
   const today = new Date(); //need to get todays date to use to use the iso format
@@ -187,6 +188,7 @@ const completeUpdateBundle = (posting_id) => {
     if(numberAvailable) data.available = Number(numberAvailable);
     if(bundlePrice) data.price = Number(bundlePrice);
     if(bundleWeight) data.weight = Number(bundleWeight);
+    
     
     if(startTime){
       const today = new Date();
@@ -339,7 +341,7 @@ const submitReply = (issue_id) => {
                   className="bundleImage"
                 />
                 <div className="rowBox">
-                  <h1>Bundle Name</h1>
+                  <h1>{bundle.seller.name}</h1>
                 </div>
                 <div className="rowBox">
                   <div className="textBox">
@@ -347,6 +349,8 @@ const submitReply = (issue_id) => {
                     <p>Category: {bundle.category.name}</p>
                     <p>Available: {bundle.available}</p>
                     <p>Weight: {bundle.weight}g</p>
+                    <p>Description: {bundle.contents}</p>
+                    <p>Discount: {bundle.discount_percent}</p>
                     <div className="forecastColumn">
                       {(() => {
                       const forecast = forecasts.find(f => f.posting_id === bundle.posting_id);
@@ -456,7 +460,7 @@ const submitReply = (issue_id) => {
 
                       <div className="row">
                       {/* An input box with a label to input the bundle price */}
-                      <label htmlFor="price">Enter Bundle Price : </label>
+                      <label htmlFor="price">Enter Bundle Price: </label>
                       <input
                         id="price"
                         type="number"
@@ -464,6 +468,7 @@ const submitReply = (issue_id) => {
                         onChange={(e) => setBundlePrice(e.target.value)}
                       />
                     </div>
+                    
 
                       <div className="row">
                       {/* Outputs an input box with a label asking for bundle weight */}

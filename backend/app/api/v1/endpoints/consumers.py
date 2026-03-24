@@ -3,8 +3,10 @@ from app.api.deps import AdminDep, ConsumerDep, SessionDep
 from app.schemas.consumer import ConsumerAdminUpdate, ConsumerPublic, ConsumerUpdate, ConsumerCreate
 from app.services import badge as badge_service
 from app.services import consumer as consumer_service
+from app.services import analytics as analytics_service
 from app.schemas.user import UserCreate
 from app.schemas.badge import BadgePublic
+from app.schemas.analytics import ConsumerPersonalImpactSummary
 
 router = APIRouter()
 
@@ -28,6 +30,11 @@ def get_current_consumers_badges(current_consumer: ConsumerDep, db: SessionDep):
 @router.get("/badges", response_model=list[BadgePublic])
 def get_all_badges(db: SessionDep):
     return badge_service.get_all_badges(db=db)
+
+
+@router.get("/me/personal-impact-summary", response_model=ConsumerPersonalImpactSummary)
+def get_consumer_personal_impact_summary(current_consumer: ConsumerDep, db: SessionDep):
+    return analytics_service.get_consumer_personal_impact_summary(consumer_id=current_consumer.user_id, db=db)
 
 # Ednpoint for creating a new consumer
 @router.post("/", response_model = ConsumerPublic)
