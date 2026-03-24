@@ -19,6 +19,18 @@ class SellerSellThroughBreakdown(BaseModel):
     outcome_breakdown: List[OutcomeBreakdownItem]
 
 
+class DiscountBandMetrics(BaseModel):
+    discount_band: str
+    posted_units: int
+    reserved_units: int
+    collected_units: int
+    no_show_units: int
+    expired_units: int
+    sell_through_rate: float
+    reservation_conversion_rate: float
+    no_show_rate: float
+
+
 class SellerAnalyticsSummary(BaseModel):
     total_bundle_postings: int
     total_posted: int
