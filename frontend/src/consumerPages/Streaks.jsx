@@ -9,6 +9,7 @@ function Streaks() {
   const [bundle,setBundle] = useState(null); //defines the state and variable that allows the react page to be rerendered when called, no array as its one object that's returned
   const [badges, setBadges] = useState([]);
   const [allBadges, setAllBadges] = useState([]);
+  const [impactSummary, setImpactSummary] = useState("");
 
   useEffect(() => { //useEffect allows the command run on entering the page and if anything changes
     const token = localStorage.getItem('token'); //defines the token which we need to authorize the user and get their data
@@ -46,6 +47,19 @@ function Streaks() {
   },[]) //allows the page to rerender if anything changes
 
   useEffect(() => {
+      const token = localStorage.getItem('token');
+     axios.get(`${API_URL}/api/v1/consumers/me/personal-impact-summary`,{ //the backend server url to get the information for 
+      headers: {
+        "Authorization": `Bearer ${token}`, //sending the token to verify the user
+      }
+    })
+    .then(response => {
+      setImpactSummary(response.data);
+    })
+  }, [])
+
+
+  useEffect(() => {
      axios.get(`${API_URL}/api/v1/consumers/badges`,{ //the backend server url to get the information for 
       
     })
@@ -77,6 +91,18 @@ function Streaks() {
               )}
               <div className="textBox">
                 <p>Summary PIS</p> {/* summary statement */}
+                <p>
+                  {bundle.display_name} has made {impactSummary.total_reservations_made} reservations, collecting {impactSummary.total_collected} and not showing for {impactSummary.total_no_shows}, giving them a collection success rate of {impactSummary.collection_success_rate}%.
+                </p>
+
+              <p>
+                In total, they saved {impactSummary.waste_saved_kg}kg worth of food! Whilst saving an estimated {impactSummary.co2_estimate_saved}kg of CO2.
+              </p>
+
+              <p>
+                They have made {impactSummary.collections_this_month} collections this month with a favourite category of {impactSummary.favourite_category} and have achieved a streak of {impactSummary.streak}, whilst earning {impactSummary.badges_earned} badges!
+              </p>
+                
               </div>
               <p className="textCentre">Badges</p>
               <div className="rowIcons">
