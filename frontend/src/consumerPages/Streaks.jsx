@@ -90,7 +90,7 @@ function Streaks() {
                 </div>
               )}
               <div className="textBox">
-                <p>Summary PIS</p> {/* summary statement */}
+                <h3>Personal Impact Summmary</h3> {/* summary statement */}
                 <p>
                   {bundle.display_name} has made {impactSummary.total_reservations_made} reservations, collecting {impactSummary.total_collected} and not showing for {impactSummary.total_no_shows}, giving them a collection success rate of {impactSummary.collection_success_rate}%.
                 </p>

@@ -305,7 +305,6 @@ const submitReply = (issue_id) => {
           <nav className="navRow">
             <Link to="/add-bundles" className="button"><b>Add Bundles</b></Link>
             <Link to="/analytics" className="button"><b>Analytics</b></Link>
-            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
           <div className="textHeading">
             {/* Header to display the page name to the user */}

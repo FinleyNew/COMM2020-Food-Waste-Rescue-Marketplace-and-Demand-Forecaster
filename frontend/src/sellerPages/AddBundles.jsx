@@ -155,7 +155,6 @@ function AddBundles() {
           <nav className="navRow">
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/analytics" className="button"><b>Analytics</b></Link>
-            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
           <div className="textHeading">
             <h1>Add Bundles</h1> 

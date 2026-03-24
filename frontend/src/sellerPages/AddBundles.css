@@ -1,7 +1,7 @@
 .addBundles .navRow{
     grid-column: 1;
     gap: 10px;
-    width: 485px;
+    width: 350px;
     background-color: var(--bg-container);
     border: 4px solid var(--border-colour);
     padding: 8px;
