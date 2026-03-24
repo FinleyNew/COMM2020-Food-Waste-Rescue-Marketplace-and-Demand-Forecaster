@@ -41,6 +41,10 @@ def collect_by_code(claim_code: str, db: Session) -> Reservation:
     reservation = reservation_crud.get_reservation_by_claim_code(claim_code=claim_code, db=db)
     if not reservation:
         raise HTTPException(status_code = 404, detail = "No reservation with that code")
+    if reservation.status == ReservationStatus.COLLECTED:
+        raise HTTPException(status_code = 400, detail = "Reservation has already been collected")
+    if reservation.status == ReservationStatus.NO_SHOW:
+        raise HTTPException(status_code = 400, detail = "Reservation was marked as no-show and cannot be collected")
     reservation.status = ReservationStatus.COLLECTED
     db.add(reservation)
     db.commit()

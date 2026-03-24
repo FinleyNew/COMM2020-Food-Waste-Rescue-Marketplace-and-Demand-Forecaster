@@ -18,7 +18,7 @@ class BundlePostingBase(SQLModel):
     # Can't have a negative ammount of bundles
     available: int = Field(ge=0) 
     # Price should only have 2 decimal places
-    price: Decimal = Field(ge=0, decimal_places=2) 
+    price: Decimal = Field(gt=0, decimal_places=2) 
     # Weight is in grams
     weight: int = Field(gt=0)
 
@@ -46,7 +46,7 @@ class BundlePostingUpdate(SQLModel):
     category: CategoryPublic | None = None
     allergens: str | None = None
     available: int | None = Field(default=None, ge=0)
-    price: Decimal | None = Field(default=None, ge=0, decimal_places=2)
+    price: Decimal | None = Field(default=None, gt=0, decimal_places=2)
     weight: int | None = Field(default=None, gt=0)
     # They could send a new start but not end so need to check in the service
     start_time: datetime | None = None

@@ -10,6 +10,8 @@ from app.services import user as user_service
 
 router = APIRouter()
 
+# Endpoint for getting latest test results, only works if user is an admin
+# Test comment
 @router.get("/tests")
 def get_test_results(admin: AdminDep):
     if not os.path.exists("test_results.json"):
@@ -17,6 +19,8 @@ def get_test_results(admin: AdminDep):
     with open("test_results.json") as f:
         return json.load(f)
 
+
+# Endpoint for creating a new admin
 @router.post("/", response_model=UserPublic)
 def create_admin(user_in: UserCreate, admin: AdminDep, db: SessionDep):
     return user_service.create_admin(user_in=user_in, db=db)

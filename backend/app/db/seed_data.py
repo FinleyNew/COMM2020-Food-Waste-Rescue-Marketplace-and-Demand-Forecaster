@@ -194,7 +194,12 @@ def seed_reservation(db: Session):
 
             #Randomise status based on post status
             if post.status == BundleStatus.EXPIRED:
-                status = fake.random_element(elements=[ReservationStatus.COLLECTED, ReservationStatus.NO_SHOW])
+                raining = calculate_rain(post.reserved)
+                no_show_prob = 0.1 if raining else 0.5
+                if np.random.random() < no_show_prob:
+                    status = ReservationStatus.NO_SHOW
+                else:
+                    status = ReservationStatus.COLLECTED
             else:
                 status = ReservationStatus.RESERVED
 

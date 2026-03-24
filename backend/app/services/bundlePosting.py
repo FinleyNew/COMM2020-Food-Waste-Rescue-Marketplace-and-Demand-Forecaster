@@ -4,12 +4,11 @@ from typing import Sequence
 from app.models.bundlePosting import BundlePosting
 from app.schemas.bundlePosting import BundlePostingAdminUpdate, BundlePostingCreate, BundlePostingUpdate
 from app.crud import bundlePosting as bundlePosting_crud
-from app.services import reservation as reservation_service
-from app.services import forecast as forecast_service
-from app.services import issueReport as issueReport_service
 
 # The service for creating bundle postings
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Session) -> BundlePosting:
+    from app.services import forecast as forecast_service
+
     # Creates the pickup range from the start and end time
     pickup_range = f"[{bundle_in.start_time.isoformat()}, {bundle_in.end_time.isoformat()})"
     bundle_posting = bundlePosting_crud.create_bundle_posting(bundle_in = bundle_in, owner_id=owner_id, pickup_window=pickup_range, db=db)
@@ -56,6 +55,10 @@ def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | 
     return bundlePosting_crud.update_bundle_posting(db_bundle=db_bundle, bundle_update=bundle_update, pickup_window=pickup_range, db=db)
 
 def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
+    from app.services import reservation as reservation_service
+    from app.services import forecast as forecast_service
+    from app.services import issueReport as issueReport_service
+
     bundle_posting = get_bundle_posting(posting_id=posting_id, db=db)
     for reservation in bundle_posting.reservations:
         reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
@@ -67,6 +70,9 @@ def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
 # The service for deleting a bundle posting
 # Currently not in use
 def delete_bundle_posting(posting_id: int, db: Session):
+    from app.services import reservation as reservation_service
+    from app.services import issueReport as issueReport_service
+
     bundle_posting = get_bundle_posting(posting_id=posting_id, db=db)
     for reservation in bundle_posting.reservations:
         reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
