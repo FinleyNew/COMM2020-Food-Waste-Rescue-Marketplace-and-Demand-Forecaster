@@ -1,9 +1,96 @@
+from datetime import datetime, timezone
+
 from sqlalchemy import Float, Time, func, case, cast
 from sqlmodel import Session
 from app.models.record import Record
 from app.models.bundlePosting import BundlePosting, Category
+from app.models.consumer import Consumer
+from app.models.badge import ConsumerBadge
+from app.models.reservation import Reservation
+from app.models.enums import ReservationStatus
 
 _BAND_ORDER = {"0-10": 0, "11-20": 1, "21-30": 2, "31-40": 3, "41+": 4}
+_CO2_KG_PER_KG_FOOD = 2.5
+
+
+def get_consumer_personal_impact_summary(consumer_id: int, db: Session) -> dict:
+    now_utc = datetime.now(timezone.utc)
+    month_start_utc = now_utc.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    reservation_stats = (
+        db.query(
+            func.count(Reservation.reservation_id).label("total_reservations_made"),
+            func.sum(
+                case((Reservation.status == ReservationStatus.COLLECTED, 1), else_=0)
+            ).label("total_collected"),
+            func.sum(
+                case((Reservation.status == ReservationStatus.NO_SHOW, 1), else_=0)
+            ).label("total_no_shows"),
+            func.sum(
+                case(
+                    (Reservation.status == ReservationStatus.COLLECTED, BundlePosting.weight),
+                    else_=0,
+                )
+            ).label("waste_saved_grams"),
+        )
+        .outerjoin(BundlePosting, BundlePosting.posting_id == Reservation.posting_id)
+        .filter(Reservation.user_id == consumer_id)
+        .first()
+    )
+
+    favourite_category = (
+        db.query(Category.name)
+        .join(BundlePosting, BundlePosting.category_id == Category.category_id)
+        .join(Reservation, Reservation.posting_id == BundlePosting.posting_id)
+        .filter(Reservation.user_id == consumer_id)
+        .filter(Reservation.status == ReservationStatus.COLLECTED)
+        .group_by(Category.name)
+        .order_by(func.count(Reservation.reservation_id).desc(), Category.name.asc())
+        .first()
+    )
+
+    collections_this_month = (
+        db.query(func.count(Reservation.reservation_id))
+        .filter(Reservation.user_id == consumer_id)
+        .filter(Reservation.status == ReservationStatus.COLLECTED)
+        .filter(Reservation.timestamp >= month_start_utc)
+        .scalar()
+    ) or 0
+
+    consumer_streak = (
+        db.query(Consumer.streak)
+        .filter(Consumer.user_id == consumer_id)
+        .scalar()
+    ) or 0
+
+    badges_earned = (
+        db.query(func.count(ConsumerBadge.badge_id))
+        .filter(ConsumerBadge.user_id == consumer_id)
+        .scalar()
+    ) or 0
+
+    total_reservations_made = reservation_stats.total_reservations_made or 0
+    total_collected = reservation_stats.total_collected or 0
+    total_no_shows = reservation_stats.total_no_shows or 0
+    waste_saved_grams = reservation_stats.waste_saved_grams or 0
+    waste_saved_kg = float(waste_saved_grams) / 1000.0
+
+    collection_success_rate = 0.0
+    if total_reservations_made > 0:
+        collection_success_rate = (total_collected / total_reservations_made) * 100
+
+    return {
+        "total_reservations_made": total_reservations_made,
+        "total_collected": total_collected,
+        "total_no_shows": total_no_shows,
+        "collection_success_rate": round(collection_success_rate, 2),
+        "waste_saved_kg": round(waste_saved_kg, 2),
+        "co2_estimate_saved": round(waste_saved_kg * _CO2_KG_PER_KG_FOOD, 2),
+        "favourite_category": favourite_category[0] if favourite_category else None,
+        "collections_this_month": collections_this_month,
+        "streak": consumer_streak,
+        "badges_earned": badges_earned,
+    }
 
 
 def get_seller_operational_insights(seller_id: int, db: Session) -> dict:

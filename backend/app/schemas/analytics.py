@@ -85,3 +85,16 @@ class SellerAnalyticsSummary(BaseModel):
     no_show_rate: float
     expiry_rate: float
     waste_avoided_kg: float
+
+
+class ConsumerPersonalImpactSummary(BaseModel):
+    total_reservations_made: int
+    total_collected: int
+    total_no_shows: int
+    collection_success_rate: float
+    waste_saved_kg: float
+    co2_estimate_saved: float
+    favourite_category: str | None
+    collections_this_month: int
+    streak: int
+    badges_earned: int
