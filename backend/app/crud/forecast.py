@@ -4,11 +4,12 @@ from sqlmodel import Session, select
 from app.schemas.forecast import ForecastCreate
 from app.models import Forecast
 
+# The crud function for getting all forecasts
 def get_all_forecasts(db: Session) -> Sequence[Forecast]:
     statement = select(Forecast)
     return db.exec(statement).all()
 
-#Crud function for creating a forecast
+# The crud function for creating a new forecast
 def create_forecast(forecast: ForecastCreate, db: Session) -> Forecast:
     # Converts the Schema into a Model
     db_forecast = Forecast.model_validate(forecast)
@@ -17,6 +18,7 @@ def create_forecast(forecast: ForecastCreate, db: Session) -> Forecast:
     db.refresh(db_forecast)
     return db_forecast
 
+# The crud function for deleting a specific forecasts
 def delete_forecast(forecast_id: int, db: Session):
     statement = select(Forecast).where(Forecast.forecast_id == forecast_id)
     forecast = db.exec(statement).first()

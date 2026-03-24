@@ -13,8 +13,10 @@ from app.models.bundlePosting import Category
 
 # The crud function for creating a new bundle posting
 def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_window: str, db: Session) -> BundlePosting:
-    # Converts the Schema into a Model
+    # Removes the category from the input data
     bundle_data = bundle_in.model_dump(exclude={"category"})
+    # validate this bundle data on the DB model to ensure it's valid
+    # Updates owner ID, pickup window and category ID
     db_bundle_posting = BundlePosting.model_validate(bundle_data, update={"owner_id": owner_id, "pickup_window": pickup_window, "category_id": bundle_in.category.category_id})
     db.add(db_bundle_posting)
     db.commit()
@@ -22,6 +24,7 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, pickup_
     return db_bundle_posting
 
 # The crud function for getting all available bundle postings
+# Only returns bundle postings that are currently available
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(BundlePosting.status == BundleStatus.AVAILABLE)
     return db.exec(statement).all()
@@ -31,24 +34,29 @@ def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting)
     return db.exec(statement).all()
 
+# The crud function for getting any bundle postings whose pickup window has ended
 def get_to_be_expired_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(func.upper(BundlePosting.pickup_window) <= now).where(BundlePosting.status.in_([BundleStatus.AVAILABLE, BundleStatus.SOLD_OUT])) # type: ignore
     return db.exec(statement).all()
 
+# The crud function for getting any bundle postings related to the input query
 def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
     search = f"%{query}%"  # % is SQL wildcard
-    categories = category_crud.get_all_categories(db=db)
+    # Gets any matching category Ids
     matching_category_ids = [
         c.category_id for c in db.exec(select(Category)).all()
         if query.lower() in c.name.lower() or c.name.lower() in query.lower()
     ]
+    # Gets any bundle postings where the category, sellers name or contents is like the query
     statement = select(BundlePosting).join(Seller).where(or_(BundlePosting.category_id.in_(matching_category_ids), Seller.name.ilike(search), BundlePosting.contents.ilike(search))).where(BundlePosting.status == BundleStatus.AVAILABLE) # type: ignore
     return db.exec(statement).all()
 
+# The crud function that gets all the bundle postings that are due to be emailed
 def get_to_be_emailed_bundle_postings(now: datetime, db: Session) -> Sequence[BundlePosting]:
     statement = select(BundlePosting).where(func.lower(BundlePosting.pickup_window) - timedelta(minutes=30) <= now).where(func.lower(BundlePosting.pickup_window) - timedelta(minutes=29) > now)
     return db.exec(statement).all()
 
+# The crud function for setting a posting to be expired
 def set_expired(bundle_posting: BundlePosting, db: Session):
     bundle_posting.status = BundleStatus.EXPIRED
 
@@ -66,7 +74,7 @@ def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundleP
     statement = select(BundlePosting).where(BundlePosting.user_id == owner_id)
     return db.exec(statement).all()
 
-# The crud function for reserving a bundle
+# The crud function for reserving a bundle posting
 # It adds one to reserved and takes one from available
 def reserve_bundle_posting(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
@@ -77,6 +85,7 @@ def reserve_bundle_posting(posting_id: int, db: Session):
 
     db.add(bundle_posting)
 
+# The crud function for updating a bundle posting
 def update_bundle_posting(db_bundle: BundlePosting, bundle_update: BundlePostingUpdate, pickup_window: str | None, db: Session) -> BundlePosting:
     update_data = bundle_update.model_dump(exclude_unset=True, exclude={"category", "start_time", "end_time"})
     if bundle_update.category:
@@ -88,6 +97,7 @@ def update_bundle_posting(db_bundle: BundlePosting, bundle_update: BundlePosting
     db.refresh(db_bundle)
     return db_bundle
 
+# The crud function for setting a bundle posting deleted
 def set_bundle_deleted(bundle: BundlePosting, db: Session) -> BundlePosting:
     bundle.status = BundleStatus.DELETED
     db.commit()
@@ -95,7 +105,6 @@ def set_bundle_deleted(bundle: BundlePosting, db: Session) -> BundlePosting:
     return bundle
 
 # The crud function for deleting a bundle posting
-# Currently not in use
 def delete_bundle_posting(posting_id: int, db: Session):
     statement = select(BundlePosting).where(BundlePosting.posting_id == posting_id)
     bundle_posting = db.exec(statement).first()
