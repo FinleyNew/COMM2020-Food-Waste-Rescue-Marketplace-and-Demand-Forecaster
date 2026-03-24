@@ -5,7 +5,7 @@ from app.services import seller as seller_service
 from fastapi import UploadFile, File
 from app.schemas.user import UserCreate
 from app.services.cloudinary import upload_image
-from app.schemas.analytics import DiscountBandMetrics, SellerAnalyticsSummary, SellerSellThroughBreakdown
+from app.schemas.analytics import DiscountBandMetrics, SellerAnalyticsSummary, SellerOperationalInsights, SellerSellThroughBreakdown
 from app.services import analytics as analytics_service
 
 router = APIRouter()
@@ -67,3 +67,7 @@ def get_seller_sell_through_breakdown(current_seller: SellerDep, db: SessionDep)
 @router.get("/me/analytics/pricing-effectiveness", response_model=list[DiscountBandMetrics])
 def get_seller_pricing_effectiveness(current_seller: SellerDep, db: SessionDep):
     return analytics_service.get_seller_pricing_effectiveness(seller_id=current_seller.user_id, db=db)
+
+@router.get("/me/analytics/operational-insights", response_model=SellerOperationalInsights)
+def get_seller_operational_insights(current_seller: SellerDep, db: SessionDep):
+    return analytics_service.get_seller_operational_insights(seller_id=current_seller.user_id, db=db)

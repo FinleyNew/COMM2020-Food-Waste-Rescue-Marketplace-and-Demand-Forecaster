@@ -1,9 +1,121 @@
-from sqlalchemy import Float, func, case, cast
+from sqlalchemy import Float, Time, func, case, cast
 from sqlmodel import Session
 from app.models.record import Record
-from app.models.bundlePosting import BundlePosting
+from app.models.bundlePosting import BundlePosting, Category
 
 _BAND_ORDER = {"0-10": 0, "11-20": 1, "21-30": 2, "31-40": 3, "41+": 4}
+
+
+def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
+    pickup_start_expr = cast(func.lower(Record.pickup_window), Time)
+    pickup_end_expr = cast(func.upper(Record.pickup_window), Time)
+
+    pickup_rows = (
+        db.query(
+            pickup_start_expr.label("pickup_start"),
+            pickup_end_expr.label("pickup_end"),
+            func.sum(Record.observed_reservations).label("reserved_units"),
+            func.sum(Record.observed_no_show).label("no_show_units"),
+            func.sum(Record.observed_expired).label("expired_units"),
+        )
+        .filter(Record.user_id == seller_id)
+        .group_by(pickup_start_expr, pickup_end_expr)
+        .all()
+    )
+
+    pickup_windows = []
+    for row in pickup_rows:
+        reserved = row.reserved_units or 0
+        no_shows = row.no_show_units or 0
+        expired = row.expired_units or 0
+        collected = max(reserved - no_shows, 0)
+        posted = reserved + expired
+        pickup_window_label = f"{row.pickup_start.strftime('%H:%M')} - {row.pickup_end.strftime('%H:%M')}"
+
+        pickup_windows.append({
+            "pickup_window": pickup_window_label,
+            "posted_units": posted,
+            "reserved_units": reserved,
+            "collected_units": collected,
+            "no_show_units": no_shows,
+            "expired_units": expired,
+            "sell_through_rate": round((collected / posted) * 100, 2) if posted > 0 else 0.0,
+            "no_show_rate": round((no_shows / reserved) * 100, 2) if reserved > 0 else 0.0,
+        })
+
+    pickup_windows.sort(key=lambda item: item["pickup_window"])
+
+    category_rows = (
+        db.query(
+            Category.name.label("category"),
+            func.sum(Record.observed_reservations).label("reserved_units"),
+            func.sum(Record.observed_no_show).label("no_show_units"),
+            func.sum(Record.observed_expired).label("expired_units"),
+        )
+        .join(Category, Category.category_id == Record.category_id)
+        .filter(Record.user_id == seller_id)
+        .group_by(Category.name)
+        .all()
+    )
+
+    categories = []
+    for row in category_rows:
+        reserved = row.reserved_units or 0
+        no_shows = row.no_show_units or 0
+        expired = row.expired_units or 0
+        collected = max(reserved - no_shows, 0)
+        posted = reserved + expired
+
+        categories.append({
+            "category": row.category,
+            "posted_units": posted,
+            "reserved_units": reserved,
+            "collected_units": collected,
+            "sell_through_rate": round((collected / posted) * 100, 2) if posted > 0 else 0.0,
+        })
+
+    categories.sort(key=lambda item: item["category"])
+
+    best_pickup_window_by_sell_through = None
+    if pickup_windows:
+        best_pickup_window = max(
+            pickup_windows,
+            key=lambda item: item["sell_through_rate"],
+        )
+        best_pickup_window_by_sell_through = {
+            "pickup_window": best_pickup_window["pickup_window"],
+            "sell_through_rate": best_pickup_window["sell_through_rate"],
+        }
+
+    worst_pickup_window_by_no_show = None
+    if pickup_windows:
+        worst_pickup_window = max(
+            pickup_windows,
+            key=lambda item: item["no_show_rate"],
+        )
+        worst_pickup_window_by_no_show = {
+            "pickup_window": worst_pickup_window["pickup_window"],
+            "no_show_rate": worst_pickup_window["no_show_rate"],
+        }
+
+    most_popular_category_by_reservations = None
+    if categories:
+        most_popular_category = max(
+            categories,
+            key=lambda item: item["reserved_units"],
+        )
+        most_popular_category_by_reservations = {
+            "category": most_popular_category["category"],
+            "reserved_units": most_popular_category["reserved_units"],
+        }
+
+    return {
+        "pickup_windows": pickup_windows,
+        "categories": categories,
+        "best_pickup_window_by_sell_through": best_pickup_window_by_sell_through,
+        "worst_pickup_window_by_no_show": worst_pickup_window_by_no_show,
+        "most_popular_category_by_reservations": most_popular_category_by_reservations,
+    }
 
 
 def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:

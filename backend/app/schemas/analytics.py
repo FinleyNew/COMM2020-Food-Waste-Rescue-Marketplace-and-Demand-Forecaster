@@ -31,6 +31,48 @@ class DiscountBandMetrics(BaseModel):
     no_show_rate: float
 
 
+class PickupWindowOperationalMetrics(BaseModel):
+    pickup_window: str
+    posted_units: int
+    reserved_units: int
+    collected_units: int
+    no_show_units: int
+    expired_units: int
+    sell_through_rate: float
+    no_show_rate: float
+
+
+class CategoryOperationalMetrics(BaseModel):
+    category: str
+    posted_units: int
+    reserved_units: int
+    collected_units: int
+    sell_through_rate: float
+
+
+class BestPickupWindowBySellThrough(BaseModel):
+    pickup_window: str
+    sell_through_rate: float
+
+
+class WorstPickupWindowByNoShow(BaseModel):
+    pickup_window: str
+    no_show_rate: float
+
+
+class MostPopularCategoryByReservations(BaseModel):
+    category: str
+    reserved_units: int
+
+
+class SellerOperationalInsights(BaseModel):
+    pickup_windows: List[PickupWindowOperationalMetrics]
+    categories: List[CategoryOperationalMetrics]
+    best_pickup_window_by_sell_through: BestPickupWindowBySellThrough | None
+    worst_pickup_window_by_no_show: WorstPickupWindowByNoShow | None
+    most_popular_category_by_reservations: MostPopularCategoryByReservations | None
+
+
 class SellerAnalyticsSummary(BaseModel):
     total_bundle_postings: int
     total_posted: int
