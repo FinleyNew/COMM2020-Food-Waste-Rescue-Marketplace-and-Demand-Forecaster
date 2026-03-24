@@ -70,9 +70,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-around;
   padding: 20px;
-  gap: 300px;
+  gap: 20px;  /* ← sensible gap */
+  flex-wrap: wrap;  /* ← prevents overflow on smaller screens */
   margin-inline: 0px;
 }
 /* Formatting for an image */
