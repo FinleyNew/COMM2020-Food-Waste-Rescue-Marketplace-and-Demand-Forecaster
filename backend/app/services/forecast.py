@@ -8,7 +8,7 @@ from sklearn.linear_model import PoissonRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from datetime import datetime
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from app.schemas.forecast import ForecastPublic, ForecastCreate
 import pandas as pd
 import numpy as np
@@ -61,7 +61,10 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     y_pred_res = float(model_res.predict(X_new)[0])
     y_pred_no_show = float(model_no_show.predict(X_new)[0])
     #Normalising the predictions so they can't be negative and the no show probability is between 0 and 1
-    predicted_reservations = max(0, int(round(y_pred_res)))
+    predicted_reservations = min(
+        bundle_in.available,
+        max(0, int(round(y_pred_res)))
+    )
     predicted_no_show_prob = min(1.0, max(0.0, y_pred_no_show / y_pred_res)) if y_pred_res > 0 else 0.0
     #Creates the forecast and returns it
     forecast = ForecastPublic(
@@ -70,6 +73,8 @@ def get_forecast(bundle_in: BundlePostingCreate, db: Session):
         predicted_reservations=predicted_reservations,
         predicted_no_show_prob=predicted_no_show_prob
     )
+    #For calculating the model performance metrics, the evaluate_model function can be called which trains the model on 80% of the records and tests it on the remaining 20%, comparing the predictions to the actual observed reservations and no show rates. This is currently commented out to avoid long execution times when creating a forecast, but it can be uncommented for testing purposes.
+    #print(evaluate_model(records))
     return forecast
 
 def create_dataframe(records):
@@ -134,13 +139,117 @@ def train_model(df: pd.DataFrame):
     clf_no_show.fit(X, y_no_show)
     return clf_res, clf_no_show
 
-def get_baseline(train_df: pd.DataFrame, dow: int, start_time: int):
-    #This function is used to get a baseline prediction for the number of reservations based on the average number of reservations for records with the same day of week and starting hour.
-    mask = (train_df["dow"] == dow) & (train_df["start_time"] == start_time)
-    subset = train_df.loc[mask, "observed_reservations"]#
+def get_baseline(records, dow: int, start_time):
+    matching = [
+        r.observed_reservations
+        for r in records
+        if ((r.pickup_window.lower.weekday() + 1) % 7 == dow)
+        and (r.pickup_window.lower.hour == start_time)
+    ]
 
-    
-    if len(subset) > 0:
-        return float(subset.mean())
-    #Fallback if no exact matches:
-    return float(train_df["observed_reservations"].mean())
+    if len(matching) > 0:
+        return float(sum(matching) / len(matching))
+
+    return float(sum(r.observed_reservations for r in records) / len(records))
+
+def evaluate_model(records):
+        if len(records) < 2:
+            return {
+                "baseline_mae": None,
+                "model_mae": None,
+                "baseline_mse": None,
+                "model_mse": None,
+                "baseline_no_show_mae": None,
+                "model_no_show_mae": None,
+                "baseline_no_show_mse": None,
+                "model_no_show_mse": None
+            }
+
+        split_index = int(len(records) * 0.8)
+
+        train_records = records[:split_index]
+        test_records = records[split_index:]
+
+        train_df = create_dataframe(train_records)
+        test_df = create_dataframe(test_records)
+
+        model_res, model_no_show = train_model(train_df)
+
+        model_preds = []
+        baseline_preds = []
+        actuals = []
+
+        model_no_show_preds = []
+        baseline_no_show_preds = []
+        actual_no_show_rates = []
+
+        for r, (_, row) in zip(test_records, test_df.iterrows()):
+            X_new = pd.DataFrame([{
+                "user_id": row["user_id"],
+                "category": row["category"],
+                "price": row["price"],
+                "raining": row["raining"],
+                "hour_sin": row["hour_sin"],
+                "hour_cos": row["hour_cos"],
+                "dow": row["dow"]
+            }])
+
+            # Reservation prediction
+            model_pred = float(model_res.predict(X_new)[0])
+            baseline_pred = get_baseline(
+                train_records,
+                (r.pickup_window.lower.weekday() + 1) % 7,
+                r.pickup_window.lower.hour
+            )
+            actual = float(r.observed_reservations)
+
+            model_preds.append(model_pred)
+            baseline_preds.append(baseline_pred)
+            actuals.append(actual)
+
+            # No-show prediction
+            model_no_show_count = float(model_no_show.predict(X_new)[0])
+            model_no_show_prob = (
+                min(1.0, max(0.0, model_no_show_count / model_pred))
+                if model_pred > 0 else 0.0
+            )
+
+            baseline_no_show_prob = get_no_show_baseline(
+                train_records,
+                (r.pickup_window.lower.weekday() + 1) % 7,
+                r.pickup_window.lower.hour
+            )
+
+            actual_no_show_rate = (
+                float(r.observed_no_show / r.observed_reservations)
+                if r.observed_reservations > 0 else 0.0
+            )
+
+            model_no_show_preds.append(model_no_show_prob)
+            baseline_no_show_preds.append(baseline_no_show_prob)
+            actual_no_show_rates.append(actual_no_show_rate)
+
+        return {
+            "baseline_mae": mean_absolute_error(actuals, baseline_preds),
+            "model_mae": mean_absolute_error(actuals, model_preds),
+            "baseline_mse": mean_squared_error(actuals, baseline_preds),
+            "model_mse": mean_squared_error(actuals, model_preds),
+            "baseline_no_show_mae": mean_absolute_error(actual_no_show_rates, baseline_no_show_preds),
+            "model_no_show_mae": mean_absolute_error(actual_no_show_rates, model_no_show_preds),
+            "baseline_no_show_mse": mean_squared_error(actual_no_show_rates, baseline_no_show_preds),
+            "model_no_show_mse": mean_squared_error(actual_no_show_rates, model_no_show_preds)
+        }
+
+def get_no_show_baseline(records, dow, start_hour):
+    rates = [
+        (r.observed_no_show / r.observed_reservations)
+        for r in records
+        if r.observed_reservations > 0
+        and ((r.pickup_window.lower.weekday() + 1) % 7 == dow)
+        and (r.pickup_window.lower.hour == start_hour)
+    ]
+
+    if len(rates) > 0:
+        return float(sum(rates) / len(rates))
+
+    return 0.0
