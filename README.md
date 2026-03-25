@@ -17,6 +17,7 @@ Our motivation for building this project was to help mitigate the the 10.7 milli
 ## Site
 
  - The project is deployed on the URL tlll.me and you can access the swagger documentation using api.tlll.me.
+ - The website may be blocked on the univerity wifi so you may need to use a VPN or connect to a different network.
  - To run the project locally refer to the installation instructions below
 
 ## Installation
@@ -272,6 +273,12 @@ Tests record schema validation (end > start, positive weight, non-negative count
 - `test_update_record_valid_times`
 - `test_update_record_end_before_start_raises_400`
 - `test_create_record_passes_seller_coordinates`
+
+## Scrum Board
+
+To access the scrum board follow this [link](https://id.atlassian.com/invite/p/jira-software?id=Y8HtYQg5RjCvo5-tJgh-FQ).
+
+If you are unable to access it contact [jmh280@exeter.ac.uk](mailto:jmh280@exeter.ac.uk)
 
 ## Licence
 
