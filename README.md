@@ -76,7 +76,7 @@ Sellers Pages Guide
 
  Editing a bundle - Use the "Update Bundle" and "Delete Bundle" buttons to edit a bundle. When updating a bundle not all fields have to have information entered.
 
- Forecasting a new bundle - Head to the "add_bundle" page via the navigation buttons, then enter the correct information, with a positive price, weight and number of bundles available. A seller can then view their forecasts by navigating to the "current-bundles" page and their new bundle will have the forecast data just below it.
+ Forecasting a new bundle - Head to the "add_bundle" page via the navigation buttons, then enter the correct information, with a positive price, weight and number of bundles available. A seller can then view their forecasts clicking on the "Forecast" button, which shows the forecasted data at the bottom of the page, as well as on the "current-bundles" page.
 
  Viewing a sellers' analytics - Head to the "analytics" page with the navigation buttons, on this page all of the collected bundles are shown with lots of information. Such as number of reservations, no-shows and expiries. There is also a bar chart to visualise this information. 
 
