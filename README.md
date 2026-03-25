@@ -40,9 +40,11 @@ Login Page
 
  If a user already has an account they can log in by entering their details into the email and password boxes. To create an account a user has to click the register button, and then select their account type. For a seller account there is more information to enter, such as opening hours, and a profile photo. Email, Time and Password regular expressions are implemented to ensure the details are in the correct format. A user also has to read and agree to the terms and conditions to make an account. 
 
-![Consumer Screenshot](images/consumerNavigation.png)
+
 
 Consumer Pages Guide 
+
+![Consumer Screenshot](images/consumerNavigation.png)
 
  Looking at all Bundles - Use the navigation buttons at the top of the screen to get to the "Discover" page. All the bundles and their information are displayed there. A consumer can also use the search feature to only show bundles for a specific category or seller name.
 
@@ -54,13 +56,17 @@ Consumer Pages Guide
 
  Finding a consumer's badges - Use the navigation buttons at the top of the screen to navigate to the "Streaks" page, there is all of the badges a user can collect and the badges highlights in gold are the badges the consumer has already collected. 
 
+ ![Badges Screenshot](images/badges.png)
+
  Viewing a consumer's personal impact summary - On the "Streaks" page, a short paragraph highlighting a consumers statistics while they have been on the site is displayed. Such as CO2 saving and collection success rate.
 
-![Badges Screenshot](images/badges.png)
 
-![Seller Screenshot](images/sellersNavigation.png)
+
+
 
 Sellers Pages Guide
+
+![Seller Screenshot](images/sellersNavigation.png)
 
  Looking at the sellers current bundles - Use the navigation buttons to get to the "current-bundles" page, from there, all the bundles that have been created by the current seller are displayed.
 
@@ -74,18 +80,20 @@ Sellers Pages Guide
 
  Viewing a sellers' analytics - Head to the "analytics" page with the navigation buttons, on this page all of the collected bundles are shown with lots of information. Such as number of reservations, no-shows and expiries. There is also a bar chart to visualise this information. 
 
-![Admin Screenshot](images/adminNavigation.png)
 
 Admin Pages Guide
+
+![Admin Screenshot](images/adminNavigation.png)
 
  Viewing all database information - This page is automatically loaded upon logging in as an admin. Use each button to view all the information for that object. Such as viewing all bundles, records and users.
 
  Changing information - Use the navigation buttons to change to the "change-information" page. From here select which object you would like to edit, enter the correct information and view your change in the "view-information" page. 
 
  Viewing all tests - Using the navigation buttons, navigate to the "view-tests" page, where all the tests are displayed. 
-![Settings Screenshot](images/settingScreenshot.png)
 
 Settings
+
+![Settings Screenshot](images/settingScreenshot.png)
 
  Use the settings tab in the top right of every screen to view certain features. For each user their information is displayed including their email and account type. They also have accessability settings such as light and dark mode. A user can also delete their account to abide by GDPR guidelines, and they can also sign out to return to the login page.
 
