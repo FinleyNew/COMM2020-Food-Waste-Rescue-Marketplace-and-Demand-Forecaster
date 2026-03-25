@@ -1,3 +1,4 @@
+/*Navigation row to format a row with a background colour and border*/
 .deployment .navRow{
     grid-column: 1;
     gap: 10px;
@@ -9,7 +10,7 @@
     margin-bottom: 20px;
     overflow-x: auto;
 }
-
+/*Defines how a button is formatted*/
 .deployment .button {
     background-color: var(--button-bg);
     font-family: Arial;
@@ -24,14 +25,14 @@
     border-radius: 5px;
     text-decoration: none;
 }
-
+/*Defines a row structure*/
 .deployment .row{
     display: flex;
     flex-direction: row;
     justify-content: center;
     padding: 7px;
 }
-
+/*Creates a header box for the page title*/
 .deployment .header {
     color: var(--text-colour);
     font-size: 30px;
@@ -44,7 +45,7 @@
     margin-bottom: 20px;
     text-align: center;
 }
-
+/*Container that creates a box for the text*/
 .deployment .container {
     color: var(--text-colour);
     margin: auto;
@@ -57,7 +58,7 @@
     text-align: center;
     padding: 20px;
 }
-
+/*Creates a column structure for tests*/
 .deployment .tests {
     display: flex;
     flex-direction: column;

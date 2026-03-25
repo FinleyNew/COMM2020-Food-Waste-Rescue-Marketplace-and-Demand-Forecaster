@@ -1,33 +1,39 @@
+/*Main root styling*/
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
+/*Sets the background for all pages*/
 body{
     background-image: url('./assets/Background.png');
     background-repeat: repeat;
     background-size: 400px;
 }
-
+/*Sets the background for in dark mode*/
 .dark body{
     background-image: url('./assets/DarkBackground.png');
     background-repeat: repeat;
     background-size: 400px;
 }
+/*Styles the logos*/
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+/*Changes the effect when hovering the logo*/
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+/*Changes for react logo hover*/
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/*Key frames for spinning logo*/
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,17 +42,17 @@ body{
     transform: rotate(360deg);
   }
 }
-
+/*Adds the animation*/
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
-
+/*Card styling*/
 .card {
   padding: 2em;
 }
-
+/*Document colour style*/
 .read-the-docs {
   color: #888;
 }

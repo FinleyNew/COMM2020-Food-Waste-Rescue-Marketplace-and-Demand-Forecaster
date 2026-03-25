@@ -1,9 +1,11 @@
+/*Makes a flex box with row direction for section tags*/
 .codes section{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
 }
+/*Creates a header box for the page title*/
 .codes .pageHeading{
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -11,6 +13,7 @@
     justify-content: left;
     gap: 10px;
 }
+/*Navigation row to format a row with a background colour and border*/
 .codes .navRow{
     grid-column: 1;
     gap: 10px;
@@ -21,6 +24,7 @@
     border-radius: 1rem;
     margin-bottom: 20px;
 }
+/*Creates a header box for the text for the start of the page*/
 .codes .textHeading{
     color: var(--text-colour);
     grid-column: 2;
@@ -34,6 +38,7 @@
     margin-bottom: 20px;
     text-align: center;
 }
+/* Creates a button structure with colours and spacings*/
 .codes .button {
     background-color: var(--button-bg);
     font-family: Arial;
@@ -47,6 +52,7 @@
     border-radius: 5px;
     text-decoration: none;
 }
+/* Creates a button structure with colours and spacings for the payment button*/
 .codes .payButton {
     display: inline-flex;
     text-align: center;
@@ -67,24 +73,29 @@
     border: 8px solid var(--border-colour);
     
 }
+/*Formats the headline stylisation*/
 .codes .headline{
     color: var(--text-colour);
     font-family: Arial;
     font-size: 35px;
 }
+/*Style of the box which contains the codes text*/
 .codes .codeText{
     font-size: 70px;
     margin-bottom: 50px;
     margin-top: 45px;
 }
+/*Centres text with sizing changes*/
 .codes .textCentre{
     text-align: center;
     font-size: 25px;
 }
+/* Formatting for an image */
 .codes .icon{
     width: 70px;
     height: 70px;
 }
+/*Defines a row structure for images*/
 .codes .rowIcons{
   display: flex;
   flex-direction: row;
@@ -93,10 +104,12 @@
   margin: 10px;
   gap: 40px;
 }
+/*Defines sizing for settings*/
 .codes .setting{
     width: 30px;
     height: 30px;
 }
+/*Defines a popup structure and how it will appear*/
 .codes .popup{
     width: 400px;
     border-radius: 6px;
@@ -110,11 +123,13 @@
     transition: transform 0.4s, top 0.4s;
     background-color: white;
 }
+/*Defines how a popup will appear and change visibility*/
 .codes .open-popup{
     visibility: visible;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
 }
+/*Structure of popup buttons*/
 .codes .popup button{
     width: 100%;
     margin-top: 50px;
@@ -124,6 +139,7 @@
     cursor: pointer;
     box-shadow: 0 5px 5px;
 }
+/*Formats the box as the parent block for the bundleEntry*/
 .codes .mainBox{
     display: flex;
     justify-content: center;
@@ -134,6 +150,7 @@
     width: 100%;
     padding-bottom: 30px;
 }
+/*Structure for the text used in the entire box strucure*/
 .codes .bundleEntry{
     display: flex;
     flex-direction: row;
@@ -149,13 +166,16 @@
     padding-bottom: 30px;
     color: var(--text-colour);
 }
+/*Styles the h1 text for box structures*/
 .codes .bundleEntry h1{
     font-size: 25px; 
 }
+/*Styles the h2 text for box structures*/
 .codes .bundleEntry h2{
     font-size: 32px;
     text-align: right; 
 }
+/*Style of the box which contains the page text*/
 .codes .textBox{
     padding-inline: 5%;
     display: flex;
@@ -167,12 +187,14 @@
     gap: 20px;
     margin-top: 20px;
 }
+/*Formats a row for image with sizing*/
 .codes .rowImg{
     display: block;
     width: 100%;
     height: 20vh;
     object-fit: cover;
 }
+/*Row structure for bundles*/
 .codes .bundleRow{
     display: flex;
     flex-direction: row;
@@ -180,6 +202,7 @@
     justify-content: space-between; 
     width: 100%;
 }
+/*Creatse a column structure with flex box*/
 .codes .column{
     flex: 1;
     display: flex;
@@ -187,27 +210,35 @@
     justify-content: space-between; 
     padding-inline: 3%;
 }
+/*Styles the text of the column structure*/
 .codes .column p{
     font-size: 25px;
 }
 .codes .companyIcon{
-    height: 95%;
-    width: 95%;
+    height: 250px;
+    width: 250px;
+    max-height: 250px;
+    max-width: 250px;
     border-radius: 1rem;
 }
+/*Aligns the content centrally*/
 .codes .centerAlign{
     display: flex;
     justify-content: center;
 }
+/*Changes text colour when reserved*/
 .codes .statusreserved{
     color: orange;
 }
+/*Changes text colour when collected*/
 .codes .statuscollected{
     color: green;
 }
+/*Changes text colour in the event if a no show*/
 .codes .statusno_show{
     color: red;
 }
+/*Box formatting for the error logic*/
 .codes .errorBox{
     display: flex;
     flex-direction: column;
