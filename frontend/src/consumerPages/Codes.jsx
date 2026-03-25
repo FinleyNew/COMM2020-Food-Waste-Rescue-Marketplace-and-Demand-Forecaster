@@ -49,32 +49,33 @@ function Codes() {
           </nav>
         </div>
         {bundles.map((bundle) => (
-  
-    <div className="bundleEntry">
-      <div className="textBox">
-        <div className="bundleRow">
-          <h1>{bundle.posting.seller.name}</h1>
-          <h2>Claim Code: {bundle.claim_code}</h2>
-        </div>
-
-        <div className="bundleRow">
-          <div className="column">
-            <p>
-              Status:{" "}
-              <span className={`status${bundle.status.toLowerCase()}`}>
-                {bundle.status.toUpperCase()}
-              </span>
-            </p>
-            <p>Pickup Date: {bundle.posting.formatted_date}</p>
-            <p>Pickup Time: {bundle.posting.formatted_time_range}</p>
+    <div className="mainBox">
+      <div className="bundleEntry">
+        <div className="textBox">
+          <div className="bundleRow">
+            <h1>{bundle.posting.seller.name}</h1>
+            <h2>Claim Code: {bundle.claim_code}</h2>
           </div>
 
-          <div className="column">
-            <img
-              src={bundle.posting.seller.logo_url}
-              alt="Company"
-              className="companyIcon"
-            />
+          <div className="bundleRow">
+            <div className="column">
+              <p>
+                Status:{" "}
+                <span className={`status${bundle.status.toLowerCase()}`}>
+                  {bundle.status.toUpperCase()}
+                </span>
+              </p>
+              <p>Pickup Date: {bundle.posting.formatted_date}</p>
+              <p>Pickup Time: {bundle.posting.formatted_time_range}</p>
+            </div>
+
+            <div className="column">
+              <img
+                src={bundle.posting.seller.logo_url}
+                alt="Company"
+                className="companyIcon"
+              />
+            </div>
           </div>
         </div>
       </div>
