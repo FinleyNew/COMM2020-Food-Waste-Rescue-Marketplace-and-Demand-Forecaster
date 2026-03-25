@@ -2,10 +2,11 @@
 
 ## Description
 
-Our motivation for building this project was to help mitigate the the 10.7 million tonnes of food wasted annually in the UK. We built this project to benefit both sellers and consumers by providing a marketplace in which excess food can be posted to help businesses reduce waste and allow consumers to reserve this food for a cheap price. Through this project we learnt how to create an interactive frontend and how to intergrate it with responsive backend. We also learnt how data moves through these layers and how the database it interacted with.
+Our motivation for building this project was to help mitigate the the 10.7 million tonnes of food wasted annually in the UK. We built this project to benefit both sellers and consumers by providing a marketplace in which excess food can be posted to help businesses reduce waste and allow consumers to reserve this food for a cheap price. Through this project we learnt how to create an interactive frontend and how to intergrate it with responsive backend. We also learnt how data moves through these layers and how the database is interacted with.
 
 ## Table of Contents
 
+- [Site](#site)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Tech Stack](#tech-stack)
@@ -13,24 +14,27 @@ Our motivation for building this project was to help mitigate the the 10.7 milli
 - [Tests](#tests)
 - [Licence](#licence)
 
+## Site
+
+ - The project is deployed on the URL tlll.me and you can access the swagger documentation using api.tlll.me.
+ - To run the project locally refer to the installation instructions below
+
 ## Installation
 
-To run the program you will need to have install Docker.
+To run the program you will need to have Docker installed.
 
- - Open docker desktop and ensure the Docker engine is running.
- - In your terminal navigate to the root folder and run docker compose up --build
+ - Open docker desktop and/or ensure the Docker engine is running.
+ - In your terminal navigate to the root folder and run docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
  - This starts up the frontend, backend and database and installs any necessary dependencies.
- - You may get an error saying that start.sh is not executable. If this is the case run chmod +x backend/start.sh && ls -l backend/start.sh and try again.
+ - At this point the database will begin seeding which can take 5-10 minutes
+ - To see any progress you can access the logs using the command docker compose logs -f app
  - Once the logs say the application is running open http://127.0.0.1:5173 on your web browser for the web app.
  - To access the API swagger documentation open http://127.0.0.1:8000/docs
- - To shut the program down press ctrl + c to exit the logs and run docker compose down in the terminal to remove the container.
+ - To shut the program down press ctrl + c to exit the logs and run docker compose -f docker-compose.yml -f docker-compose.dev.yml down to remove the container.
 
 ## Usage
 
-To navigate the project you will have to login as either a seller or consumer. As this is a prototype we have hardcoded these two for ease of use.
-
- - For the consumer log in with the credentials: consumer, 1
- - For the seller log in with the credentials: seller, 1
+To navigate the project you will have to login with a seeded user or you can create a new account.
 
 ![Homepage Screenshot](images/consumerNavigation.png)
 
@@ -72,6 +76,7 @@ Sellers Pages Guide
 | Frontend | React |
 | Backend | Python, FastAPI, PostgreSQL |
 | DevOps | Docker |
+| Deployment | Coolify |
 
 ## Credits
 
