@@ -145,8 +145,13 @@ def seed_bundle_posting(db: Session):
             allergens = None
 
         #Create random 1 hour pickup window
-        day = 1 + calculate_day_of_week(reservations) + (fake.random_int(0, 3) * 7)
-        start_time = datetime(2026, 3, day, calculate_start_time(reservations), tzinfo=timezone.utc)
+        month = fake.random_element(elements=[3, 4])
+        day_of_week = calculate_day_of_week(reservations)
+        week_offset = fake.random_int(0, 3) * 7
+        day = day_of_week + week_offset
+        day = min(day, 30 if month == 4 else 31)
+        
+        start_time = datetime(2026, month, day, calculate_start_time(reservations), tzinfo=timezone.utc)
         end_time = start_time + timedelta(hours=1)
         pickup_window = DateTimeTZRange(start_time, end_time, bounds='[)')
 
