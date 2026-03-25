@@ -107,14 +107,14 @@ function Streaks() {
               <p className="textCentre">Badges</p>
               <div className="rowIcons">
                 {allBadges.slice(0,4).map((badge)=> {
-                  const unlock = badges.some(userBadge => userBadge.name === badge.name);
+                  const unlock = badges.some(userBadge => userBadge.name === badge.name); //if the badge is unlocked display it instead of the locked version
                   return (
                     <div key={badge.badge_id} className="badges">
                       <img className="icon" src={unlock ? Badge : noBadge}></img>
                       <div className="hoverDesc">
                         {badge.name}
                         <br></br>
-                        {unlock ? badge.detail : "Badge is Locked"}
+                        {unlock ? badge.detail : "Badge is Locked"} {/* displays the first row of badges */}
                       </div>
                     </div>
                   );
@@ -129,7 +129,7 @@ function Streaks() {
                       <div className="hoverDesc">
                         {badge.name}
                         <br></br>
-                        {unlock ? badge.detail : "Badge is Locked"}
+                        {unlock ? badge.detail : "Badge is Locked"} {/* displays the second row of badges */}
                       </div>
                     </div>
                   );
@@ -144,7 +144,7 @@ function Streaks() {
                       <div className="hoverDesc">
                         {badge.name}
                         <br></br>
-                        {unlock ? badge.detail : "Badge is Locked"}
+                        {unlock ? badge.detail : "Badge is Locked"} {/* displays the third row of badges */}
                       </div>
                     </div>
                   );
@@ -159,7 +159,7 @@ function Streaks() {
                       <div className="hoverDesc">
                         {badge.name}
                         <br></br>
-                        {unlock ? badge.detail : "Badge is Locked"}
+                        {unlock ? badge.detail : "Badge is Locked"} {/* displays the fouth row of badges */}
                       </div>
                     </div>
                   );

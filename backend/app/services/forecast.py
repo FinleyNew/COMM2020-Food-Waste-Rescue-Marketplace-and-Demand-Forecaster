@@ -137,7 +137,9 @@ def train_model(df: pd.DataFrame):
 def get_baseline(train_df: pd.DataFrame, dow: int, start_time: int):
     #This function is used to get a baseline prediction for the number of reservations based on the average number of reservations for records with the same day of week and starting hour.
     mask = (train_df["dow"] == dow) & (train_df["start_time"] == start_time)
-    subset = train_df.loc[mask, "observed_reservations"]
+    subset = train_df.loc[mask, "observed_reservations"]#
+
+    
     if len(subset) > 0:
         return float(subset.mean())
     #Fallback if no exact matches:

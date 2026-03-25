@@ -904,4 +904,4 @@ function AdminActionForm() {
   );
 }
 
-export default AdminActionForm;
+export default AdminActionForm; //exports the component so it can be imported in other files

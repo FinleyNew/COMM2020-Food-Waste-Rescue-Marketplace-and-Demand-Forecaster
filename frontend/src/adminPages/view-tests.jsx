@@ -81,5 +81,5 @@ function View_tests() {
     </>
   );
 }
-
+//exports the component so it can be imported in other files
 export default View_tests;

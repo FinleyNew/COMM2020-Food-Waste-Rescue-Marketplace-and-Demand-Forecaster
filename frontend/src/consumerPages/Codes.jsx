@@ -22,12 +22,13 @@ function Codes() {
         if (response.data.length === 0) {
           setNoBundles(true);
         } else {
-          setBundles(response.data);
+          setBundles(response.data); // stores the data here 
           setNoBundles(false);
   }
 })
-      .catch(err =>{
-        console.error("request failed",err);
+     .catch(err => {
+           console.log("status:", err.response?.status); //error catching
+           console.log("backend error:", err.response?.data);
       })
     },[]) //if anything changes reload the page
 
@@ -48,7 +49,7 @@ function Codes() {
               <h1>Codes</h1>
           </nav>
         </div>
-        {bundles.map((bundle) => (
+        {bundles.map((bundle) => ( //uses a map to display the data as the data is stored in an array
     <div className="mainBox">
       <div className="bundleEntry">
         <div className="textBox">
@@ -65,7 +66,7 @@ function Codes() {
                   {bundle.status.toUpperCase()}
                 </span>
               </p>
-              <p>Pickup Date: {bundle.posting.formatted_date}</p>
+              <p>Pickup Date: {bundle.posting.formatted_date}</p> {/* displaying all the data */}
               <p>Pickup Time: {bundle.posting.formatted_time_range}</p>
             </div>
 
