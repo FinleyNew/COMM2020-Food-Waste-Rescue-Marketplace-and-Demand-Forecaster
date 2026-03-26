@@ -6,7 +6,7 @@ import axios from "axios";
 
 function AddBundles() {
 
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [categories, setCategories] = useState([]); //store the categories
   useEffect(() => { //to get all the categories at the start so they can be used throughout
       
@@ -21,17 +21,13 @@ function AddBundles() {
     });
     },[])
 
-    
-
-
-
-  const API_URL = import.meta.env.VITE_API_URL;
   const [bundleWeight, setBundleWeight] = useState("0");
   
   
   const [bundleAllergens,setBundleAllergens] = useState("");
   const [bundleCategory, setBundleCategory] = useState(1);
- 
+  const [description, setDescription] = useState("");
+  const [initialPrice, setInitialPrice] = useState("");
   const [bundlePrice,setBundlePrice] = useState("");
   const [numberAvailable, setNumberAvailable] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -42,12 +38,13 @@ function AddBundles() {
   const dateString = today.toISOString().split("T")[0]; // YYYY-MM-DD, removing the time to replace with the selected time
   const startDateTime = new Date(`${dateString}T${startTime}:00`); //creating new start time
   const endDateTime = new Date(`${dateString}T${endTime}:00`); //creating new end time
-  const slots = Array.from({ length: 24 }, (_, i) => 
-    { const start = i;
-      const end = i + 1; 
-      return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
-     });
+  const slots = Array.from({ length: 11 }, (_, i) => 
+  { const start = i + 8;
+    const end = start + 1; 
+    return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
+  });
   const [data, setForecastData] = useState({});
+  const [successPopup, setSuccessPopup] = useState(false);
   function addBundle(){
     //Initialise data to be sent to the backend
     const categoryObject = categories.find(
@@ -61,6 +58,8 @@ function AddBundles() {
       available: Number(numberAvailable),
       price: Number(bundlePrice),
       weight: Number(bundleWeight),
+      initial_price: Number(initialPrice),
+      contents: description,
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
@@ -89,6 +88,9 @@ function AddBundles() {
         "Content-Type": "application/json"
       }
     })
+    .then(() => {
+      setSuccessPopup(true);
+    })
       
   }
 
@@ -111,6 +113,8 @@ function AddBundles() {
       available: Number(numberAvailable),
       price: Number(bundlePrice),
       weight: Number(bundleWeight),
+      initial_price: Number(initialPrice),
+      contents: description,
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };
@@ -153,7 +157,6 @@ function AddBundles() {
           <nav className="navRow">
             <Link to="/current-bundles" className="button"><b>Current Bundles</b></Link>
             <Link to="/analytics" className="button"><b>Analytics</b></Link>
-            <Link to="/forecasts" className="button"><b>Forecasts</b></Link>
           </nav>
           <div className="textHeading">
             <h1>Add Bundles</h1> 
@@ -216,7 +219,34 @@ function AddBundles() {
                     onChange={(e) => setBundlePrice(e.target.value)}
                   />
                 </div>
+                
               </div>
+               <div className="textBox">
+                <div className="row">
+                  {/* An input box with a label to input the bundle price */}
+                  <label htmlFor="Iprice">Enter Initial Price : </label>
+                  <input
+                    id="Iprice"
+                    type="number"
+                    value={initialPrice}
+                    onChange={(e) => setInitialPrice(e.target.value)}
+                  />
+                </div>
+                
+              </div>
+              <div className="textBox">
+                <div className="row">
+                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                  <label htmlFor="desc">Enter Bundle Description : </label>
+                  <input
+                    id="desc"
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div className="textBox">
                 <div className="row">
                   {/* Outputs an input box with a label asking for bundle weight */}
@@ -266,6 +296,12 @@ function AddBundles() {
               <h4>Predicted No Show Probability: {data.predicted_no_show_prob}</h4>
             </div>
           </div>
+          {successPopup && (
+            <div className="popup open-popup">
+              <h1>Success!</h1>
+              <button className="button" onClick={() => setSuccessPopup(false)}>Ok</button>
+            </div>
+          )}
       </div>
     </>
   );

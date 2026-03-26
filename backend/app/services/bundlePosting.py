@@ -19,6 +19,7 @@ def create_bundle_posting(bundle_in: BundlePostingCreate, owner_id: int, db: Ses
 def get_active_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_active_bundle_postings(db=db)
 
+# Gets bundles related to this query
 def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_queried_bundle_postings(query=query, db=db)
 
@@ -26,7 +27,7 @@ def get_queried_bundle_postings(query: str, db: Session) -> Sequence[BundlePosti
 def get_all_bundle_postings(db: Session) -> Sequence[BundlePosting]:
     return bundlePosting_crud.get_all_bundle_postings(db=db)
 
-# The sertvice for getting a specific bundle posting
+# The service for getting a specific bundle posting
 def get_bundle_posting(posting_id: int, db: Session, lock: bool = False) -> BundlePosting:
     return bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=lock)
 
@@ -38,6 +39,7 @@ def get_bundle_postings_by_owner(owner_id: int, db: Session) -> Sequence[BundleP
 def reserve_bundle_posting(posting_id: int, db: Session):
     bundlePosting_crud.reserve_bundle_posting(posting_id=posting_id, db=db)
 
+# Used to update a bundle posting
 def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | BundlePostingAdminUpdate, db: Session, user_id: int | None = None) -> BundlePosting:
     db_bundle = bundlePosting_crud.get_bundle_posting(posting_id=posting_id, db=db, lock=False)
 
@@ -54,6 +56,7 @@ def update_bundle_posting(posting_id: int, bundle_update: BundlePostingUpdate | 
     
     return bundlePosting_crud.update_bundle_posting(db_bundle=db_bundle, bundle_update=bundle_update, pickup_window=pickup_range, db=db)
 
+# Sets the bundle status to deleted
 def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
     from app.services import reservation as reservation_service
     from app.services import forecast as forecast_service
@@ -64,11 +67,10 @@ def set_bundle_deleted(posting_id: int, db: Session) -> BundlePosting:
         reservation_service.delete_reservation(reservation_id=reservation.reservation_id, db=db) # type: ignore
     for report in bundle_posting.reports:
         issueReport_service.delete_issue_report(issue_id=report.issue_id, db=db) # type: ignore
-    forecast_service.delete_forecast(forecast_id=bundle_posting.forecast.forecast_id, db=db)
+    forecast_service.delete_forecast(forecast_id=bundle_posting.forecast.forecast_id, db=db) # type: ignore
     return bundlePosting_crud.set_bundle_deleted(bundle=bundle_posting, db=db)
 
 # The service for deleting a bundle posting
-# Currently not in use
 def delete_bundle_posting(posting_id: int, db: Session):
     from app.services import reservation as reservation_service
     from app.services import issueReport as issueReport_service

@@ -28,9 +28,11 @@ class SellerBase(SQLModel):
             raise ValueError("Closing time must be after opening time")
         return v
 
+# The create schema for sellers
 class SellerCreate(SellerBase):
     pass
 
+# The schema used to update a seller
 class SellerUpdate(SQLModel):
     name: str | None = None
     location: str | None = None
@@ -49,7 +51,8 @@ class SellerUpdate(SQLModel):
             if close_time <= open_time:
                 raise ValueError("Closing time must be after opening time")
             return v
-        
+
+# The schema used for admins to update a seller
 class SellerAdminUpdate(SellerUpdate):
     pass
 
@@ -61,3 +64,4 @@ class SellerPublic(SellerBase):
 class SellerSummary(SQLModel):
     name: str
     logo_url: str
+    location: str

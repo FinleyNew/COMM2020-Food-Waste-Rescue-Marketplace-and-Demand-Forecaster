@@ -5,7 +5,9 @@ from sqlmodel import Field, SQLModel
 class ForecastBase(SQLModel):
     user_id: int
     posting_id: Optional[int] = None
+    # Cannot predict negative
     predicted_reservations: int = Field(ge=0)
+    # The probability has to be between 0 and 1
     predicted_no_show_prob: float = Field(ge=0, le=1)
 
 # The create schema for forecasts

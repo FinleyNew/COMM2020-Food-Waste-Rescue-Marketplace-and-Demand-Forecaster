@@ -13,7 +13,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 .loginPage .loginItems{
@@ -55,12 +55,19 @@
 .loginPage .popupRegister{
     width: 90%;
     min-width: 200px;
+    max-width: 450px;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    z-index: 1001;
     border-radius: 6px;
-    position: absolute;
-    top: 150%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
     left: 50%;
     text-align: center;
-    padding: 0 30px 30px;
+    padding: 30px;
     visibility: hidden;
     transition: transform 0.4s, top 0.4s;
     background-color: var(--bg-container);
@@ -72,7 +79,7 @@
 .loginPage .open-popupRegister{
     visibility: visible;
     top: 50%;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 .loginPage .popupRegister button{

@@ -1,3 +1,8 @@
+/*Sets the pages colour scheme to be compatible with dark mode*/
+.view {
+    color: var(--text-colour);
+}
+/*Navigation row to format a row with a background colour and border*/
 .view .navRow{
     grid-column: 1;
     gap: 10px;
@@ -9,7 +14,7 @@
     margin-bottom: 20px;
     overflow-x: auto;
 }
-
+/*Defines how a button is formatted*/
 .view .button {
     background-color: var(--button-bg);
     font-family: Arial;
@@ -24,7 +29,7 @@
     border-radius: 5px;
     text-decoration: none;
 }
-
+/*Creates a header box for the page title*/
 .view .header {
     color: var(--text-colour);
     font-size: 30px;
@@ -37,7 +42,7 @@
     margin-bottom: 20px;
     text-align: center;
 }
-
+/*Creates a box that fits content with page colours*/
 .view .box {
     width: fit-content;
     background-color: var(--bg-container);
@@ -45,12 +50,12 @@
     border: 4px solid var(--border-colour);
     border-radius: 1rem;
 }
-
+/*Container that creates a flex structure*/
 .view .container {
     display: flex;
     justify-content: center;
 }
-
+/*Creates a box that fits content with page colours*/
 .view .outputBox {
     width: fit-content;
     background-color: var(--bg-container);

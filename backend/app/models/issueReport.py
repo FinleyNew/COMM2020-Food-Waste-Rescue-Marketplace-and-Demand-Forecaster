@@ -1,4 +1,4 @@
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
 from .enums import ReportStatus
 
@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from .consumer import Consumer
     from .bundlePosting import BundlePosting
 
+# The table model for issue reports
 class IssueReport(SQLModel, table=True):
     issue_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     posting_id: Optional[int] = Field(default=None, foreign_key="bundleposting.posting_id", index=True)

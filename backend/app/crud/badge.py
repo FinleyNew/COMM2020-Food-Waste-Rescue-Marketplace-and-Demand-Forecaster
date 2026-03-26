@@ -3,10 +3,12 @@ from sqlmodel import Session, select
 
 from app.models.badge import Badge, ConsumerBadge
 
+# The crud function for getting all the badges from the DB
 def get_all_badges(db: Session) -> Sequence[Badge]:
     statement = select(Badge)
     return db.exec(statement).all()
 
+# The crud function for awarding a specific badge to a specific user
 def award_badge(badge_name: str, consumer_id: int, db: Session):
     # Get the badge
     badge = db.exec(select(Badge).where(Badge.name == badge_name)).first()

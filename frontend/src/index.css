@@ -1,3 +1,4 @@
+/*Main root styling*/
 :root {
   --bg-color: white; /*default theme*/
   --text-colour: black;
@@ -8,7 +9,7 @@
   --bg-container: white;
   --badge-icon: url('./assets/NoBadge.png')
 }
-
+/*Main page styling for dark mode*/
 .dark {
   --bg-color: #121212; /*when html tag is changed this becomes into effetc*/
   --text-colour: #ffffff;  /*overrides variables when run*/
@@ -19,20 +20,20 @@
   --bg-container: #111827;
   --badge-icon: url('./assets/NoBadgeDark.png')
 }
-
+/*Sets the background for all pages*/
 body{
     background-image: url('./assets/Background.png');
     background-repeat: repeat;
     background-size: 400px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
-
+/*Sets the background for in dark mode*/
 .dark body{
     background-image: url('./assets/DarkBackground.png');
     background-repeat: repeat;
     background-size: 400px;
 }
-
+/*Dark mode button colouring and style*/
 .dark-mode-btn {
   display: flex;
   background-color: var(--settings-button-bg);
@@ -44,15 +45,18 @@ body{
   top: 20px;
   right: 20px;
 }
+/*Sets the background for all pages*/
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+/*Defines sizing for settings icon*/
 .settingsIcon{
   width: 50px;
   height: 50px;
 }
+/*Defines a popup structure and how it will appear for settings*/
 .settingsPopup{
   display: flex;
   flex-direction: column;
@@ -74,29 +78,37 @@ body {
   max-height: 80vh;
   overflow-y: auto;
 }
+/*Changes the styling for h1 text colour in settings*/
 .settingsPopup h1{
   color: var(--text-colour);
 }
+/*Changes the text styling in settings popup*/
 .settingsPopup p{
   color: var(--text-colour);
 }
+/*Defines how a popup will appear and change visibility*/
 .settingsOpenPopup{
     visibility: visible;
     top: 12%;
     transform: translateX(-50%) scale(1);
+    color: var(--text-colour);
 }
+/*Defines a row for the settings*/
 .settingsRow{
     display: flex;
     color: var(--text-colour);
     font-size: 20px;
 }
+/*Creates a box for the settngs text*/
 .settingsTextBox{
     display: block;
     text-align: left;
 }
+/*Changes the sign out button colour*/
 .signOutButton{
   color: rgb(224, 17, 17);
 }
+/*Structure of popup buttons*/
 .settingsPopup .settingsButton{
     display: inline-flex;
     justify-content: center;

@@ -1,3 +1,8 @@
+/*Sets the pages colour scheme to be compatible with dark mode*/
+.change {
+    color: var(--text-colour);
+}
+/*Navigation row to format a row with a background colour and border*/
 .change .navRow{
     grid-column: 1;
     gap: 10px;
@@ -9,7 +14,7 @@
     margin-bottom: 20px;
     overflow-x: auto;
 }
-
+/*Defines how a button is formatted*/
 .change .button {
     background-color: var(--button-bg);
     font-family: Arial;
@@ -24,7 +29,7 @@
     border-radius: 5px;
     text-decoration: none;
 }
-
+/*Creates a header box for the page title*/
 .change .header {
     color: var(--text-colour);
     font-size: 30px;
@@ -37,7 +42,7 @@
     margin-bottom: 20px;
     text-align: center;
 }
-
+/*Container that creates a box for the text*/
 .change .container {
     color: var(--text-colour);
     margin: auto;
@@ -49,11 +54,11 @@
     margin-bottom: 20px;
     text-align: center;
 }
-
+/*Defines a row*/
 .change .row {
     margin: 25px;
 }
-
+/*Styles a button with text formatting and background colours*/
 .change .boxButton {
     background-color: var(--button-bg);
     font-family: Arial;
@@ -68,7 +73,7 @@
     text-decoration: none;
     margin-bottom: 15px;
 }
-
+/*Sets a row structure style*/
 .change .setRow {
     display: flex;
     flex-direction: row;

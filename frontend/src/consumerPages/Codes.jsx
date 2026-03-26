@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './Codes.css'
-import Company from "../assets/Company.png";
+import Company from "../assets/BundleImage.png";
 import axios from "axios";
 function Codes() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -22,12 +22,13 @@ function Codes() {
         if (response.data.length === 0) {
           setNoBundles(true);
         } else {
-          setBundles(response.data);
+          setBundles(response.data); // stores the data here 
           setNoBundles(false);
   }
 })
-      .catch(err =>{
-        console.error("request failed",err);
+     .catch(err => {
+           console.log("status:", err.response?.status); //error catching
+           console.log("backend error:", err.response?.data);
       })
     },[]) //if anything changes reload the page
 
@@ -48,42 +49,39 @@ function Codes() {
               <h1>Codes</h1>
           </nav>
         </div>
-        {bundles.map((bundle) => (
-  <Link
-    to={`/bundle/${bundle.posting_id}`}
-    className="mainBox"
-    key={bundle.posting_id}
-  >
-    <div className="bundleEntry">
-      <div className="textBox">
-        <div className="bundleRow">
-          <h1>{bundle.posting.seller.name}</h1>
-          <h2>Claim Code: {bundle.claim_code}</h2>
-        </div>
-
-        <div className="bundleRow">
-          <div className="column">
-            <p>
-              Status:{" "}
-              <span className={`status${bundle.status.toLowerCase()}`}>
-                {bundle.status.toUpperCase()}
-              </span>
-            </p>
-            <p>Pickup Date: {bundle.posting.formatted_date}</p>
-            <p>Bundle ID: {bundle.posting.formatted_time_range}</p>
+        {bundles.map((bundle) => ( //uses a map to display the data as the data is stored in an array
+    <div className="mainBox">
+      <div className="bundleEntry">
+        <div className="textBox">
+          <div className="bundleRow">
+            <h1>{bundle.posting.seller.name}</h1>
+            <h2>Claim Code: {bundle.claim_code}</h2>
           </div>
 
-          <div className="column">
-            <img
-              src={bundle.posting.seller.logo_url}
-              alt="Company"
-              className="companyIcon"
-            />
+          <div className="bundleRow">
+            <div className="column">
+              <p>
+                Status:{" "}
+                <span className={`status${bundle.status.toLowerCase()}`}>
+                  {bundle.status.toUpperCase()}
+                </span>
+              </p>
+              <p>Pickup Date: {bundle.posting.formatted_date}</p> {/* displaying all the data */}
+              <p>Pickup Time: {bundle.posting.formatted_time_range}</p>
+            </div>
+
+            <div className="column">
+              <img
+                src={bundle.posting.seller.logo_url}
+                alt="Company"
+                className="companyIcon"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </Link>
+  
 ))}
         {noBundles && (
         <div className="mainBox">  

@@ -2,7 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import './Discover.css';
 import axios from "axios";
-import Company from "../assets/Company.png";
+import Company from "../assets/BundleImage.png";
 import Bundle from "../assets/BundleImage.png";
 
 function Discover() {
@@ -67,7 +67,7 @@ function Discover() {
       <div className="pageHeading">
         <nav className="navRow">
           <Link to="/streaks" className="button"><b>Streaks</b></Link>
-          <Link to="/codes" className="button"><b>Codes</b></Link>
+          <Link to="/codes" className="button"><b>Codes</b></Link> {/* navigation links to the other pages */}
         </nav>
         <div className="textHeading">
           <h1>Bundles</h1>
@@ -75,7 +75,7 @@ function Discover() {
       </div>
 
       <div className="searchRow">
-        <p>Search for a Bundle: </p>
+        <p>Search for a Bundle: </p> {/* search bar to search for specific categories within active bundles */}
         <input
           id="searchBundle"
           type="text"
@@ -86,7 +86,7 @@ function Discover() {
       </div>
 
       <div className="bundleList">
-        {bundles.map(bundle => (
+        {bundles.map(bundle => ( //using a map to display all the 
           <Link to={`/bundle/${bundle.posting_id}`} className="mainBox" key={bundle.posting_id}>
             <div className="bundleEntry">
               <img src={Bundle} alt="Bundle" className="bundleImage" />
@@ -97,8 +97,14 @@ function Discover() {
                 </div>
                 <div className="bundleRow">
                   <div className="column">
-                    <p>Collection Time: {bundle.formatted_time_range}</p>
+                    <p>Collection Time: {bundle.formatted_time_range}</p> {/* display the results */}
                     <p>Price: £{bundle.price_display}</p>
+                    <p>{bundle.discount_percent}% off original price</p>
+                  </div>
+                  <div className="column">
+                    <p>Contents: {bundle.contents}</p>
+                    <p>Pickup Location: {bundle.seller.location}</p>
+                    <p>Pickup Date: {bundle.formatted_date}</p>
                   </div>
                   <img src={bundle.seller.logo_url} alt="Company" className="companyIcon" />
                 </div>
@@ -107,8 +113,8 @@ function Discover() {
           </Link>
         ))}
         <div className="mainBox">
-          {bundles.length === 0 && <p className="errorBox" style={{ color: "red" }}>
-            No Bundles Found
+          {bundles.length === 0 && <p className="errorBox" style={{ color: "red" }}> {/* display message if no bundles are found */}
+            No Bundles Found 
             </p>}
         </div>
       </div>

@@ -10,11 +10,11 @@ function BundleSelect() {
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
-  const [reportButton, setReportButton] = useState(false);
+  const [reportButton, setReportButton] = useState(false); //all the variables to hold the data retrieved
   const [viewReport, setViewReportButton] = useState(false);
   const [showReports, setShowReports] = useState([]);
   const [report, setReport] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL; //holds the API URL that can be changed if the website is deployed locally or online
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -60,7 +60,7 @@ function BundleSelect() {
       setBundles(response.data); // Update state with search results
     })
     .catch(err => {
-      console.error("Error searching bundles:", err);
+      console.error("Error creating reservation:", err);
       setBundles([]); // Clear bundles if search fails
     });
     
@@ -69,24 +69,27 @@ function BundleSelect() {
 
 
 
-  function createReport() {
+  function createReport() { //creates an issue report by sending data using a post request
     const data={
       posting_id:id,
       description:report,
     }
     console.log(data);
     const token = localStorage.getItem(`token`);
-    axios.post(`${API_URL}/api/v1/reports/`, data ,{
+    axios.post(`${API_URL}/api/v1/reports/`, data ,{ //post request and sending the data
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`, //sending a toekn to verify the user
         "Content-Type": "application/json"
       }
     })
     
   }
+  function closeReportPopup() {
+    setReportButton(false);
+  }
 
-  function handleViewReports() {
-  const token = localStorage.getItem('token');
+  function handleViewReports() { //viewing reports button, shows all the reports that the consumer has made
+  const token = localStorage.getItem('token'); 
   const API_URL = import.meta.env.VITE_API_URL;
 
   axios.get(`${API_URL}/api/v1/reports/consumer/${id}`, {  
@@ -124,7 +127,7 @@ function BundleSelect() {
               />{/* holds the base company image */}
               <div className="textBox">
                 <div className="bundleRow">
-                  <h1>Bundle Name</h1>
+                  <h1>{bundle.seller.name}</h1>
                   <img
                       src={bundle.seller.logo_url}
                       alt="Company"
@@ -134,12 +137,16 @@ function BundleSelect() {
                 <div className="bundleRow">
                   <div className="column">
                     <p>Category: {bundle.category.name}</p> {/* displays the category, allergens and prices */}
-                    <p>Allergens: {bundle.allergens}</p>
+                    <p>Contents: {bundle.contents}</p>
+                    <p>Pickup Location: {bundle.seller.location}</p>
+                    <p>Pickup Date: {bundle.formatted_date}</p>
                     <p>Price: £{bundle.price}</p>
                   </div>
                   <div className="column">
                     <p>Date to Collect: {bundle.formatted_date}</p> {/* displays the formatted date and the time range */}
                     <p>Time to Collect: {bundle.formatted_time_range}</p>
+                    <p>{bundle.discount_percent}% off original price</p>
+                    <p>Allergens: {bundle.allergens}</p>
                   </div>
                 </div>
                 <br></br>
@@ -149,9 +156,8 @@ function BundleSelect() {
                   Pay
                 </button>
                 <Link to="/discover" className="payButton">Back</Link>
-
-                <button className="reportButton" onClick={() => (setReportButton(true))}>Create Report</button>
-                <button className="viewReportButton" onClick={() => (handleViewReports(),setViewReportButton(true))}>View Reports</button>
+                <button className="payButton" onClick={() => (setReportButton(true))}>Create Report</button>
+                <button className="payButton" onClick={() => (handleViewReports(),setViewReportButton(true))}>View Reports</button>
 
 
               </div>
@@ -162,34 +168,54 @@ function BundleSelect() {
                 </div>
               )}
               {reportButton && (
-                <div>
-                  <h1>Please enter the issue to send to the seller.</h1>
-                  <div className="row">
-                  {/* Outputs an input box with a label asking for bundle allergen inputs */}
-                  <label htmlFor="report">Enter Issue : </label>
-                  <input
-                    id="report"
-                    type="text"
-                    value={report}
-                    onChange={(e) => setReport(e.target.value)}
-                  />
-                  <h1>    </h1>
-                  <button className="button" onClick={() => (createReport(), alert("Report Created"), setTimeout(() => {setReportButton(false)},3000))}>Confirm</button>
+                <div className="popup open-popup">
+                  <div className="textBox">
+                    <h1>Please enter the issue to send to the seller.</h1>
+                    <div className="row">
+                    {/* Outputs an input box with a label asking for bundle allergen inputs */}
+                    <label htmlFor="report">Enter Issue : </label>
+                    <input
+                      id="report"
+                      type="text"
+                      value={report}
+                      onChange={(e) => setReport(e.target.value)}
+                    />
+                    <br></br>
+                    <br></br>
+                    <button className="button" onClick={() => {
+                      if(report.trim()==="") {
+                        closeReportPopup(); 
+                        return;
+                      } 
+                      createReport();
+                      closeReportPopup()
+                    }}
+                    >Confirm</button>
+                  </div>
                 </div>
                    {/* {setReportButton(false)} close after report is made */}
                 </div>
               )}
               {viewReport && (
-                <>
-                
-                {showReports.map(report => (
-                    <div>
-                      <h1>Description:{report.description},Seller Response:{report.seller_response},Status:{report.status}</h1>
-                      {(setTimeout(() => {setViewReportButton(false)},20000))}
+                <div className="popup open-popup">
+                  <h1>View Reports</h1>
+                    <div className="textBox">
+                      {showReports.length === 0 ? (
+                        <p>No reports found</p>
+                      ) : (
+                      <div className="reportsFormat">
+                        {showReports.map((report) => (
+                          <>
+                            <h1>Description: {report.description}</h1>
+                            <h1>Seller Response: {report.seller_response}</h1>
+                            <h1>Status: {report.status}</h1>
+                          </>
+                        ))}
+                      </div>
+                      )}
+                      <button className="button" onClick={() => setViewReportButton(false)}>Close</button>
                     </div>
-       
-                ))}
-                </>
+                </div>
               )}
             </div>
           </div>

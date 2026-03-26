@@ -6,14 +6,14 @@ import './change-information.css'
 function AdminActionForm() {
 
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL; 
   const [categories, setCategories] = useState([]); //store the categories
   useEffect(() => { //to get all the categories at the start so they can be used throughout
       
-    axios.get(`${API_URL}/api/v1/categories/`, {
+    axios.get(`${API_URL}/api/v1/categories/`, { //get request using the API URL variable, used to switch allow local use and deployed use
     })
     .then(response => {
-       setCategories(response.data); //store them in categories
+       setCategories(response.data); //store them in categories variable declared above
     })
     .catch(err => { //Returns alert if an error occurs
         console.error("Error fetching categories:", err);
@@ -22,7 +22,7 @@ function AdminActionForm() {
     },[])
 
 
-  const buttonData = [
+  const buttonData = [ //all of the options that the admin can pick to change
     "Update Consumer",
     "Update Seller",
     "Update Bundle",
@@ -39,7 +39,7 @@ function AdminActionForm() {
     "Create Category",
     "Create Admin",
   ];
-  
+  //all of the variables used to store the data gathered by the get requests
   const [reportID, setReportID] = useState("");
   const [selectedAction, setSelectedAction] = useState("");
   const [category, setCategory] = useState("");
@@ -56,6 +56,8 @@ function AdminActionForm() {
   const [location, setLocation] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [description, setDescription] = useState("");
+  
   const [status, setStatus] = useState("");
   const [bundleID, setBundleID] = useState("");
   const [timestamp, setTimeStamp] = useState("");
@@ -64,7 +66,8 @@ function AdminActionForm() {
   const [observed_no_show, setno_show] = useState("");
   const [observed_expired, setexpired] = useState("");
   const token = localStorage.getItem('token');
-  const payload = JSON.parse(atob(token.split('.')[1]));
+  //
+  
   const [userIdentification, setUserIdentification] = useState("");
   const today = new Date(); //need to get todays date to use to use the iso format
   const dateString = today.toISOString().split("T")[0]; // YYYY-MM-DD, removing the time to replace with the selected time
@@ -72,16 +75,17 @@ function AdminActionForm() {
   const endDateTime = new Date(`${dateString}T${endTime}:00`); //creating new end time
   const [startTimestamp, setStartTimeStamp] = useState("");
   const [endTimestamp, setEndTimeStamp] = useState("");
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  //the regex is used to make sure the input matches a specific form
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/; //this regex makes sure the email has an @ symbol and a domain name (.com)
   const [openingTime, setOpeningTime] = useState("");
   const [closingTime, setClosingTime] = useState("");
-  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
-  const toMinutes = (time) => {
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/; //this regex makes sure the time is in a format of HH:MM
+  const toMinutes = (time) => { //converts to a number that we can compare to other times, to make sure the closing time is bigger than the opening time
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
   }
 
-  const validTimeFormat =
+  const validTimeFormat = //checks the times are in the correct time format (HH:MM)
     timeRegex.test(openingTime) &&
     timeRegex.test(closingTime);
 
@@ -90,7 +94,7 @@ function AdminActionForm() {
     { const start = i;
       const end = i + 1; 
       return `${String(start).padStart(2,"0")}:00 - ${String(end).padStart(2,"0")}:00`;
-     });
+     }); //creates all the slots for picking the time of the bundle
   
     
     
@@ -99,30 +103,32 @@ function AdminActionForm() {
 
     const categoryObject = categories.find(
       cat => cat.category_id === Number(bundleCategory) //create a catgeory object to upload both the name and the id at once
-    );
+    ); //as the backend requires an object for the category with a category name and index, we have to build an object to parse
+    //to the backend
 
 
-    if (!userID && selectedAction !== "Update User") {
-    alert("Please enter a valid ID");
+    if (!userID && selectedAction !== "Update User") { //makes sure an ID and an action are entered
+    alert("Please enter a valid ID"); //if not alert the admin that they havent been entered
     return;
     }
     let data ={};
-    let suffix="";
-    switch (selectedAction) {
+    let suffix=""; //a suffix variable, this makes sure that we cna build the request by adding the specific path to the end to save space
+    switch (selectedAction) { //each case is the same but with different variables that the request needs and the suffix is different
       case "Update Consumer":
         suffix=`consumers/admin/${userID}`;
-        if(name) data.display_name = name;
+        if(name) data.display_name = name; //update consumer needs display name and the streak to update
         if(streak) data.streak = streak;
         break;
       case "Update Seller":
-        suffix=`sellers/admin/${userID}`;
+        suffix=`sellers/admin/${userID}`; //updating the seller requires a name, location and opening hours
         if(name) data.name = name;
         if(location) data.location = location;
+        //the opening and closing time allows for a user to enter both, then builds one variable which the backend requires
         if(openingTime && closingTime && (toMinutes(openingTime) < toMinutes(closingTime))) data.opening_hours = `${openingTime} - ${closingTime}` //only when closing time is after
         break;
-      case "Update Bundle":
-        suffix=`bundles/admin/${userID}`;
-        if(categoryObject) data.category = categoryObject;
+      case "Update Bundle": //updating the bundle 
+        suffix=`bundles/admin/${userID}`; //the if statements allow certain elements to be changed if they exist, so not all elements
+        if(categoryObject) data.category = categoryObject; //have to be present for the object to update, the same for all cases
         if(bundleAllergens) data.allergens = bundleAllergens;
         if(numberAvailable) data.available = Number(numberAvailable);
         if(bundlePrice) data.price = Number(bundlePrice);
@@ -131,16 +137,16 @@ function AdminActionForm() {
         if(endTime) data.end_time = endDateTime.toISOString();
         if(userIdentification) data.user_id = Number(userIdentification);
         if(status) data.status = String(status);
-        console.log(data);
+        
         break;
-      case "Update Reservation":
+      case "Update Reservation": //updating reservation requires the status of the bundle and a timestamp
         suffix=`reservations/admin/${userID}`;
         if(status) data.status = status;
         if(timestamp) {
           data.timestamp = new Date(timestamp).toISOString();
         } 
         break;
-      case "Update Record":
+      case "Update Record": //updating record
         suffix=`records/admin/${userID}`;
         if(categoryObject) data.category = categoryObject;
         if(bundlePrice) data.price = Number(bundlePrice);
@@ -153,7 +159,7 @@ function AdminActionForm() {
         if(endTimestamp) {data.end_time = new Date(endTimestamp).toISOString();}
 
         break;
-      case "Update User":
+      case "Update User": //updating user
         suffix=`users/admin/${userID}`;
         if(email) data.email = email;
         if(password) data.password = password;
@@ -163,53 +169,53 @@ function AdminActionForm() {
         console.log("Unknown button clicked!");
     }
 
-    const token = localStorage.getItem('token');
-    const API_URL = import.meta.env.VITE_API_URL;
-    axios.patch(`${API_URL}/api/v1/${suffix}`, data ,{
+    const token = localStorage.getItem('token'); //the token retrieves the locally stored token from when the user logs in
+    //this verifies the user and allows them to access the correct data
+    const API_URL = import.meta.env.VITE_API_URL; //the API_URL variable stores the URL based on if the website is accessed locally or deployed
+    axios.patch(`${API_URL}/api/v1/${suffix}`, data ,{  //a patch request updates data with the data variable that was build in the switch case
       
        //Fetch data for the user
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`, //headers allow the token and content type to be sent to the backend to verify and access the data
         "Content-Type": "application/json"
       }
     })
-      .then(response => {
-        //setForecasts(response.data); // data is likely an array
-        //setAnalytics(response.data);
-        console.log("hello");
+      .then(response => { //console log to confirm information has been changed
+        
+        console.log("Information Changed");
           
         
       })
       .catch(err => { //Returns alert if an error occurs
-        console.error("Error fetching forecasts:", err);
-        alert("No data");
+        console.error("Error changing information:", err);
+        alert("No data"); //display any errors to the user and the logs
       });
   }
 
-  function deleteBundle(){
+  function deleteBundle(){ //function to delete a bundle
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
     console.log(API_URL);
-    console.log(bundleID);
-    axios.delete(`${API_URL}/api/v1/bundles/${bundleID}`, {
+    
+    axios.delete(`${API_URL}/api/v1/bundles/${bundleID}`, { //delete request to delete the bundle in the backend
       headers: {
         "Authorization": `Bearer ${token}`
       }
     })
     .catch(err => {
-      console.error("FULL ERROR:", err); 
-      console.error("BACKEND RESPONSE:", err.response);
-      console.error("ERROR DATA:", err.response?.data);
+      
+      console.error("Backend Response:", err.response);
+      console.error("Error:", err.response?.data); //display any erorrs
 
-      alert(JSON.stringify(err.response?.data, null, 2));
+      
     });
     
   }
 
-  function deleteFunction(){
+  function deleteFunction(){ //function for the other delete forms
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
-    let suffix="";
+    let suffix=""; //similar to the update switches with the suffix
     switch(selectedAction){
       case "Delete Forecast":
         suffix=`forecasts/${bundleID}`;
@@ -233,8 +239,8 @@ function AdminActionForm() {
         break;
 
     }
-    console.log(`${API_URL}/api/v1/${suffix}`);
-    axios.delete(`${API_URL}/api/v1/${suffix}` ,{
+    
+    axios.delete(`${API_URL}/api/v1/${suffix}` ,{ //same delete function with the same headers and content type for the backend to verify
       
        //Fetch data for the user
       headers: {
@@ -243,83 +249,88 @@ function AdminActionForm() {
       }
     })
       .then(response => {
-        //setForecasts(response.data); // data is likely an array
-        //setAnalytics(response.data);
-        console.log("hello");
+        
+        console.log("Deleted"); //log the object has been deleted
           
         
       })
       .catch(err => {
            console.log("status:", err.response?.status);
            console.log("backend error:", err.response?.data);
-
-            
-              });
+      });
   }
 
-  function createCategory() {
+  function createCategory() { //create category function
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
     const data={
-      name:category
+      name:category //creating a cetegory only needs the name of the new category
     }
     axios.post(`${API_URL}/api/v1/categories/`, data ,{
       headers: {
         "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json" //same headers
       }
     })
     .then(() => {
-      console.log("Category Added");
+      console.log("Category Added"); //output
     })
+    .catch(err => {
+           console.log("status:", err.response?.status);
+           console.log("backend error:", err.response?.data);
+      }); //display any errors
   }
 
-  function createAdmin() {
+  function createAdmin() { //creating a new admin
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
     const data={
       email:email,
-      password:password,
+      password:password, //requires an email and passowrd
     };
     console.log(data);
     axios.post(`${API_URL}/api/v1/admins/`, data ,{
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`, //same headers
         "Content-Type": "application/json"
       }
     })
     .then(() => {
-      console.log("Admin Added");
+      console.log("Admin Added"); //console log to display if admin has been created
     })
+    .catch(err => {
+           console.log("status:", err.response?.status); //error catching
+           console.log("backend error:", err.response?.data);
+      });
   }
 
-  return (
+  return ( //all html for displaying the form selection and enter boxes
     <>
     <div className="change">
       <nav className="navRow">
         <Link to="/view-information" className="button">View Information</Link>
-        <Link to="/view-tests" className="button">View Tests</Link>
+        <Link to="/view-tests" className="button">View Tests</Link> {/* navigation links to the other pages */}
       </nav>
       <div style={{ padding: "20px", fontFamily: "Arial, sans-serif", maxWidth: "500px", margin: "0 auto" }}>
-        <h1 className="header">Admin Actions</h1>
+        <h1 className="header">Admin Actions</h1> {/* Heading */}
 
         <div style={{ marginTop: "20px" }}>
           {/* Dropdown */}
           <select
             value={selectedAction}
             onChange={(e) => setSelectedAction(e.target.value)}
-            style={{
+            style={{ 
               width: "100%",
               padding: "10px",
               fontSize: "16px",
               borderRadius: "8px",
               border: "1px solid #ccc",
               cursor: "pointer",
-            }}
+            }} //defining the style of the select element
           >
             <option value="">Select Action</option>
             {buttonData.map((action, idx) => (
-              <option key={idx} value={action}>
+              <option key={idx} value={action}> {/* Display all the drop down choices using the array holding all the choices */}
                 {action}
               </option>
             ))}
@@ -332,14 +343,14 @@ function AdminActionForm() {
                       <button className="boxButton" onClick={completeAction}>Add Bundle</button> */}
         <div className="container">
           {/* UPDATING CONSUMER */}
-          {selectedAction === "Update Consumer" && (
-            <>
+          {selectedAction === "Update Consumer" && ( //every choice has its own selected action check and then a varying number of inputs
+            <> {/* dependent on what the backend requires to change the information */}
             <div className="row">
-              <label htmlFor="numAvailable3">Enter UserID: </label>
+              <label htmlFor="numAvailable3">Enter UserID: </label> {/* each div holds an input */}
               <input
                 id="numAvailable3"
                 type="number"
-                value={userID}
+                value={userID} // each ID is stored as userID, this means we can use it in the switch statement
                 onChange={(e) => setUserID(e.target.value)}
               />
             </div>
@@ -893,4 +904,4 @@ function AdminActionForm() {
   );
 }
 
-export default AdminActionForm;
+export default AdminActionForm; //exports the component so it can be imported in other files

@@ -60,7 +60,7 @@ function Forecasts() {
                   <h1>Predicted Forecast</h1>
                   <div className="textBox">
                     <p>Predicted Reservations: {forecast.predicted_reservations}</p>
-                    <p>Predicted No-show Probability: {forecast.predicted_no_show_prob}</p>
+                    Predicted No-show Probability: {(forecast.predicted_no_show_prob * 100).toFixed(1)}%
                     <p>User ID : {forecast.user_id}</p>
                     <p>Posting ID {forecast.posting_id}</p>
                   </div>

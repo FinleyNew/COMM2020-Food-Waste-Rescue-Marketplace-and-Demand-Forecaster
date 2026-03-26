@@ -1,8 +1,6 @@
 from typing import Any, List, Union
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-import os
-from pathlib import Path
 
 # This class stores any settings that the API will use
 class Settings(BaseSettings):
@@ -26,7 +24,7 @@ class Settings(BaseSettings):
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
         elif isinstance(v, (list, str)):
-            return v
+            return v # type: ignore
         raise ValueError(v)
 
     #Builds the full DB URL
@@ -38,6 +36,8 @@ class Settings(BaseSettings):
     #Taken from .env
     SECRET_KEY: str = ""
 
+    # All API secrets and keys
+    # These are all taken from the .env
     OPENWEATHER_API_KEY: str = ""
 
     CLOUDINARY_CLOUD_NAME: str = ""

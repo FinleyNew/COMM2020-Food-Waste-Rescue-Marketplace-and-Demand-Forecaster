@@ -2,10 +2,11 @@
 
 ## Description
 
-Our motivation for building this project was to help mitigate the the 10.7 million tonnes of food wasted annually in the UK. We built this project to benefit both sellers and consumers by providing a marketplace in which excess food can be posted to help businesses reduce waste and allow consumers to reserve this food for a cheap price. Through this project we learnt how to create an interactive frontend and how to intergrate it with responsive backend. We also learnt how data moves through these layers and how the database it interacted with.
+Our motivation for building this project was to help mitigate the the 10.7 million tonnes of food wasted annually in the UK. We built this project to benefit both sellers and consumers by providing a marketplace in which excess food can be posted to help businesses reduce waste and allow consumers to reserve this food for a cheap price. Through this project we learnt how to create an interactive frontend and how to intergrate it with responsive backend. We also learnt how data moves through these layers and how the database is interacted with.
 
 ## Table of Contents
 
+- [Site](#site)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Tech Stack](#tech-stack)
@@ -13,40 +14,60 @@ Our motivation for building this project was to help mitigate the the 10.7 milli
 - [Tests](#tests)
 - [Licence](#licence)
 
+## Site
+
+ - The project is deployed on the URL tlll.me and you can access the swagger documentation using api.tlll.me.
+ - The website may be blocked on the univerity wifi so you may need to use a VPN or connect to a different network.
+ - To run the project locally refer to the installation instructions below
+
 ## Installation
 
-To run the program you will need to have install Docker.
+To run the program you will need to have Docker installed.
 
- - Open docker desktop and ensure the Docker engine is running.
- - In your terminal navigate to the root folder and run docker compose up --build
+ - Open docker desktop and/or ensure the Docker engine is running.
+ - In your terminal navigate to the root folder and run docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
  - This starts up the frontend, backend and database and installs any necessary dependencies.
- - You may get an error saying that start.sh is not executable. If this is the case run chmod +x backend/start.sh && ls -l backend/start.sh and try again.
+ - At this point the database will begin seeding which can take 5-10 minutes
+ - To see any progress you can access the logs using the command docker compose logs -f app
  - Once the logs say the application is running open http://127.0.0.1:5173 on your web browser for the web app.
  - To access the API swagger documentation open http://127.0.0.1:8000/docs
- - To shut the program down press ctrl + c to exit the logs and run docker compose down in the terminal to remove the container.
+ - To shut the program down press ctrl + c to exit the logs and run docker compose -f docker-compose.yml -f docker-compose.dev.yml down to remove the container.
 
 ## Usage
 
-To navigate the project you will have to login as either a seller or consumer. As this is a prototype we have hardcoded these two for ease of use.
+To navigate the project you will have to login with a seeded user or you can create a new account.
 
- - For the consumer log in with the credentials: consumer, 1
- - For the seller log in with the credentials: seller, 1
+Login Page
 
-![Homepage Screenshot](images/consumerNavigation.png)
+ If a user already has an account they can log in by entering their details into the email and password boxes. To create an account a user has to click the register button, and then select their account type. For a seller account there is more information to enter, such as opening hours, and a profile photo. Email, Time and Password regular expressions are implemented to ensure the details are in the correct format. A user also has to read and agree to the terms and conditions to make an account. 
+
+
 
 Consumer Pages Guide 
 
- Looking at all Bundles - Use the navigation buttons at the top of the screen to get to the "Discover" page. All the bundles and their information are displayed there.
+![Consumer Screenshot](images/consumerNavigation.png)
+
+ Looking at all Bundles - Use the navigation buttons at the top of the screen to get to the "Discover" page. All the bundles and their information are displayed there. A consumer can also use the search feature to only show bundles for a specific category or seller name.
 
  Purchasing and reserving a bundle - When on the discover page, click on a bundle to be taken to another page with only the selected bundles' information on it. From there click the pay button and then "confirm" to successfully reserve a bundle.
 
- Finding a consumers' current reservations - Use the navigation buttons at the top to navigate to the "Codes" page, there is all the current users reservations, and the code to collect the bundle with.
+ Finding a consumer's current reservations - Use the navigation buttons at the top to navigate to the "Codes" page, there is all the current users reservations, and the code to collect the bundle with.
 
  Finding your current streak - Use the navigation buttons at the top of the screen to naviate to the "Streaks" page, there is a users current streak and the badges they have collected.
 
-![Homepage Screenshot](images/sellersNavigation.png)
+ Finding a consumer's badges - Use the navigation buttons at the top of the screen to navigate to the "Streaks" page, there is all of the badges a user can collect and the badges highlights in gold are the badges the consumer has already collected. 
+
+ ![Badges Screenshot](images/badges.png)
+
+ Viewing a consumer's personal impact summary - On the "Streaks" page, a short paragraph highlighting a consumers statistics while they have been on the site is displayed. Such as CO2 saving and collection success rate.
+
+
+
+
 
 Sellers Pages Guide
+
+![Seller Screenshot](images/sellersNavigation.png)
 
  Looking at the sellers current bundles - Use the navigation buttons to get to the "current-bundles" page, from there, all the bundles that have been created by the current seller are displayed.
 
@@ -54,15 +75,28 @@ Sellers Pages Guide
 
  Creating a new bundle - Head to the "add_bundle" page via the navigation buttons, then enter the correct information, with a positive price, weight and number of bundles available. Then click the "Add Bundle" button, the new bundle should appear in the "current-bundles" page if the data entered is valid.
 
- Forecasting a new bundle - Head to the "add_bundle" page via the navigation buttons, then enter the correct information, with a positive price, weight and number of bundles available. Then click the "Forecast" button near the bottom to get an prediction on the number of reservations and the chance of a no-show based off the information entered.
+ Editing a bundle - Use the "Update Bundle" and "Delete Bundle" buttons to edit a bundle. When updating a bundle not all fields have to have information entered.
+
+ Forecasting a new bundle - Head to the "add_bundle" page via the navigation buttons, then enter the correct information, with a positive price, weight and number of bundles available. A seller can then view their forecasts clicking on the "Forecast" button, which shows the forecasted data at the bottom of the page, as well as on the "current-bundles" page.
 
  Viewing a sellers' analytics - Head to the "analytics" page with the navigation buttons, on this page all of the collected bundles are shown with lots of information. Such as number of reservations, no-shows and expiries. There is also a bar chart to visualise this information. 
 
- Viewing all previous forecasts - Head to the "forecasts" page with the navigation buttons. On this page all previous forecasts made will appear, allowing a seller to compare predictions with actaul results.
 
+Admin Pages Guide
 
+![Admin Screenshot](images/adminNavigation.png)
 
+ Viewing all database information - This page is automatically loaded upon logging in as an admin. Use each button to view all the information for that object. Such as viewing all bundles, records and users.
 
+ Changing information - Use the navigation buttons to change to the "change-information" page. From here select which object you would like to edit, enter the correct information and view your change in the "view-information" page. 
+
+ Viewing all tests - Using the navigation buttons, navigate to the "view-tests" page, where all the tests are displayed. 
+
+Settings
+
+![Settings Screenshot](images/settingScreenshot.png)
+
+ Use the settings tab in the top right of every screen to view certain features. For each user their information is displayed including their email and account type. They also have accessability settings such as light and dark mode. A user can also delete their account to abide by GDPR guidelines, and they can also sign out to return to the login page.
 
 
 ## Tech-Stack
@@ -72,6 +106,7 @@ Sellers Pages Guide
 | Frontend | React |
 | Backend | Python, FastAPI, PostgreSQL |
 | DevOps | Docker |
+| Deployment | Coolify |
 
 ## Credits
 
@@ -238,6 +273,12 @@ Tests record schema validation (end > start, positive weight, non-negative count
 - `test_update_record_valid_times`
 - `test_update_record_end_before_start_raises_400`
 - `test_create_record_passes_seller_coordinates`
+
+## Scrum Board
+
+To access the scrum board follow this [link](https://id.atlassian.com/invite/p/jira-software?id=Y8HtYQg5RjCvo5-tJgh-FQ).
+
+If you are unable to access it contact [jmh280@exeter.ac.uk](mailto:jmh280@exeter.ac.uk)
 
 ## Licence
 

@@ -13,6 +13,7 @@ class ReservationBase(SQLModel):
 class ReservationCreate(ReservationBase):
     pass
 
+# The schema for admins to update a reservation
 class ReservationAdminUpdate(SQLModel):
     status: ReservationStatus | None = None
     timestamp: datetime | None = None

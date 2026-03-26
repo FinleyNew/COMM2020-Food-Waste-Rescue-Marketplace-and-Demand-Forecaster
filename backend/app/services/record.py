@@ -8,9 +8,11 @@ from app.schemas.record import RecordAdminUpdate, RecordCreate
 from app.crud import record as record_crud
 from random import randint
 
+# Gets all the records
 def get_all_records(db: Session) -> Sequence[Record]:
     return record_crud.get_all_records(db=db)
 
+# Updates a record
 def update_record(record_id: int, record_update: RecordAdminUpdate, db: Session) -> Record:
     db_record = record_crud.get_record_by_id(record_id=record_id, db=db)
     # Ensures that the pickup window is still valid
@@ -23,13 +25,11 @@ def update_record(record_id: int, record_update: RecordAdminUpdate, db: Session)
     return record_crud.update_record(db_record=db_record, record_update=record_update, pickup_window=pickup_range, db=db)
 
 # The service function for creating a record
-# Not currently in use
 def create_record(bundle_posting: BundlePosting, db: Session) -> Record:
     latitude = bundle_posting.seller.latitude
     longitude = bundle_posting.seller.longitude
     return record_crud.create_record(bundle_posting=bundle_posting, latitude=latitude, longitude=longitude, db=db)
 
-
-    
+# Deletes a record
 def delete_record(record_id: int, db: Session):
     record_crud.delete_record(record_id=record_id, db=db)

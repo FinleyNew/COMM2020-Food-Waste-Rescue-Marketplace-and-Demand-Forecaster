@@ -8,12 +8,15 @@ from app.crud import record as record_crud
 from app.models.enums import ReservationStatus
 from app.models.badge import Badge
 
+# Returns all the badges
 def get_all_badges(db: Session) -> Sequence[Badge]:
     return badge_crud.get_all_badges(db=db)
 
+# Badge checks to run at reservation time
 def check_at_reservation(consumer_id: int, db: Session):
     check_good_start(consumer_id=consumer_id, db=db)
 
+# Badge checks to run at collection time
 def check_at_collection(consumer_id: int, db: Session):
     check_first_rescue(consumer_id=consumer_id, db=db)
     check_on_a_roll(consumer_id=consumer_id, db=db)
@@ -32,7 +35,7 @@ def check_at_collection(consumer_id: int, db: Session):
     check_well_rounded(consumer_id=consumer_id, db=db)
 
 def check_good_start(consumer_id: int, db: Session):
-    # Award if that consumer has at least one reservation
+    # Award if this consumer has at least one reservation
     if reservation_crud.get_reservations_by_consumer(consumer_id=consumer_id, db=db):
         badge_crud.award_badge(badge_name="Good Start", consumer_id=consumer_id, db=db)
 
@@ -42,6 +45,7 @@ def check_first_rescue(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="First Rescue", consumer_id=consumer_id, db=db)
 
 def check_on_a_roll(consumer_id: int, db: Session):
+    # Award if this consumer has collected a bundle three days in a row
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if len(reservations) < 3:
         return
@@ -57,6 +61,7 @@ def check_on_a_roll(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="On a Roll", consumer_id=consumer_id, db=db)
 
 def check_locked_in(consumer_id: int, db: Session):
+    # Award if this consumer has collected a bundle seven days in a row
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if len(reservations) < 7:
         return
@@ -72,6 +77,7 @@ def check_locked_in(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Locked In", consumer_id=consumer_id, db=db)
 
 def check_relentless(consumer_id: int, db: Session):
+    # Award if this consumer has collected a bundle thirty days in a row
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if len(reservations) < 30:
         return
@@ -87,6 +93,7 @@ def check_relentless(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Relentless", consumer_id=consumer_id, db=db)
 
 def check_waste_warrior(consumer_id: int, db: Session):
+    # Award if this consumer has saved 1kg of food
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     # Get the total weight of all the consumers bundles
     weight = sum(r.posting.weight for r in reservations)
@@ -95,6 +102,7 @@ def check_waste_warrior(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Waste Warrior", consumer_id=consumer_id, db=db)
 
 def check_eco_advocate(consumer_id: int, db: Session):
+    # Award if this consumer has saved 10kg of food
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     # Get the total weight of all the consumers bundles
     weight = sum(r.posting.weight for r in reservations)
@@ -103,6 +111,7 @@ def check_eco_advocate(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Eco Advocate", consumer_id=consumer_id, db=db)
 
 def check_green_guardian(consumer_id: int, db: Session):
+    # Award if this consumer has saved 25kg of food
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     # Get the total weight of all the consumers bundles
     weight = sum(r.posting.weight for r in reservations)
@@ -111,6 +120,7 @@ def check_green_guardian(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Green Guardian", consumer_id=consumer_id, db=db)
 
 def check_punctual(consumer_id: int, db: Session):
+    # Award if this consumer has 10 collections in a row with 0 no_shows
     reservations = reservation_crud.get_reservations_by_consumer(consumer_id=consumer_id, db=db)
     if len(reservations) < 10:
         return
@@ -123,6 +133,7 @@ def check_punctual(consumer_id: int, db: Session):
         badge_crud.award_badge("Punctual", consumer_id=consumer_id, db=db)
 
 def check_timekeeper(consumer_id: int, db: Session):
+    # Award if this consumer has 25 collections in a row with 0 no_shows
     reservations = reservation_crud.get_reservations_by_consumer(consumer_id=consumer_id, db=db)
     if len(reservations) < 25:
         return
@@ -135,6 +146,7 @@ def check_timekeeper(consumer_id: int, db: Session):
         badge_crud.award_badge("Timekeeper", consumer_id=consumer_id, db=db)
 
 def check_unshakeable(consumer_id: int, db: Session):
+    # Award if this consumer has 50 collections in a row with 0 no_shows
     reservations = reservation_crud.get_reservations_by_consumer(consumer_id=consumer_id, db=db)
     if len(reservations) < 50:
         return
@@ -147,6 +159,7 @@ def check_unshakeable(consumer_id: int, db: Session):
         badge_crud.award_badge("Unshakeable", consumer_id=consumer_id, db=db)
 
 def check_final_call(consumer_id: int, db: Session):
+    # Award if this consumer collects a bundle within the last 5 minuites of a reservation
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if not reservations:
         return
@@ -158,6 +171,7 @@ def check_final_call(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Final Call", consumer_id=consumer_id, db=db)
 
 def check_weatherproof(consumer_id: int, db: Session):
+    # Award if this consumer has collected 5 bundles in rainy weather
     records = record_crud.get_records_by_consumer(consumer_id=consumer_id, db=db)
     if not records:
         return
@@ -167,6 +181,7 @@ def check_weatherproof(consumer_id: int, db: Session):
     
 
 def check_triple_threat(consumer_id: int, db: Session):
+    # Award if this consumer has collected 3 bundles in 1 day
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if len(reservations) < 3:
         return
@@ -176,6 +191,7 @@ def check_triple_threat(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Triple Threat", consumer_id=consumer_id, db=db)
 
 def check_familiar_face(consumer_id: int, db: Session):
+    # Award if this consumer has collected 3 bundles from the same seller
     reservations = reservation_crud.get_consumers_collected_reservations(consumer_id=consumer_id, db=db)
     if len(reservations) < 3:
         return
@@ -183,5 +199,6 @@ def check_familiar_face(consumer_id: int, db: Session):
         badge_crud.award_badge(badge_name="Familiar Face", consumer_id=consumer_id, db=db)
 
 def check_well_rounded(consumer_id: int, db: Session):
+    # Award if this consumer has collected a bundle from each food category
     if reservation_crud.check_well_rounded(consumer_id=consumer_id, db=db):
         badge_crud.award_badge(badge_name="Well Rounded", consumer_id=consumer_id, db=db)
