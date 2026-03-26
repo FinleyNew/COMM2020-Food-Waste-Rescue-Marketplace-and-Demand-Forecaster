@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from .forecast import Forecast
     from .issueReport import IssueReport
 
-# The database table model for BundlePostings
+# The table for BundlePostings
 class BundlePosting(SQLModel, table=True):
     posting_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     user_id: Optional[int] = Field(default=None, foreign_key="seller.user_id", index=True)
@@ -24,7 +24,7 @@ class BundlePosting(SQLModel, table=True):
     price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     pickup_window: Any = Field(sa_column=Column(postgresql.TSTZRANGE, index=True))
     status: BundleStatus = Field(default=BundleStatus.AVAILABLE)
-    weight: int
+    weight: int # weight is in grams
     initial_price: Decimal = Field(sa_column=Column(postgresql.NUMERIC(precision=10, scale=2)))
     contents: str
 
@@ -37,7 +37,8 @@ class BundlePosting(SQLModel, table=True):
     reports: List["IssueReport"] = Relationship(back_populates="posting")
     category: "Category" = Relationship()
 
+# The table for categories
 class Category(SQLModel, table=True):
-    __tablename__ = "categories"
+    __tablename__ = "categories" # type: ignore
     category_id: Optional[int] = Field(default=None, primary_key=True, index=True)
     name: str

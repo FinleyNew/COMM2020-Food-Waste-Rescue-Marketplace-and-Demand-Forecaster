@@ -20,13 +20,12 @@ def get_db() -> Generator:
         yield session
     # As it is a generator the session automatically closes here
 
-# This is the code we'll need when implementing the login system
+# This code is used to validate the JWT given from the user
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_STR}/login/access-token"
 )
 
-# This can be called in an endpoint and will get a session to be used for the
-# duration of that endpoint
+# This can be called in an endpoint and will get a session to be used for the duration of that endpoint
 SessionDep = Annotated[Session, Depends(get_db)]
 
 # This function is used to decrypt the token into a user_id and then get that user from the DB
@@ -84,7 +83,6 @@ def get_current_consumer(db: SessionDep, current_user: CurrentUser) -> Consumer:
     return consumer
 
 # This function is used to get the current admin
-# Currently not in use
 def get_current_admin(current_user: CurrentUser) -> User:
     if current_user.role != "admin":
         raise HTTPException(status_code=400, detail="This user is not an admin")

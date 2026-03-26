@@ -14,9 +14,11 @@ import pandas as pd
 import numpy as np
 from app.models.forecast import Forecast
 
+# Gets all the forecasts
 def get_all_forecasts(db: Session) -> Sequence[Forecast]:
     return forecast_crud.get_all_forecasts(db=db)
 
+# Creates a new forecast
 def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: Session):
     #This function creates and stores a forecast object in the database for a given bundle posting
     forecast = get_forecast(bundle_in=bundle_in, db=db)
@@ -31,15 +33,17 @@ def create_forecast(bundle_in: BundlePostingCreate, posting_id: int | None, db: 
     forecast_crud.create_forecast(forecast=create_forecast, db=db)
     return
 
+# Deletes a forecast
 def delete_forecast(forecast_id: int, db: Session):
     forecast_crud.delete_forecast(forecast_id=forecast_id, db=db)
 
+# Returns a forecast for the given bundle
 def get_forecast(bundle_in: BundlePostingCreate, db: Session):
     search_start = bundle_in.start_time.time()
     search_end = bundle_in.end_time.time()
     #Get records to train the model
     records = record_crud.get_all_records(db=db)
-    same_time_records = record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=0, db=db)
+    same_time_records = record_crud.get_same_time_records(search_start=search_start, search_end=search_end, day_of_week=0, db=db) # type: ignore
     #Collecting the day of week and starting time hour for the new bundle posting to make the prediction
     dow = (bundle_in.start_time.weekday() + 1) % 7
     hour = bundle_in.start_time.hour

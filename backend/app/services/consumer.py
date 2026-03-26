@@ -12,15 +12,20 @@ from app.models.consumer import Consumer
 from app.core.security import get_password_hash
 from app.models.enums import Role
 
+# Gets all consumers
 def get_all_consumers(db: Session) -> Sequence[Consumer]:
     return consumer_crud.get_all_consumers(db=db)
 
+# Gets the start of the week as a date
+# Start of the week is Monday
 def get_week_start(d: date) -> date:
     return d - timedelta(days=d.weekday())
 
+# Updates consumer
 def update_consumer(current_consumer: Consumer, consumer_update: ConsumerUpdate | ConsumerAdminUpdate, db: Session) -> Consumer:
     return consumer_crud.update_consumer(current_consumer=current_consumer, consumer_update=consumer_update, db=db)
 
+# Gets a consumer by their ID
 def get_consumer_by_id(user_id: int, db: Session) -> Consumer:
     return consumer_crud.get_consumer_by_id(user_id=user_id, db=db)
 
@@ -46,6 +51,7 @@ def check_streak(consumer_id: int, db: Session) -> bool:
         return False
     return True
 
+# Increments a users streak by 1 if they meet the requirements
 def increment_streak(consumer_id: int, streak: int, db: Session):
     #Check the consumers streak to make sure it's still valid
     if streak > 0 and check_streak(consumer_id=consumer_id, db=db):
@@ -66,6 +72,7 @@ def increment_streak(consumer_id: int, streak: int, db: Session):
     else:
         consumer_crud.increment_consumers_streak(consumer_id=consumer_id, db=db)
 
+# Creates a new consumer
 def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Session) -> Consumer:
     #Check if email already exists
     if user_crud.get_user_by_email(email=user_in.email, db=db):
@@ -88,6 +95,7 @@ def create_consumer(consumer_in: ConsumerCreate, user_in: UserCreate, db: Sessio
         db.rollback
         raise
 
+# Deletes a specific consumer
 def delete_consumer(user_id: int, db:Session):
     consumer_crud.delete_consumer(user_id=user_id, db=db)
     user_crud.delete_user(user_id=user_id, db=db)
