@@ -9,14 +9,18 @@ from app.models.badge import ConsumerBadge
 from app.models.reservation import Reservation
 from app.models.enums import ReservationStatus
 
+# Sort order for discount bands
 _BAND_ORDER = {"0-10": 0, "11-20": 1, "21-30": 2, "31-40": 3, "41+": 4}
+# CO2 conversion factor: kg CO2 per kg food
 _CO2_KG_PER_KG_FOOD = 2.5
 
 
+# Builds a personal impact summary for a consumer (reservation stats, waste saved, streak, badges)
 def get_consumer_personal_impact_summary(consumer_id: int, db: Session) -> dict:
     now_utc = datetime.now(timezone.utc)
     month_start_utc = now_utc.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
+    # Lifetime reservation counts + total weight of collected bundles
     reservation_stats = (
         db.query(
             func.count(Reservation.reservation_id).label("total_reservations_made"),
@@ -38,6 +42,7 @@ def get_consumer_personal_impact_summary(consumer_id: int, db: Session) -> dict:
         .first()
     )
 
+    # Most-collected category (ties broken alphabetically)
     favourite_category = (
         db.query(Category.name)
         .join(BundlePosting, BundlePosting.category_id == Category.category_id)
@@ -49,6 +54,7 @@ def get_consumer_personal_impact_summary(consumer_id: int, db: Session) -> dict:
         .first()
     )
 
+    # Collections this calendar month
     collections_this_month = (
         db.query(func.count(Reservation.reservation_id))
         .filter(Reservation.user_id == consumer_id)
@@ -93,7 +99,9 @@ def get_consumer_personal_impact_summary(consumer_id: int, db: Session) -> dict:
     }
 
 
+# Operational insights grouped by pickup window and category, with best/worst highlights
 def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
+    # Extract time-of-day from the pickup_window range for grouping
     pickup_start_expr = cast(func.lower(Record.pickup_window), Time)
     pickup_end_expr = cast(func.upper(Record.pickup_window), Time)
 
@@ -115,6 +123,7 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
         reserved = row.reserved_units or 0
         no_shows = row.no_show_units or 0
         expired = row.expired_units or 0
+        # collected = reserved - no_shows; posted = reserved + expired
         collected = max(reserved - no_shows, 0)
         posted = reserved + expired
         pickup_window_label = f"{row.pickup_start.strftime('%H:%M')} - {row.pickup_end.strftime('%H:%M')}"
@@ -132,6 +141,7 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
 
     pickup_windows.sort(key=lambda item: item["pickup_window"])
 
+    # Same metrics grouped by food category
     category_rows = (
         db.query(
             Category.name.label("category"),
@@ -163,6 +173,7 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
 
     categories.sort(key=lambda item: item["category"])
 
+    # Highlight best/worst windows and top category
     best_pickup_window_by_sell_through = None
     if pickup_windows:
         best_pickup_window = max(
@@ -205,9 +216,9 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
     }
 
 
+# Pricing effectiveness grouped by discount bands. Joins BundlePosting for initial_price.
 def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
     # Discount % = (initial_price - price) / initial_price * 100
-    # initial_price lives on BundlePosting, so we join on posting_id.
     discount_pct_expr = case(
         (
             BundlePosting.initial_price > 0,
@@ -218,6 +229,7 @@ def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
         else_=0.0,
     )
 
+    # Bucket discount % into bands
     band_expr = case(
         (discount_pct_expr <= 10, "0-10"),
         (discount_pct_expr <= 20, "11-20"),
@@ -239,6 +251,7 @@ def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
         .all()
     )
 
+    # Sort bands in ascending discount order
     bands = []
     for row in sorted(rows, key=lambda r: _BAND_ORDER.get(r.discount_band, 99)):
         reserved = row.reserved_units or 0
@@ -262,6 +275,7 @@ def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
     return bands
 
 
+# Sell-through breakdown: how posted units split into collected, no-show, and expired
 def get_seller_sell_through_breakdown(seller_id: int, db: Session) -> dict:
     result = db.query(
         func.sum(Record.observed_reservations).label("total_reserved"),
@@ -283,6 +297,7 @@ def get_seller_sell_through_breakdown(seller_id: int, db: Session) -> dict:
         no_show_pct_of_posted = (total_no_shows / total_posted) * 100
         expired_pct_of_posted = (total_expired / total_posted) * 100
 
+    # outcome_breakdown is used by the frontend chart
     return {
         "total_posted": total_posted,
         "total_collected": total_collected,
@@ -299,10 +314,8 @@ def get_seller_sell_through_breakdown(seller_id: int, db: Session) -> dict:
     }
 
 
+# High-level analytics summary: aggregate counts, rates, and waste avoided
 def get_seller_analytics_summary(seller_id: int, db: Session) -> dict:
-    # Aggregate data from Record table for the seller.
-    # Note: total_posted is interpreted as total bundle units posted,
-    # not number of posting records.
     result = db.query(
         func.count(Record.record_id).label("total_bundle_postings"),
         func.sum(Record.observed_reservations).label("total_reserved"),
@@ -316,14 +329,14 @@ def get_seller_analytics_summary(seller_id: int, db: Session) -> dict:
     total_no_shows = result.total_no_shows or 0
     total_expired = result.total_expired or 0
     total_collected = max(total_reserved - total_no_shows, 0)
+    # waste_avoided = weight * collected per record
     waste_avoided_grams = result.waste_avoided_grams or 0.0
     waste_avoided_kg = float(waste_avoided_grams) / 1000.0
 
-    # Unit-based denominator: offered units = reserved units + units that expired unsold
+    # posted = reserved + expired
     total_units_posted = total_reserved + total_expired
     total_posted = total_units_posted
 
-    # Calculate rates
     reservation_conversion_rate = 0.0
     if total_reserved > 0:
         reservation_conversion_rate = (total_collected / total_reserved) * 100
