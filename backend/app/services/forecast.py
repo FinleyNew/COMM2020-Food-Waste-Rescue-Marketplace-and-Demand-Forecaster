@@ -140,19 +140,21 @@ def train_model(df: pd.DataFrame):
     return clf_res, clf_no_show
 
 def get_baseline(records, dow: int, start_time):
+    #Find all records that match the same day of the week and starting hour
     matching = [
         r.observed_reservations
         for r in records
         if ((r.pickup_window.lower.weekday() + 1) % 7 == dow)
         and (r.pickup_window.lower.hour == start_time)
     ]
-
+    #Checks if there are any matching records
     if len(matching) > 0:
         return float(sum(matching) / len(matching))
 
     return float(sum(r.observed_reservations for r in records) / len(records))
 
 def evaluate_model(records):
+    #Checks if there are enough records to train and test the model
         if len(records) < 2:
             return {
                 "baseline_mae": None,
@@ -165,6 +167,7 @@ def evaluate_model(records):
                 "model_no_show_mse": None
             }
 
+        #Splits the records into a training set and a test set
         split_index = int(len(records) * 0.8)
 
         train_records = records[:split_index]
@@ -183,6 +186,7 @@ def evaluate_model(records):
         baseline_no_show_preds = []
         actual_no_show_rates = []
 
+        #Iterates through the test records
         for r, (_, row) in zip(test_records, test_df.iterrows()):
             X_new = pd.DataFrame([{
                 "user_id": row["user_id"],
@@ -194,7 +198,7 @@ def evaluate_model(records):
                 "dow": row["dow"]
             }])
 
-            # Reservation prediction
+            #Reservation prediction
             model_pred = float(model_res.predict(X_new)[0])
             baseline_pred = get_baseline(
                 train_records,
@@ -203,11 +207,11 @@ def evaluate_model(records):
             )
             actual = float(r.observed_reservations)
 
+            #Calculates the baseline no show probability
             model_preds.append(model_pred)
             baseline_preds.append(baseline_pred)
             actuals.append(actual)
 
-            # No-show prediction
             model_no_show_count = float(model_no_show.predict(X_new)[0])
             model_no_show_prob = (
                 min(1.0, max(0.0, model_no_show_count / model_pred))
@@ -225,10 +229,12 @@ def evaluate_model(records):
                 if r.observed_reservations > 0 else 0.0
             )
 
+            #Append the no show predictions and actual rates to their respective lists
             model_no_show_preds.append(model_no_show_prob)
             baseline_no_show_preds.append(baseline_no_show_prob)
             actual_no_show_rates.append(actual_no_show_rate)
 
+        #Returns the results of the evaluation
         return {
             "baseline_mae": mean_absolute_error(actuals, baseline_preds),
             "model_mae": mean_absolute_error(actuals, model_preds),
@@ -241,6 +247,7 @@ def evaluate_model(records):
         }
 
 def get_no_show_baseline(records, dow, start_hour):
+    #Finds all records that match the same day of the week and starting hour
     rates = [
         (r.observed_no_show / r.observed_reservations)
         for r in records
@@ -249,6 +256,7 @@ def get_no_show_baseline(records, dow, start_hour):
         and (r.pickup_window.lower.hour == start_hour)
     ]
 
+    #Checks if there are matching records and returns 0.0 if not
     if len(rates) > 0:
         return float(sum(rates) / len(rates))
 
