@@ -123,6 +123,7 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
         reserved = row.reserved_units or 0
         no_shows = row.no_show_units or 0
         expired = row.expired_units or 0
+        # collected = reserved - no_shows; posted = reserved + expired
         collected = max(reserved - no_shows, 0)
         posted = reserved + expired
         pickup_window_label = f"{row.pickup_start.strftime('%H:%M')} - {row.pickup_end.strftime('%H:%M')}"
@@ -172,6 +173,7 @@ def get_seller_operational_insights(seller_id: int, db: Session) -> dict:
 
     categories.sort(key=lambda item: item["category"])
 
+    # Highlight best/worst windows and top category
     best_pickup_window_by_sell_through = None
     if pickup_windows:
         best_pickup_window = max(
@@ -227,6 +229,7 @@ def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
         else_=0.0,
     )
 
+    # Bucket discount % into bands
     band_expr = case(
         (discount_pct_expr <= 10, "0-10"),
         (discount_pct_expr <= 20, "11-20"),
@@ -248,6 +251,7 @@ def get_seller_pricing_effectiveness(seller_id: int, db: Session) -> list:
         .all()
     )
 
+    # Sort bands in ascending discount order
     bands = []
     for row in sorted(rows, key=lambda r: _BAND_ORDER.get(r.discount_band, 99)):
         reserved = row.reserved_units or 0
@@ -293,6 +297,7 @@ def get_seller_sell_through_breakdown(seller_id: int, db: Session) -> dict:
         no_show_pct_of_posted = (total_no_shows / total_posted) * 100
         expired_pct_of_posted = (total_expired / total_posted) * 100
 
+    # outcome_breakdown is used by the frontend chart
     return {
         "total_posted": total_posted,
         "total_collected": total_collected,
@@ -324,6 +329,7 @@ def get_seller_analytics_summary(seller_id: int, db: Session) -> dict:
     total_no_shows = result.total_no_shows or 0
     total_expired = result.total_expired or 0
     total_collected = max(total_reserved - total_no_shows, 0)
+    # waste_avoided = weight * collected per record
     waste_avoided_grams = result.waste_avoided_grams or 0.0
     waste_avoided_kg = float(waste_avoided_grams) / 1000.0
 
