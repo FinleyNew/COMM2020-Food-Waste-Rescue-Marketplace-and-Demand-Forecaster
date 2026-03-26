@@ -30,7 +30,7 @@ def _valid_category():
 
 
 def _base_fields(**overrides):
-    
+    # Helper to generate a valid set of base fields for RecordCreate and RecordAdminUpdate, with the ability to override specific fields for testing.
     defaults = dict(
         user_id=1,
         posting_id=10,
@@ -51,7 +51,7 @@ def _base_fields(**overrides):
 # ensures end > start.
 
 def test_record_create_valid(mock_db):
-    
+    # If end_time is after start_time, the schema should accept the record.
     now = datetime.now(timezone.utc)
     record = RecordCreate(
         **_base_fields(),
@@ -62,7 +62,7 @@ def test_record_create_valid(mock_db):
 
 
 def test_record_create_end_before_start_raises():
-    
+    #   If end_time is before start_time, the schema must raise a ValidationError with a message about end_time > start_time.
     now = datetime.now(timezone.utc)
     with pytest.raises(ValidationError, match="end_time must be after start_time"):
         RecordCreate(
@@ -73,7 +73,7 @@ def test_record_create_end_before_start_raises():
 
 
 def test_record_create_zero_weight_rejected():
-    
+    # A weight of zero doesn't make sense for a record, so the schema must reject it with a ValidationError mentioning "weight".
     now = datetime.now(timezone.utc)
     with pytest.raises(ValidationError):
         RecordCreate(
@@ -84,7 +84,7 @@ def test_record_create_zero_weight_rejected():
 
 
 def test_record_create_negative_reservations_rejected():
-    
+    # observed_reservations cannot be negative, as that would make no sense.
     now = datetime.now(timezone.utc)
     with pytest.raises(ValidationError):
         RecordCreate(
@@ -98,7 +98,7 @@ def test_record_create_negative_reservations_rejected():
 # RecordAdminUpdate only validates end > start when *both* are provided.
 
 def test_admin_update_both_times_valid():
-    
+    # If both start_time and end_time are provided, and end_time is after start_time, the schema should accept the update.
     now = datetime.now(timezone.utc)
     update = RecordAdminUpdate(
         start_time=now,
@@ -108,7 +108,7 @@ def test_admin_update_both_times_valid():
 
 
 def test_admin_update_both_times_invalid_raises():
-    
+    # If both start_time and end_time are provided, but end_time is before start_time, the schema must raise a ValidationError about end_time > start_time.
     now = datetime.now(timezone.utc)
     with pytest.raises(ValidationError, match="end_time must be after start_time"):
         RecordAdminUpdate(
@@ -118,7 +118,7 @@ def test_admin_update_both_times_invalid_raises():
 
 
 def test_admin_update_only_start_time_skips_validation():
-    
+    # If only start_time is provided, the schema should not validate end > start and should accept the update.
     now = datetime.now(timezone.utc)
     update = RecordAdminUpdate(start_time=now)
     assert update.start_time == now
@@ -130,7 +130,7 @@ def test_admin_update_only_start_time_skips_validation():
 # record's pickup_window and re-validates end > start.
 
 def test_update_record_valid_times(mock_db):
-    
+    # If the new end_time is after the existing start_time, the service should call through to the CRUD layer to update the record.
     now = datetime.now(timezone.utc)
     mock_record = MagicMock()
     mock_record.pickup_window.lower = now
@@ -147,7 +147,7 @@ def test_update_record_valid_times(mock_db):
 
 
 def test_update_record_end_before_start_raises_400(mock_db):
-    
+    # If the new end_time is before the existing start_time, the service must raise HTTP 400 with a message about end_time > start_time.
     now = datetime.now(timezone.utc)
     mock_record = MagicMock()
     mock_record.pickup_window.lower = now + timedelta(hours=2)
@@ -163,10 +163,9 @@ def test_update_record_end_before_start_raises_400(mock_db):
         assert "end_time must be after start_time" in exc_info.value.detail
 
 
-# ── R-04: create_record Service Logic ─────────────────────────────────
 
 def test_create_record_passes_seller_coordinates(mock_db):
-    
+    # When creating a record, the service must pass the seller's latitude and longitude to the CRUD layer.
     mock_posting = MagicMock()
     mock_posting.seller.latitude = 50.72
     mock_posting.seller.longitude = -3.53
