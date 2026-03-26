@@ -15,53 +15,51 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   const [role,setRole] = useState("");
   const [accountType, setAccountType] = useState("Consumer");
   const [displayName, setDisplayName] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(""); //all of the variables to store the data collected and entered with the requests
   const [openingHours, setOpeningHours] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [showPassword, setShowPassword] = useState("");
   const [openingTime, setOpeningTime] = useState("");
   const [closingTime, setClosingTime] = useState("");
   //let invalidTime = false;
-  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+  //all of the regular expressions to make sure the details entered are in the correct format
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/; //ensures the time is formatted as HH:MM
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/; //ensures the email has an @ symbol and a domain name (.com)
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/; //ensures the password is atleast 6 chars, has a capiutal and a special symbol
   const [accountError, setAccountError] = useState(""); 
   const [loginError, setLoginError] = useState(""); 
   const [sellerProfile, setSellerProfile] = useState(null); //for the profile picture
   
 
-  const validPassword = passwordRegex.test(password);
+  const validPassword = passwordRegex.test(password); //checks the password is in the correct format
   const [agree, setAgree] = useState(false);
-  const [conditions, setConditions] = useState(false);
+  const [conditions, setConditions] = useState(false); //stores if the user has agreed to the T&Cs
 
   const toMinutes = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
+    return hours * 60 + minutes; //transforms a HH:MM time to a number so the opening and closing times can be compared
   }
 
   const validTimeFormat =
     timeRegex.test(openingTime) &&
-    timeRegex.test(closingTime);
+    timeRegex.test(closingTime); //ensures the time is in the correct form HH:MM
 
   const invalidTime =
-    accountType === "Seller" &&
+    accountType === "Seller" && //ensures the closing time is bigger and therefore after the opening time 
     validTimeFormat &&
     toMinutes(closingTime) <= toMinutes(openingTime);
 
-  const timeValidForSeller = 
+  const timeValidForSeller = //checks if valid
     accountType==="Seller"
     ? validTimeFormat && toMinutes(closingTime) > toMinutes(openingTime)
     : true;
 
   
-  const validTime =
-    timeRegex.test(openingTime) &&
-    timeRegex.test(closingTime) &&
-    toMinutes(closingTime) > toMinutes(openingTime);
-  const API_URL = import.meta.env.VITE_API_URL;
+  
+  const API_URL = import.meta.env.VITE_API_URL; //stores the URL of the webiste wether it it deployed or accessed locally
 
 
-  const handleAccountTypeChange = (e) => {
+  const handleAccountTypeChange = (e) => { //if the account type is changed when creating an account then reset all values
     const value = e.target.value;
     setAccountType(value);
 
@@ -76,7 +74,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
 
   }
 
-  const handleCancel = () => {
+  const handleCancel = () => { //if creating an account is cancelled reset all variables
     setUsername("");
     setPassword("");
     checkPassword("");
@@ -89,7 +87,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
     closePopup();
   }
 
-  const handleAccountCreation = () => {
+  const handleAccountCreation = () => { //if account is created reset all variables 
     setUsername("");
     setPassword("");
     checkPassword("");
@@ -114,32 +112,24 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
   }
   function loginFunction() {
 
-    const data={
-      grant_type:"password",
-      username:username,
-      password:password.toString()
-    };
-    const formData = new URLSearchParams();
+    
+    const formData = new URLSearchParams(); //build formData variable to send to backend, MUST contain username and password
     formData.append("grant_type","password");
     formData.append("username",username);
     formData.append("password",password);
-   
-    console.log(import.meta.env);
-
-
-    
-    axios.post(`${API_URL}/api/v1/login/access-token`, formData, {
+  
+    axios.post(`${API_URL}/api/v1/login/access-token`, formData, { //send the data to the backend to get a token back
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
     })
     .then(response => {
 
-    const token = response.data.access_token;
-    setToken(token);
-    if (token) {
+    const token = response.data.access_token; //get token
+    setToken(token); //set token
+    if (token) { // if a token exists
 
-      axios.get(`${API_URL}/api/v1/users/me`, {
+      axios.get(`${API_URL}/api/v1/users/me`, { //get user role
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -149,10 +139,10 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         const role = response.data.role;
         setRole(role);
 
-        if (role === "consumer") {
+        if (role === "consumer") { //if user role is a consumer
           const userObj = { username: username, role: "consumer" }
           setUser(userObj)
-          localStorage.setItem("user", JSON.stringify(userObj))
+          localStorage.setItem("user", JSON.stringify(userObj)) //locally store their token and user role for later use
           localStorage.setItem("token", token);
           
           navigate("/discover");
@@ -160,7 +150,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         } else if (role === "seller") {
           const userObj = { username: username, role: "seller" }
           setUser(userObj)
-          localStorage.setItem("user", JSON.stringify(userObj))
+          localStorage.setItem("user", JSON.stringify(userObj)) //locally store their token and user role for later use
           localStorage.setItem("token", token);
           
           console.log(openingHours);
@@ -172,7 +162,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
         } else {
           const userObj = { username: username, role: "admin" }
           setUser(userObj)
-          localStorage.setItem("user", JSON.stringify(userObj))
+          localStorage.setItem("user", JSON.stringify(userObj)) //locally store their token and user role for later use
           localStorage.setItem("token", token);
           navigate("/view-information");
         }
@@ -181,9 +171,8 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       .catch(err => {
            console.log("status:", err.response?.status);
            console.log("backend error:", err.response?.data);
-
             
-              });
+      });
     }
 
     })
@@ -191,28 +180,24 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
            console.log("status:", err.response?.status);
            console.log("backend error:", err.response?.data);
 
-             if(err.response?.status === 401 && err.response?.data?.detail){
-                setLoginError(err.response.data.detail);
-              } else {
-                setLoginError("An unexpected error occurred. Please try again.");
-                } 
+            
               });
 
   }
-  function createAccount(){
+  function createAccount(){ //used for creating an account
     //combine times
-    if(accountType==="Consumer"){
+    if(accountType==="Consumer"){ //if role selected is consumer
       const data = {
         consumer_in: {
           display_name: displayName
-        },
+        }, //build data variable in the correct formated to send to the backend
         user_in: {
           email: username,
           password: password
         }
       }
 
-      axios.post(`${API_URL}/api/v1/consumers/`, data, {
+      axios.post(`${API_URL}/api/v1/consumers/`, data, { //send the data
           headers: {
             
             "Content-Type": "application/json"
@@ -220,20 +205,16 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
           })
           .then(response => {
               console.log("profile made");
-              navigate("/login")
+              navigate("/login") //navigate to correct function to process data
               handleAccountCreation();
               closePopup()
           })
           .catch(err => {
-           console.log("status:", err.response?.status);
+           console.log("status:", err.response?.status); //catch any errors 
            console.log("backend error:", err.response?.data);
 
-             if(err.response?.status === 400 && err.response?.data?.detail){
-                setAccountError(err.response.data.detail);
-              } else {
-                setAccountError("An unexpected error occurred. Please try again.");
-                } 
-              });
+             
+          });
 
 
 
@@ -243,43 +224,37 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
       const formData = new FormData()
       formData.append('name', companyName)
       formData.append('location', location)
-      formData.append('opening_hours', `${openingTime} - ${closingTime}`)
+      formData.append('opening_hours', `${openingTime} - ${closingTime}`) //build formData variable to match backend request format
       formData.append('email', username)
       formData.append('password', password)
       const logoFile = sellerProfile;
       
       if (logoFile) {
-          formData.append('file', logoFile)
+          formData.append('file', logoFile) //add logo seperately
       }
       console.log(formData);
-        axios.post(`${API_URL}/api/v1/sellers/`, formData, {
+        axios.post(`${API_URL}/api/v1/sellers/`, formData, { //send the data to the backend
           headers: {
             "Content-Type": "multipart/form-data"
           }
           })
           .then(response => {
               console.log(formData);
-              navigate("/login")
+              navigate("/login") //navigate to correct function to process data
               handleAccountCreation();
               closePopup()
           })
           .catch(err => {
-           console.log("status:", err.response?.status);
+           console.log("status:", err.response?.status); //catch any errors
            console.log("backend error:", err.response?.data);
 
-             if(err.response?.status === 400 && err.response?.data?.detail){
-                setAccountError(err.response.data.detail);
-              } else {
-                setAccountError("An unexpected error occurred. Please try again.");
-                } 
-              });
+             
+          });
     }
-    else{
-      //idk some error
-    }
+    
   }
 
-  return (
+  return ( //all html
     <div className="loginPage">
       <div className="loginBox">
         <div className="loginItems">
@@ -322,7 +297,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
             </div>
           )}
 
-              {Popup && (
+              {Popup && ( //popup to register
                 <div className="popupRegister open-popupRegister">
                   <h3>Account Registration</h3>
                   <br></br>
@@ -335,7 +310,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       
                     >
                       <option value="Consumer">Consumer</option>
-                      <option value="Seller">Seller</option>
+                      <option value="Seller">Seller</option> {/* two options to select */}
                     </select>
                   </div>
                   <br></br>
@@ -347,7 +322,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
-                  {accountType === "Consumer" && (
+                  {accountType === "Consumer" && ( //the inputs for consumer
                     <>
                     <div className="rowRegister">
                       <p>Display Name: </p>
@@ -359,7 +334,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     </div>
                     </>
                   )}
-                  {accountType==="Seller" && (
+                  {accountType==="Seller" && ( //the inputs for seller
                     <>
                     <div className="rowRegister">
                     <p>Name: </p>
@@ -396,26 +371,26 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     </>
                     
                   )}
-                  {username && !emailRegex.test(username) && (
+                  {username && !emailRegex.test(username) && ( //error message if email format does not match the regex
                     <p style={{color: "red"}}>Email must contain @ and contain a domain name</p>
                   ) }
-                  {password && !passwordRegex.test(password) && (
+                  {password && !passwordRegex.test(password) && ( //error message if password is not in the right format
                     <p style={{color: "red"}}>Password must contain at least 6 characters, 1 capital letter, 1 number and 1 special character</p>
                   )}
-                  {confirmPassword && password !== confirmPassword && (
+                  {confirmPassword && password !== confirmPassword && ( //error message if passwords do not match
                     <p style={{color: "red"}}>Passwords do not match</p>
                   )}
-                {openingTime && !timeRegex.test(openingTime) && (
+                {openingTime && !timeRegex.test(openingTime) && ( //erorr message if time is not in right format
                     <p style={{color:"red"}}>
                         Times must be in format HH:MM
                     </p>
                   )}
-                  {closingTime && !timeRegex.test(closingTime) && (
+                  {closingTime && !timeRegex.test(closingTime) && ( //erorr message if time is not in right format
                     <p style={{color:"red"}}>
                         Times must be in format HH:MM
                     </p>
                   )}
-                  {accountType==="Seller" && invalidTime && (
+                  {accountType==="Seller" && invalidTime && ( //erorr message if opening time is after closing time
                     <p style={{color:"red"}}>
                         Invalid Time, Opening Time cannot be before Closing Time
                     </p>
@@ -425,7 +400,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                         {accountError}
                     </p>
                   )}
-                  {accountType==="Seller" && (
+                  {accountType==="Seller" && ( //added profile picture processing with images
                     <>
                     <div className="rowRegister">
                     <p>Profile Photo:</p>
@@ -467,7 +442,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                     onChange={() => setAgree(!agree)}
                   />
                   <label>Agree to the <a className="terms" onClick={()=>setConditions(true)}>terms and conditions</a></label>
-                  {conditions && (
+                  {conditions && ( //T&Cs
                     <div className="popupRegister open-popupRegister">
                     <h3>Terms and Conditions</h3>
                     <div className="scrollBox">
@@ -645,7 +620,7 @@ function LoginPage({setUser}) {// username is the variable, setUsername changes 
                   )}
                   <div className="rowRegister">
                     <button onClick={createAccount} //was close popup
-                              disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword || !agree}
+                              disabled={password!==confirmPassword || !timeValidForSeller || invalidTime || !validPassword || !agree} //if any of the regexs dont pass dont allow the create account button to be clicked
                               >Create Account</button>
                     <button onClick={handleCancel}>Cancel</button>
                   </div>

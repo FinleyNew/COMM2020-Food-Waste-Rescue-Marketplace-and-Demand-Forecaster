@@ -113,6 +113,8 @@ function AddBundles() {
       available: Number(numberAvailable),
       price: Number(bundlePrice),
       weight: Number(bundleWeight),
+      initial_price: Number(initialPrice),
+      contents: description,
       start_time: startDateTime.toISOString(),
       end_time: endDateTime.toISOString()
     };

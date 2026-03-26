@@ -10,11 +10,11 @@ function BundleSelect() {
 
   const [bundle, setBundle] = useState(null); //bundle is used to hold the data, setBundle is used to store it
   const [Popup, setPopup] = useState(false);
-  const [reportButton, setReportButton] = useState(false);
+  const [reportButton, setReportButton] = useState(false); //all the variables to hold the data retrieved
   const [viewReport, setViewReportButton] = useState(false);
   const [showReports, setShowReports] = useState([]);
   const [report, setReport] = useState("");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL; //holds the API URL that can be changed if the website is deployed locally or online
   function openPopup() {
     setPopup(true); //if variable is true then popUp needs to be opened 
   }
@@ -60,7 +60,7 @@ function BundleSelect() {
       setBundles(response.data); // Update state with search results
     })
     .catch(err => {
-      console.error("Error searching bundles:", err);
+      console.error("Error creating reservation:", err);
       setBundles([]); // Clear bundles if search fails
     });
     
@@ -69,16 +69,16 @@ function BundleSelect() {
 
 
 
-  function createReport() {
+  function createReport() { //creates an issue report by sending data using a post request
     const data={
       posting_id:id,
       description:report,
     }
     console.log(data);
     const token = localStorage.getItem(`token`);
-    axios.post(`${API_URL}/api/v1/reports/`, data ,{
+    axios.post(`${API_URL}/api/v1/reports/`, data ,{ //post request and sending the data
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`, //sending a toekn to verify the user
         "Content-Type": "application/json"
       }
     })
@@ -88,8 +88,8 @@ function BundleSelect() {
     setReportButton(false);
   }
 
-  function handleViewReports() {
-  const token = localStorage.getItem('token');
+  function handleViewReports() { //viewing reports button, shows all the reports that the consumer has made
+  const token = localStorage.getItem('token'); 
   const API_URL = import.meta.env.VITE_API_URL;
 
   axios.get(`${API_URL}/api/v1/reports/consumer/${id}`, {  

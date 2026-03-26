@@ -101,6 +101,7 @@ def test_get_forecast_returns_normalised_prediction(mock_db):
     mock_bundle.start_time = datetime(2025, 6, 10, 9, 0, tzinfo=timezone.utc)
     mock_bundle.end_time = datetime(2025, 6, 10, 12, 0, tzinfo=timezone.utc)
     mock_bundle.raining = False
+    mock_bundle.available = 10
 
     # Mock the ML pipelines to return controllable numbers
     mock_res_model = MagicMock()
@@ -132,6 +133,7 @@ def test_get_forecast_zero_predicted_reservations_yields_zero_no_show(mock_db):
     mock_bundle.start_time = datetime(2025, 6, 10, 9, 0, tzinfo=timezone.utc)
     mock_bundle.end_time = datetime(2025, 6, 10, 12, 0, tzinfo=timezone.utc)
     mock_bundle.raining = False
+    mock_bundle.available = 10
 
     mock_res_model = MagicMock()
     mock_res_model.predict.return_value = np.array([-0.5])  # negative → clamped to 0
