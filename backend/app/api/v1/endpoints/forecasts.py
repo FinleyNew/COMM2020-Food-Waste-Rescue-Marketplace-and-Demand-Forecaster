@@ -12,6 +12,8 @@ router = APIRouter()
 def get_current_sellers_forecasts(current_seller: SellerDep, db: SessionDep):
     return current_seller.forecasts or []
 
+# Endpoint for getting all the forecasts in the DB
+# Can only be used by admins
 @router.get("/", response_model=list[ForecastPublic])
 def get_all_forecasts(current_user: AdminDep, db: SessionDep):
     return forecast_service.get_all_forecasts(db=db)
@@ -24,6 +26,8 @@ def get_new_forecast(bundle_in: BundlePostingCreate, db: SessionDep):
         raise HTTPException(status_code=404, detail="No forecast made")
     return forecast
 
+# Endpoint for deleting a specific forecast
+# Can only be used by admins
 @router.delete("/{forecast_id}")
 def delete_forecast(forecast_id: int, current_user: AdminDep, db: SessionDep):
     forecast_service.delete_forecast(forecast_id=forecast_id, db=db)

@@ -42,6 +42,7 @@ class BundlePostingCreate(BundlePostingBase):
     
     model_config = {"from_attributes": True}
     
+# The schema used for updating a bundle posting
 class BundlePostingUpdate(SQLModel):
     category: CategoryPublic | None = None
     allergens: str | None = None
@@ -68,6 +69,7 @@ class BundlePostingUpdate(SQLModel):
                 raise ValueError("end_time must be after start_time")
         return self
     
+# The schema used for admins updating a bundle posting
 class BundlePostingAdminUpdate(BundlePostingUpdate):
     user_id: int | None = None
     status: BundleStatus | None = None
@@ -99,14 +101,17 @@ class BundlePostingPublic(BundlePostingBase):
         end: datetime = self.pickup_window.upper
         return f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')}"
     
+    #This gets the percent decrease from the original price
     @computed_field
     def discount_percent(self) -> str:
-        discount_percent = ((self.price / self.initial_price)*100)
+        discount_percent = ((self.initial_price - self.price) / self.initial_price)*100
         return str(round(discount_percent, 0))
     
     
     model_config = {"from_attributes": True}
 
+# This is the schema that other schemas can use to include seller data
+# For example the reservation schema uses this to show what seller it's from and when to pick it up
 class PostingSummary(SQLModel):
     seller: SellerSummary
     pickup_window: Any = Field(exclude=True)

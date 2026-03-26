@@ -8,8 +8,8 @@ from app.api.deps import SessionDep
 
 router = APIRouter()
 
-#No login system implemented yet
-
+# Endpoint for getting the access token
+# It ensures the username and password match and only returns the JWT if they do
 @router.post("/access-token", response_model = Token)
 def access_token(db: SessionDep, form: OAuth2PasswordRequestForm = Depends()):
     user = user_service.get_user_by_email(email = form.username, db=db)
